@@ -53,9 +53,9 @@
             flex-grow: 1;
             width: 100%;
         }
-                        .coin {
-            width: 230px;
-            height: 230px;
+        .coin {
+            width: 240px;
+            height: 240px;
             cursor: pointer;
             transition: transform 0.05s ease;
             display: flex;
@@ -65,21 +65,15 @@
             border-radius: 50%;
             border: 4px solid #f1c40f;
             overflow: hidden;
-            background-color: #11092c;
+            background-color: #0b061d;
             box-shadow: 0 10px 25px rgba(241, 196, 15, 0.3);
         }
-
-        }
-
-        }
-                        .coin img {
+        .coin img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            border-radius: 50%;
             transition: filter 0.5s ease;
-        }
-
-
         }
         .coin:active {
             transform: scale(0.92);
@@ -87,7 +81,7 @@
         
         /* Styles des filtres magiques pour chaque niveau */
         .lvl-1 img { filter: drop-shadow(0px 10px 20px rgba(241, 196, 15, 0.3)); }
-        .lvl-2 img { filter: drop-shadow(0px 0px 25px #f1c40f) saturate(1.5); }
+        .lvl-2 img { filter: drop-shadow(0px 0px 25px #f1c40f) saturate(1.4); }
         .lvl-3 img { filter: drop-shadow(0px 0px 25px #00cec9) hue-rotate(140deg); }
         .lvl-4 img { filter: drop-shadow(0px 0px 25px #2ecc71) hue-rotate(60deg) brightness(1.2); }
         .lvl-5 img { filter: drop-shadow(0px 0px 30px #e74c3c) hue-rotate(290deg) contrast(1.3); }
@@ -151,11 +145,10 @@
     <div class="header">
         <div class="username">⭐ Harold Trader</div>
         <div class="score-container" id="score">0</div>
-        <div class="level-badge" id="levelName">Niveau 1 : Débutant</div>
+        <div class="level-badge" id="levelName">Niveau 1 : Débutant 🪙</div>
     </div>
 
     <div class="coin-container">
-        <!-- La classe lvl-1 va changer en lvl-2, lvl-3 automatiquement selon le score -->
         <div class="coin lvl-1" id="coinBtn">
             <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Haroldcoins Logo">
         </div>
@@ -200,9 +193,8 @@
         const energyFill = document.getElementById('energyFill');
         const levelName = document.getElementById('levelName');
 
-        // Fonction magique de gestion des niveaux
         function checkLevel() {
-            coinButton.className = "coin"; // Reset des filtres
+            coinButton.className = "coin"; 
             
             if (score < 2000) {
                 coinButton.classList.add("lvl-1");
@@ -236,7 +228,7 @@
                 energyText.textContent = `${energy}/${maxEnergy}`;
                 energyFill.style.width = `${(energy / maxEnergy) * 100}%`;
                 
-                checkLevel(); // On vérifie le niveau à chaque clic !
+                checkLevel(); 
                 
                 if (navigator.vibrate) {
                     navigator.vibrate(40);
@@ -253,5 +245,4 @@
         }, 1000);
     </script>
 </body>
-                </html>
-    
+</html>
