@@ -55,7 +55,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow-y: auto;
         }
         .page {
             display: none;
@@ -99,7 +98,6 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            transition: filter 0.5s ease;
         }
         .coin:active {
             transform: scale(0.92);
@@ -133,15 +131,12 @@
             transition: width 0.1s ease;
         }
 
-        /* Style de la Page Gagner (Tournoi + Loterie) */
+        /* Style de la Page Gagner */
         .earn-container {
             width: 90%;
-            max-height: 80%;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            padding: 10px 0;
         }
         .card {
             background-color: #251752;
@@ -155,21 +150,15 @@
             font-weight: bold;
             color: #f1c40f;
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         .leaderboard-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             font-size: 14px;
         }
-        .leaderboard-item:last-child { border-bottom: none; }
         .rank-1 { color: #f1c40f; font-weight: bold; }
-        .rank-2 { color: #dcdde1; font-weight: bold; }
-        .rank-3 { color: #e67e22; font-weight: bold; }
         
         .lottery-btn {
             width: 100%;
@@ -182,9 +171,7 @@
             font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
-            transition: transform 0.1s;
         }
-        .lottery-btn:active { transform: scale(0.97); }
         .tickets-count {
             font-size: 13px;
             color: #a29bfe;
@@ -209,7 +196,6 @@
             color: #b2bec3;
             font-size: 12px;
             font-weight: bold;
-            text-decoration: none;
             cursor: pointer;
         }
         .nav-item .icon {
@@ -223,17 +209,16 @@
 </head>
 <body>
 
-    <!-- Entête fixe pour le Score -->
+    <!-- Entête unique -->
     <div class="header">
         <div class="username">⭐ Harold Trader</div>
         <div class="score-container" id="score">0</div>
         <div class="level-badge" id="levelName">Niveau 1 : Débutant 🪙</div>
     </div>
 
-    <!-- Zone dynamique changeant selon l'onglet -->
     <div class="page-content">
         
-        <!-- PAGE MON (Écran de Clic principal) -->
+        <!-- ÉCRAN PRINCIPAL (Mon) -->
         <div class="page active" id="page-mon">
             <div class="coin-container">
                 <div class="coin" id="coinBtn">
@@ -241,65 +226,79 @@
                 </div>
             </div>
             <div class="game-status">
-                <div class="energy-text">
-                    🟡 <span id="energyText">1000/1000</span>
-                </div>
+                <div class="energy-text">🟡 <span id="energyText">1000/1000</span></div>
                 <div class="energy-bar-bg">
                     <div class="energy-bar-fill" id="energyFill"></div>
                 </div>
             </div>
         </div>
 
-        <!-- PAGE GAGNER (Tournoi + Loterie) -->
+        <!-- ÉCRAN DES GAINS (Gagner) -->
         <div class="page" id="page-gagner">
             <div class="earn-container">
-                
-                <!-- CARD 1 : TOURNOI HEBDOMADAIRE -->
                 <div class="card">
                     <div class="card-title">🏆 Tournoi Top Clickeurs</div>
-                    <div style="font-size: 12px; color: #b2bec3; margin-bottom: 10px;">Fin de la session : Dimanche à 23:00 (Cashprize : 20$)</div>
-                    <div class="leaderboard-item rank-1">
-                        <span>1. 👑 Joueur_9843</span>
-                        <span>450 000 HRC</span>
-                    </div>
-                    <div class="leaderboard-item rank-2">
-                        <span>2. 🥈 CryptoKing</span>
-                        <span>320 500 HRC</span>
-                    </div>
-                    <div class="leaderboard-item rank-3">
-                        <span>3. 🥉 Razaf_Tech</span>
-                        <span>210 000 HRC</span>
-                    </div>
+                    <div style="font-size: 12px; color: #b2bec3; margin-bottom: 10px;">Fin : Dimanche à 23:00 (Cashprize : 20$)</div>
+                    <div class="leaderboard-item rank-1"><span>1. 👑 Joueur_9843</span><span>450 000 HRC</span></div>
+                    <div class="leaderboard-item"><span>2. 🥈 CryptoKing</span><span>320 500 HRC</span></div>
+                    <div class="leaderboard-item"><span>3. 🥉 Razaf_Tech</span><span>210 000 HRC</span></div>
                     <div class="leaderboard-item" style="margin-top: 5px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 5px;">
-                        <span style="font-weight: bold; color: #a29bfe;">Vous : (Harold Trader)</span>
+                        <span style="font-weight: bold; color: #a29bfe;">Vous :</span>
                         <span id="yourRankScore" style="font-weight: bold; color: #a29bfe;">0 HRC</span>
                     </div>
                 </div>
 
-                <!-- CARD 2 : LOTERIE INTERACTIVE -->
                 <div class="card">
                     <div class="card-title">🎟️ Grand Tirage Web3</div>
-                    <div style="font-size: 12px; color: #b2bec3;">Achetez un ticket avec vos Haroldcoins. Plus vous avez de tickets, plus vous avez de chances de gagner les 20$ par tirage au sort !</div>
-                    <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (Prix: 500 HRC)</button>
-                    <div class="tickets-count" id="ticketDisplay">Vos tickets pour cette semaine : 0 🎟️</div>
+                    <div style="font-size: 12px; color: #b2bec3;">Prix du ticket: 500 HRC. Tentez de gagner les 20$ de la semaine !</div>
+                    <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket</button>
+                    <div class="tickets-count" id="ticketDisplay">Vos tickets : 0 🎟️</div>
                 </div>
-
             </div>
         </div>
 
     </div>
 
-    <!-- Menu de Navigation Bas -->
+    <!-- Barre de navigation bas -->
     <div class="nav-menu">
         <div class="nav-item" id="btn-gagner">
-            <span class="icon">💰</span>
-            <span>Gagner</span>
+            <div class="icon">💰</div>
+            <div>Gagner</div>
         </div>
-        <div class="nav-item" id="btn-amis">
-            <span class="icon">👥</span>
-            <span>Amis</span>
+        <div class="nav-item active" id="btn-mon">
+            <div class="icon">🏠</div>
+            <div>Mon</div>
         </div>
-        <div class="nav-item" id="btn-batir">
-            <span class="icon">🛠️</span>
-            <span>Bâtir</span>
-        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let energy = 1000;
+        const maxEnergy = 1000;
+        let myTickets = 0;
+
+        const scoreDisplay = document.getElementById('score');
+        const yourRankScore = document.getElementById('yourRankScore');
+        const coinButton = document.getElementById('coinBtn');
+        const energyText = document.getElementById('energyText');
+        const energyFill = document.getElementById('energyFill');
+        const levelName = document.getElementById('levelName');
+        const ticketDisplay = document.getElementById('ticketDisplay');
+        const buyTicketBtn = document.getElementById('buyTicketBtn');
+
+        const btnGagner = document.getElementById('btn-gagner');
+        const btnMon = document.getElementById('btn-mon');
+        const pageGagner = document.getElementById('page-gagner');
+        const pageMon = document.getElementById('page-mon');
+
+        // Clic sur les onglets
+        btnGagner.onclick = function() {
+            btnGagner.classList.add('active');
+            btnMon.classList.remove('active');
+            pageGagner.classList.add('active');
+            pageMon.classList.remove('active');
+        };
+
+        btnMon.onclick = function() {
+            btnMon.classList.add('active');
+            btnGagner.classList.remove('active');
