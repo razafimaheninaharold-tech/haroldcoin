@@ -46,17 +46,40 @@
             margin-top: 5px;
             border: 1px solid rgba(241, 196, 15, 0.3);
         }
+        
+        /* Conteneurs de Pages */
+        .page-content {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .page.active {
+            display: flex;
+        }
+
+        /* Style de la Pièce (Page Mon) */
         .coin-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-grow: 1;
             width: 100%;
             padding: 10px 0;
         }
         .coin {
-            width: 280px;
-            height: 280px;
+            width: 260px;
+            height: 260px;
             aspect-ratio: 1 / 1;
             cursor: pointer;
             transition: transform 0.05s ease;
@@ -67,29 +90,22 @@
             border-radius: 50%;
             border: 5px solid #f1c40f;
             overflow: hidden;
-            background-color: transparent;
             box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
             box-sizing: border-box;
+            background-color: #0b061d;
         }
         .coin img {
             width: 100%;
             height: 100%;
-            /* Le mode cover combiné au border-radius élimine les coins noirs */
-            object-fit: cover;
+            object-fit: cover; /* Élimine définitivement les tâches et débordements noirs */
             border-radius: 50%;
             transition: filter 0.5s ease;
         }
         .coin:active {
             transform: scale(0.92);
         }
-        
-        /* Styles des filtres magiques pour chaque niveau */
-        .lvl-1 img { filter: drop-shadow(0px 10px 20px rgba(241, 196, 15, 0.3)); }
-        .lvl-2 img { filter: drop-shadow(0px 0px 25px #f1c40f) saturate(1.4); }
-        .lvl-3 img { filter: drop-shadow(0px 0px 25px #00cec9) hue-rotate(140deg); }
-        .lvl-4 img { filter: drop-shadow(0px 0px 25px #2ecc71) hue-rotate(60deg) brightness(1.2); }
-        .lvl-5 img { filter: drop-shadow(0px 0px 30px #e74c3c) hue-rotate(290deg) contrast(1.3); }
 
+        /* Zone d'Énergie */
         .game-status {
             width: 85%;
             margin-bottom: 15px;
@@ -116,6 +132,67 @@
             border-radius: 10px;
             transition: width 0.1s ease;
         }
+
+        /* Style de la Page Gagner (Tournoi + Loterie) */
+        .earn-container {
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        .card {
+            background-color: #251752;
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+        .leaderboard-item:last-child { border-bottom: none; }
+        .rank-1 { color: #f1c40f; font-weight: bold; }
+        .rank-2 { color: #dcdde1; font-weight: bold; }
+        .rank-3 { color: #e67e22; font-weight: bold; }
+        
+        .lottery-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.1s;
+        }
+        .lottery-btn:active { transform: scale(0.97); }
+        .tickets-count {
+            font-size: 13px;
+            color: #a29bfe;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* Menu de Navigation */
         .nav-menu {
             width: 100%;
             background-color: #251752;
@@ -146,29 +223,75 @@
 </head>
 <body>
 
+    <!-- Entête fixe pour le Score -->
     <div class="header">
         <div class="username">⭐ Harold Trader</div>
         <div class="score-container" id="score">0</div>
         <div class="level-badge" id="levelName">Niveau 1 : Débutant 🪙</div>
     </div>
 
-    <div class="coin-container">
-        <div class="coin lvl-1" id="coinBtn">
-            <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Haroldcoins Logo">
+    <!-- Zone dynamique changeant selon l'onglet -->
+    <div class="page-content">
+        
+        <!-- PAGE MON (Écran de Clic principal) -->
+        <div class="page active" id="page-mon">
+            <div class="coin-container">
+                <div class="coin" id="coinBtn">
+                    <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Haroldcoins Logo">
+                </div>
+            </div>
+            <div class="game-status">
+                <div class="energy-text">
+                    🟡 <span id="energyText">1000/1000</span>
+                </div>
+                <div class="energy-bar-bg">
+                    <div class="energy-bar-fill" id="energyFill"></div>
+                </div>
+            </div>
         </div>
+
+        <!-- PAGE GAGNER (Tournoi + Loterie) -->
+        <div class="page" id="page-gagner">
+            <div class="earn-container">
+                
+                <!-- CARD 1 : TOURNOI HEBDOMADAIRE -->
+                <div class="card">
+                    <div class="card-title">🏆 Tournoi Top Clickeurs</div>
+                    <div style="font-size: 12px; color: #b2bec3; margin-bottom: 10px;">Fin de la session : Dimanche à 23:00 (Cashprize : 20$)</div>
+                    <div class="leaderboard-item rank-1">
+                        <span>1. 👑 Joueur_9843</span>
+                        <span>450 000 HRC</span>
+                    </div>
+                    <div class="leaderboard-item rank-2">
+                        <span>2. 🥈 CryptoKing</span>
+                        <span>320 500 HRC</span>
+                    </div>
+                    <div class="leaderboard-item rank-3">
+                        <span>3. 🥉 Razaf_Tech</span>
+                        <span>210 000 HRC</span>
+                    </div>
+                    <div class="leaderboard-item" style="margin-top: 5px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 5px;">
+                        <span style="font-weight: bold; color: #a29bfe;">Vous : (Harold Trader)</span>
+                        <span id="yourRankScore" style="font-weight: bold; color: #a29bfe;">0 HRC</span>
+                    </div>
+                </div>
+
+                <!-- CARD 2 : LOTERIE INTERACTIVE -->
+                <div class="card">
+                    <div class="card-title">🎟️ Grand Tirage Web3</div>
+                    <div style="font-size: 12px; color: #b2bec3;">Achetez un ticket avec vos Haroldcoins. Plus vous avez de tickets, plus vous avez de chances de gagner les 20$ par tirage au sort !</div>
+                    <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (Prix: 500 HRC)</button>
+                    <div class="tickets-count" id="ticketDisplay">Vos tickets pour cette semaine : 0 🎟️</div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <div class="game-status">
-        <div class="energy-text">
-            🟡 <span id="energyText">1000/1000</span>
-        </div>
-        <div class="energy-bar-bg">
-            <div class="energy-bar-fill" id="energyFill"></div>
-        </div>
-    </div>
-
+    <!-- Menu de Navigation Bas -->
     <div class="nav-menu">
-        <div class="nav-item">
+        <div class="nav-item" id="btn-gagner">
             <span class="icon">💰</span>
             <span>Gagner</span>
         </div>
@@ -179,74 +302,4 @@
         <div class="nav-item">
             <span class="icon">🛠️</span>
             <span>Bâtir</span>
-        </div>
-        <div class="nav-item active">
-            <span class="icon">🏠</span>
-            <span>Mon</span>
-        </div>
-    </div>
-
-    <script>
-        let score = 0;
-        let energy = 1000;
-        const maxEnergy = 1000;
-
-        const scoreDisplay = document.getElementById('score');
-        const coinButton = document.getElementById('coinBtn');
-        const energyText = document.getElementById('energyText');
-        const energyFill = document.getElementById('energyFill');
-        const levelName = document.getElementById('levelName');
-
-        function checkLevel() {
-            coinButton.className = "coin"; 
-            
-            if (score < 2000) {
-                coinButton.classList.add("lvl-1");
-                levelName.textContent = "Niveau 1 : Débutant 🪙";
-                levelName.style.color = "#ffffff";
-            } else if (score >= 2000 && score < 10000) {
-                coinButton.classList.add("lvl-2");
-                levelName.textContent = "Niveau 2 : Trader Pro ✨";
-                levelName.style.color = "#f1c40f";
-            } else if (score >= 10000 && score < 50000) {
-                coinButton.classList.add("lvl-3");
-                levelName.textContent = "Niveau 3 : Crypto Whale 💎";
-                levelName.style.color = "#00cec9";
-            } else if (score >= 50000 && score < 200000) {
-                coinButton.classList.add("lvl-4");
-                levelName.textContent = "Niveau 4 : Maître du Marché 🟢";
-                levelName.style.color = "#2ecc71";
-            } else {
-                coinButton.classList.add("lvl-5");
-                levelName.textContent = "Niveau 5 : Empereur d'Haroldcoin 🔥";
-                levelName.style.color = "#e74c3c";
-            }
-        }
-
-        coinButton.addEventListener('click', () => {
-            if (energy > 0) {
-                score += 14; 
-                energy--;
                 
-                scoreDisplay.textContent = score.toLocaleString();
-                energyText.textContent = `${energy}/${maxEnergy}`;
-                energyFill.style.width = `${(energy / maxEnergy) * 100}%`;
-                
-                checkLevel(); 
-                
-                if (navigator.vibrate) {
-                    navigator.vibrate(40);
-                }
-            }
-        });
-
-        setInterval(() => {
-            if (energy < maxEnergy) {
-                energy++;
-                energyText.textContent = `${energy}/${maxEnergy}`;
-                energyFill.style.width = `${(energy / maxEnergy) * 100}%`;
-            }
-        }, 1000);
-    </script>
-</body>
-</html>
