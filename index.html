@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Étape 3</title>
+    <title>Haroldcoin - Étape Finale</title>
     <style>
         body {
             margin: 0;
             background-color: #1a103c;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -34,25 +34,21 @@
             font-size: 48px;
             font-weight: 900;
             color: #f1c40f;
-            text-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
             margin-top: 5px;
         }
-        
-        /* Bouton Cadeau / Événements */
         .event-btn {
             position: absolute;
             top: 0;
             right: 20px;
             background-color: #251752;
-            border: 1px solid #f1c40f;
+            border: 2px solid #f1c40f;
             color: #f1c40f;
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 12px;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
         }
-
         .coin-container {
             display: flex;
             justify-content: center;
@@ -61,9 +57,8 @@
             width: 100%;
         }
         .coin-btn {
-            width: 270px;
-            height: 270px;
-            aspect-ratio: 1 / 1;
+            width: 260px;
+            height: 260px;
             cursor: pointer;
             transition: transform 0.05s ease;
             display: flex;
@@ -73,8 +68,6 @@
             border-radius: 50%;
             border: 5px solid #f1c40f;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
-            box-sizing: border-box;
             background-color: #0b061d;
             padding: 0;
         }
@@ -82,7 +75,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
             pointer-events: none;
         }
         .coin-btn:active {
@@ -96,9 +88,6 @@
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
         .energy-bar-bg {
             width: 100%;
@@ -112,25 +101,22 @@
             height: 100%;
             background: linear-gradient(90deg, #f1c40f, #e67e22);
             border-radius: 10px;
-            transition: width 0.1s ease;
         }
-
-        /* Fenêtre Pop-up (Loterie + Tournoi) */
+        
+        /* Fenêtre Pop-up renforcée */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(11, 6, 29, 0.9);
+            background-color: rgba(11, 6, 29, 0.95);
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 9999;
         }
         .modal-content {
             background-color: #251752;
             border: 2px solid #f1c40f;
             width: 85%;
-            max-height: 80%;
-            overflow-y: auto;
             border-radius: 20px;
             padding: 20px;
             box-sizing: border-box;
@@ -150,13 +136,13 @@
             font-size: 24px;
             cursor: pointer;
             color: #b2bec3;
+            padding: 5px 10px;
         }
         .card {
             background-color: #1a103c;
             border-radius: 12px;
             padding: 12px;
             margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
         }
         .card-title {
             font-weight: bold;
@@ -168,7 +154,6 @@
             justify-content: space-between;
             font-size: 14px;
             padding: 4px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .lottery-btn {
             width: 100%;
@@ -179,7 +164,6 @@
             border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 8px;
         }
     </style>
 </head>
@@ -188,7 +172,6 @@
     <div class="header">
         <div class="username">⭐ Harold Trader</div>
         <div class="score-container" id="totalScore">0</div>
-        <!-- Bouton magique pour ouvrir les concours -->
         <button class="event-btn" id="openMenuBtn">🎁 Gains</button>
     </div>
 
@@ -205,7 +188,7 @@
         </div>
     </div>
 
-    <!-- LA FENÊTRE DES CONCOURS -->
+    <!-- LA BOÎTE POP-UP -->
     <div class="modal" id="eventModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -213,10 +196,8 @@
                 <div class="close-btn" id="closeMenuBtn">✕</div>
             </div>
 
-            <!-- TOURNOI -->
             <div class="card">
                 <div class="card-title">🥇 Tournoi Hebdo (20$)</div>
-                <div style="font-size: 11px; color: #b2bec3; margin-bottom: 8px;">Fin : Dimanche à 23:00</div>
                 <div class="leaderboard-item" style="color:#f1c40f;"><span>1. 👑 Joueur_9843</span><span>450k HRC</span></div>
                 <div class="leaderboard-item"><span>2. 🥈 CryptoKing</span><span>320k HRC</span></div>
                 <div class="leaderboard-item"><span>3. 🥉 Razaf_Tech</span><span>210k HRC</span></div>
@@ -225,10 +206,8 @@
                 </div>
             </div>
 
-            <!-- LOTERIE -->
             <div class="card">
                 <div class="card-title">🎟️ Grand Tirage (20$)</div>
-                <div style="font-size: 11px; color: #b2bec3;">Plus de tickets = plus de chances de gagner au tirage au sort.</div>
                 <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (500 HRC)</button>
                 <div style="font-size: 12px; color: #a29bfe; text-align: center; margin-top: 6px;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
             </div>
@@ -253,12 +232,11 @@
         const buyTicketBtn = document.getElementById('buyTicketBtn');
         const ticketDisplay = document.getElementById('ticketDisplay');
 
-        // GESTION DU CLIC SUR LA PIÈCE
+        // CLIC PIÈCE
         clickArea.onclick = function() {
             if (energy > 0) {
                 score = score + 14;
                 energy = energy - 1;
-                
                 scoreDisplay.innerText = score.toLocaleString();
                 yourRankScore.innerText = score.toLocaleString() + " HRC";
                 energyText.innerText = energy + "/1000";
@@ -266,11 +244,16 @@
             }
         };
 
-        // OUVRIR ET FERMER LE MENU DES GAINS
-        openMenuBtn.onclick = function() { modal.style.display = 'flex'; };
-        closeMenuBtn.onclick = function() { modal.style.display = 'none'; };
+        // COMMANDES DIRECTES POUR LA BOÎTE POP-UP
+        openMenuBtn.onclick = function() {
+            modal.style.display = 'flex';
+        };
 
-        // ACHAT DE TICKET DE LOTERIE
+        closeMenuBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+
+        // ACHAT TICKET
         buyTicketBtn.onclick = function() {
             if (score >= 500) {
                 score = score - 500;
@@ -278,14 +261,20 @@
                 scoreDisplay.innerText = score.toLocaleString();
                 yourRankScore.innerText = score.toLocaleString() + " HRC";
                 ticketDisplay.innerText = "Vos tickets : " + myTickets + " 🎟️";
-                alert("🎟️ Ticket acheté ! Bonne chance pour le tirage au sort.");
+                alert("🎟️ Ticket acheté ! Bonne chance.");
             } else {
                 alert("❌ Solde insuffisant ! (Il faut 500 HRC)");
             }
         };
 
-        // RECHARGE ÉNERGIE
+        // ENERGIE
         setInterval(function() {
             if (energy < maxEnergy) {
                 energy = energy + 1;
                 energyText.innerText = energy + "/1000";
+                energyFill.style.width = (energy / maxEnergy * 100) + "%";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
