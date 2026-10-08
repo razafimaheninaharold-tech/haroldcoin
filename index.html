@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Version Officielle</title>
+    <title>Haroldcoin - Version Stable</title>
     <style>
         body {
             margin: 0;
@@ -69,28 +69,29 @@
             flex-grow: 1;
             width: 100%;
         }
-        .coin-btn {
-            width: 260px;
-            height: 260px;
-            cursor: pointer;
-            transition: transform 0.05s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
+        .coin-clickable-area {
+            width: 270px;
+            height: 270px;
             border-radius: 50%;
             border: 5px solid #f1c40f;
             overflow: hidden;
             background-color: #0b061d;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
-        .coin-btn img {
+        .coin-clickable-area img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             pointer-events: none;
         }
-        .coin-btn:active {
+        .coin-clickable-area:active {
             transform: scale(0.92);
         }
         .game-status {
@@ -100,6 +101,7 @@
         .energy-text {
             font-size: 16px;
             font-weight: bold;
+            margin-bottom: 8px;
         }
         .energy-bar-bg {
             width: 100%;
@@ -136,6 +138,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            color: white;
         }
         .modal-title {
             font-size: 20px;
@@ -197,9 +200,9 @@
     </div>
 
     <div class="coin-container">
-        <button class="coin-btn" id="clickArea">
+        <div class="coin-clickable-area" id="clickArea">
             <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Logo">
-        </button>
+        </div>
     </div>
 
     <div class="game-status">
@@ -209,7 +212,7 @@
         </div>
     </div>
 
-    <!-- ZONE DE GAINS -->
+    <!-- MODAL GAINS -->
     <div class="modal" id="eventModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -233,7 +236,7 @@
         </div>
     </div>
 
-    <!-- ZONE AMIS -->
+    <!-- MODAL AMIS -->
     <div class="modal" id="friendsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -250,22 +253,9 @@
         </div>
     </div>
 
-    <!-- CHARGEMENT FIREBASE SÉCURISÉ -->
-    <script type="module">
-        import { initializeApp } from "https://gstatic.com";
-        import { getDatabase, ref, set, get, update } from "https://gstatic.com";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB9Bo1B8Pxvc_szGMf_3TOxgOoMne0yV8w",
-            authDomain: "://firebaseapp.com",
-            databaseURL: "https://firebaseio.com",
-            projectId: "haroldcoin-game",
-            storageBucket: "haroldcoin-game.firebasestorage.app",
-            messagingSenderId: "508155963084",
-            appId: "1:508155963084:web:26971d48cba0165e100469",
-            measurementId: "G-9PKB9QLKWM"
-        };
-
+    <!-- SCRIPT LOGIQUE INTERNE ISOLE -->
+    <script>
+        // Initialisation des variables locales en priorité absolue
         let score = parseInt(localStorage.getItem('hrc_score')) || 0;
         let myTickets = parseInt(localStorage.getItem('hrc_tickets')) || 0;
         let energy = 1000;
@@ -279,5 +269,18 @@
         const clickArea = document.getElementById('clickArea');
         const ticketDisplay = document.getElementById('ticketDisplay');
 
-        // Affichage initial direct pour tuer l'écran violet
+        // Affichage immédiat pour contourner le freeze
         scoreDisplay.innerText = score.toLocaleString();
+        yourRankScore.innerText = score.toLocaleString() + " HRC";
+        ticketDisplay.innerText = "Vos tickets : " + myTickets + " 🎟️";
+
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                userId = "tg_" + tg.initDataUnsafe.user.id;
+                document.getElementById('refLinkBox').innerText = "https://t.me?startapp=" + userId;
+            }
+        }
+
+        
