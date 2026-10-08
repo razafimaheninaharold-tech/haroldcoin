@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Base de données & Parrainage</title>
+    <title>Haroldcoin - Version Officielle</title>
     <style>
         body {
             margin: 0;
@@ -100,7 +100,6 @@
         .energy-text {
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 8px;
         }
         .energy-bar-bg {
             width: 100%;
@@ -115,7 +114,6 @@
             background: linear-gradient(90deg, #f1c40f, #e67e22);
             border-radius: 10px;
         }
-        
         .modal {
             display: none;
             position: fixed;
@@ -188,16 +186,79 @@
             border: 1px dashed #a29bfe;
         }
     </style>
-    
-    <!-- Scripts officiels Firebase SDK -->
+</head>
+<body>
+
+    <div class="header">
+        <button class="ref-btn" id="openFriendsBtn">👥 Amis</button>
+        <div class="username">⭐ Harold Trader</div>
+        <div class="score-container" id="totalScore">0</div>
+        <button class="event-btn" id="openGainsBtn">🎁 Gains</button>
+    </div>
+
+    <div class="coin-container">
+        <button class="coin-btn" id="clickArea">
+            <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Logo">
+        </button>
+    </div>
+
+    <div class="game-status">
+        <div class="energy-text">🟡 <span id="energyText">1000/1000</span></div>
+        <div class="energy-bar-bg">
+            <div class="energy-bar-fill" id="energyFill"></div>
+        </div>
+    </div>
+
+    <!-- ZONE DE GAINS -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏆 Zone de Cashprize</div>
+                <div class="close-btn" id="closeGainsBtn">✕</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🥇 Tournoi Hebdo (20$)</div>
+                <div class="leaderboard-item" style="color:#f1c40f;"><span>1. 👑 Joueur_9843</span><span>450k HRC</span></div>
+                <div class="leaderboard-item"><span>2. 🥈 CryptoKing</span><span>320k HRC</span></div>
+                <div class="leaderboard-item"><span>3. 🥉 Razaf_Tech</span><span>210k HRC</span></div>
+                <div class="leaderboard-item" style="color:#a29bfe; font-weight:bold; margin-top:4px;">
+                    <span>Vous :</span><span id="yourRankScore">0 HRC</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎟️ Grand Tirage (20$)</div>
+                <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (500 HRC)</button>
+                <div style="font-size: 12px; color: #a29bfe; text-align: center; margin-top: 6px;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZONE AMIS -->
+    <div class="modal" id="friendsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">👥 Inviter des Amis</div>
+                <div class="close-btn" id="closeFriendsBtn">✕</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎁 Bonus de parrainage</div>
+                <div style="font-size: 13px; color: #b2bec3; margin-bottom: 12px;">Partagez votre lien exclusif. Pour chaque ami qui commence à jouer grâce à vous, vous recevez immédiatement <b style="color:#2ecc71;">+5 000 HRC</b> bonus !</div>
+                <div class="card-title" style="font-size: 14px;">Votre lien de parrainage :</div>
+                <div class="share-box" id="refLinkBox">https://t.me</div>
+                <button class="lottery-btn" style="background:linear-gradient(90deg, #a29bfe, #6c5ce7);" id="copyLinkBtn">Copier le lien</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARGEMENT FIREBASE SÉCURISÉ -->
     <script type="module">
         import { initializeApp } from "https://gstatic.com";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://gstatic.com";
+        import { getDatabase, ref, set, get, update } from "https://gstatic.com";
 
-        // Votre configuration injectée au cœur du moteur du jeu
         const firebaseConfig = {
             apiKey: "AIzaSyB9Bo1B8Pxvc_szGMf_3TOxgOoMne0yV8w",
-            authDomain: "haroldcoin-game.firebaseapp.com",
+            authDomain: "://firebaseapp.com",
+            databaseURL: "https://firebaseio.com",
             projectId: "haroldcoin-game",
             storageBucket: "haroldcoin-game.firebasestorage.app",
             messagingSenderId: "508155963084",
@@ -205,86 +266,18 @@
             measurementId: "G-9PKB9QLKWM"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Récupération automatique de l'identifiant Telegram du joueur
-        let userId = "joueur_local";
-        let userName = "⭐ Harold Trader";
-
-        if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                userId = "tg_" + tg.initDataUnsafe.user.id;
-                userName = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Harold Trader";
-            }
-        }
-
-        // Système de gestion d'URL pour le parrainage
-        const urlParams = new URLSearchParams(window.location.search);
-        const referrerId = urlParams.get('ref');
-
-        let score = 0;
+        let score = parseInt(localStorage.getItem('hrc_score')) || 0;
+        let myTickets = parseInt(localStorage.getItem('hrc_tickets')) || 0;
         let energy = 1000;
         const maxEnergy = 1000;
-        let myTickets = 0;
+        let userId = "local_player";
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const scoreDisplay = document.getElementById('totalScore');
-            const yourRankScore = document.getElementById('yourRankScore');
-            const energyText = document.getElementById('energyText');
-            const energyFill = document.getElementById('energyFill');
-            const clickArea = document.getElementById('clickArea');
-            const refLinkBox = document.getElementById('refLinkBox');
+        const scoreDisplay = document.getElementById('totalScore');
+        const yourRankScore = document.getElementById('yourRankScore');
+        const energyText = document.getElementById('energyText');
+        const energyFill = document.getElementById('energyFill');
+        const clickArea = document.getElementById('clickArea');
+        const ticketDisplay = document.getElementById('ticketDisplay');
 
-            // Génération du lien de parrainage unique pour le joueur
-            const myRefLink = "https://t.me" + userId;
-            if(refLinkBox) refLinkBox.innerText = myRefLink;
-
-            // Connexion et récupération des données du joueur dans Firebase
-            const userDocRef = doc(db, "players", userId);
-            const userDoc = await getDoc(userDocRef);
-
-            if (!userDoc.exists()) {
-                score = 0;
-                await setDoc(userDocRef, { name: userName, score: 0, tickets: 0 });
-                
-                // Si l'utilisateur a été parrainé par un ami, on offre +5000 points au parrain
-                if (referrerId && referrerId !== userId) {
-                    const refDocRef = doc(db, "players", referrerId);
-                    const refDoc = await getDoc(refDocRef);
-                    if (refDoc.exists()) {
-                        await updateDoc(refDocRef, { score: increment(5000) });
-                    }
-                }
-            } else {
-                const data = userDoc.data();
-                score = data.score || 0;
-                myTickets = data.tickets || 0;
-            }
-
-            scoreDisplay.innerText = score.toLocaleString();
-            yourRankScore.innerText = score.toLocaleString() + " HRC";
-            document.getElementById('ticketDisplay').innerText = "Vos tickets : " + myTickets + " 🎟️";
-
-            // Clic sur la pièce synchrone avec Firebase
-            clickArea.onclick = async function() {
-                if (energy > 0) {
-                    score = score + 14;
-                    energy = energy - 1;
-                    scoreDisplay.innerText = score.toLocaleString();
-                    yourRankScore.innerText = score.toLocaleString() + " HRC";
-                    energyText.innerText = energy + "/1000";
-                    energyFill.style.width = (energy / maxEnergy * 100) + "%";
-
-                    // Sauvegarde directe asynchrone pour éviter tout ralentissement tactile
-                    updateDoc(userDocRef, { score: score });
-                }
-            };
-
-            // Achat ticket lié à la base de données
-            document.getElementById('buyTicketBtn').onclick = async function() {
-                if (score >= 500) {
-                    score = score - 500;
-                    myTickets = myTickets + 1;
+        // Affichage initial direct pour tuer l'écran violet
+        scoreDisplay.innerText = score.toLocaleString();
