@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Étape 2</title>
+    <title>Haroldcoin - Étape 3</title>
     <style>
         body {
             margin: 0;
@@ -23,6 +23,7 @@
             margin-top: 30px;
             text-align: center;
             width: 100%;
+            position: relative;
         }
         .username {
             font-size: 16px;
@@ -36,6 +37,22 @@
             text-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
             margin-top: 5px;
         }
+        
+        /* Bouton Cadeau / Événements */
+        .event-btn {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            background-color: #251752;
+            border: 1px solid #f1c40f;
+            color: #f1c40f;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         .coin-container {
             display: flex;
             justify-content: center;
@@ -97,6 +114,73 @@
             border-radius: 10px;
             transition: width 0.1s ease;
         }
+
+        /* Fenêtre Pop-up (Loterie + Tournoi) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(11, 6, 29, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background-color: #251752;
+            border: 2px solid #f1c40f;
+            width: 85%;
+            max-height: 80%;
+            overflow-y: auto;
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f1c40f;
+        }
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #b2bec3;
+        }
+        .card {
+            background-color: #1a103c;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .card-title {
+            font-weight: bold;
+            color: #f1c40f;
+            margin-bottom: 8px;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .lottery-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +188,8 @@
     <div class="header">
         <div class="username">⭐ Harold Trader</div>
         <div class="score-container" id="totalScore">0</div>
+        <!-- Bouton magique pour ouvrir les concours -->
+        <button class="event-btn" id="openMenuBtn">🎁 Gains</button>
     </div>
 
     <div class="coin-container">
@@ -119,36 +205,87 @@
         </div>
     </div>
 
+    <!-- LA FENÊTRE DES CONCOURS -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏆 Zone de Cashprize</div>
+                <div class="close-btn" id="closeMenuBtn">✕</div>
+            </div>
+
+            <!-- TOURNOI -->
+            <div class="card">
+                <div class="card-title">🥇 Tournoi Hebdo (20$)</div>
+                <div style="font-size: 11px; color: #b2bec3; margin-bottom: 8px;">Fin : Dimanche à 23:00</div>
+                <div class="leaderboard-item" style="color:#f1c40f;"><span>1. 👑 Joueur_9843</span><span>450k HRC</span></div>
+                <div class="leaderboard-item"><span>2. 🥈 CryptoKing</span><span>320k HRC</span></div>
+                <div class="leaderboard-item"><span>3. 🥉 Razaf_Tech</span><span>210k HRC</span></div>
+                <div class="leaderboard-item" style="color:#a29bfe; font-weight:bold; margin-top:4px;">
+                    <span>Vous :</span><span id="yourRankScore">0 HRC</span>
+                </div>
+            </div>
+
+            <!-- LOTERIE -->
+            <div class="card">
+                <div class="card-title">🎟️ Grand Tirage (20$)</div>
+                <div style="font-size: 11px; color: #b2bec3;">Plus de tickets = plus de chances de gagner au tirage au sort.</div>
+                <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (500 HRC)</button>
+                <div style="font-size: 12px; color: #a29bfe; text-align: center; margin-top: 6px;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let score = 0;
         let energy = 1000;
         const maxEnergy = 1000;
+        let myTickets = 0;
 
         const scoreDisplay = document.getElementById('totalScore');
+        const yourRankScore = document.getElementById('yourRankScore');
         const energyText = document.getElementById('energyText');
         const energyFill = document.getElementById('energyFill');
         const clickArea = document.getElementById('clickArea');
 
-        // Utilisation de la fonction onclick ultra-robuste qui fonctionne chez vous
+        const modal = document.getElementById('eventModal');
+        const openMenuBtn = document.getElementById('openMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const buyTicketBtn = document.getElementById('buyTicketBtn');
+        const ticketDisplay = document.getElementById('ticketDisplay');
+
+        // GESTION DU CLIC SUR LA PIÈCE
         clickArea.onclick = function() {
             if (energy > 0) {
                 score = score + 14;
                 energy = energy - 1;
                 
                 scoreDisplay.innerText = score.toLocaleString();
+                yourRankScore.innerText = score.toLocaleString() + " HRC";
                 energyText.innerText = energy + "/1000";
                 energyFill.style.width = (energy / maxEnergy * 100) + "%";
             }
         };
 
-        // Recharge automatique de l'énergie (+1 par seconde)
+        // OUVRIR ET FERMER LE MENU DES GAINS
+        openMenuBtn.onclick = function() { modal.style.display = 'flex'; };
+        closeMenuBtn.onclick = function() { modal.style.display = 'none'; };
+
+        // ACHAT DE TICKET DE LOTERIE
+        buyTicketBtn.onclick = function() {
+            if (score >= 500) {
+                score = score - 500;
+                myTickets = myTickets + 1;
+                scoreDisplay.innerText = score.toLocaleString();
+                yourRankScore.innerText = score.toLocaleString() + " HRC";
+                ticketDisplay.innerText = "Vos tickets : " + myTickets + " 🎟️";
+                alert("🎟️ Ticket acheté ! Bonne chance pour le tirage au sort.");
+            } else {
+                alert("❌ Solde insuffisant ! (Il faut 500 HRC)");
+            }
+        };
+
+        // RECHARGE ÉNERGIE
         setInterval(function() {
             if (energy < maxEnergy) {
                 energy = energy + 1;
                 energyText.innerText = energy + "/1000";
-                energyFill.style.width = (energy / maxEnergy * 100) + "%";
-            }
-        }, 1000);
-    </script>
-</body>
-</html>
