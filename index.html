@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Haroldcoins Game</title>
     <style>
         body {
@@ -17,6 +17,7 @@
             height: 100vh;
             overflow: hidden;
             user-select: none;
+            -webkit-user-select: none;
         }
         .header {
             margin-top: 25px;
@@ -47,7 +48,6 @@
             border: 1px solid rgba(241, 196, 15, 0.3);
         }
         
-        /* Conteneurs de Pages */
         .page-content {
             width: 100%;
             flex-grow: 1;
@@ -68,7 +68,6 @@
             display: flex;
         }
 
-        /* Style de la Pièce (Page Mon) */
         .coin-container {
             display: flex;
             justify-content: center;
@@ -98,12 +97,12 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
+            pointer-events: none;
         }
         .coin:active {
             transform: scale(0.92);
         }
 
-        /* Zone d'Énergie */
         .game-status {
             width: 85%;
             margin-bottom: 15px;
@@ -131,7 +130,6 @@
             transition: width 0.1s ease;
         }
 
-        /* Style de la Page Gagner */
         .earn-container {
             width: 90%;
             display: flex;
@@ -179,7 +177,6 @@
             text-align: center;
         }
 
-        /* Menu de Navigation */
         .nav-menu {
             width: 100%;
             background-color: #251752;
@@ -188,6 +185,8 @@
             padding: 12px 0 25px 0;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
         }
         .nav-item {
             display: flex;
@@ -197,10 +196,12 @@
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
+            padding: 5px 15px;
         }
         .nav-item .icon {
             font-size: 22px;
             margin-bottom: 4px;
+            pointer-events: none;
         }
         .nav-item.active {
             color: #f1c40f;
@@ -209,7 +210,6 @@
 </head>
 <body>
 
-    <!-- Entête unique -->
     <div class="header">
         <div class="username">⭐ Harold Trader</div>
         <div class="score-container" id="score">0</div>
@@ -218,7 +218,6 @@
 
     <div class="page-content">
         
-        <!-- ÉCRAN PRINCIPAL (Mon) -->
         <div class="page active" id="page-mon">
             <div class="coin-container">
                 <div class="coin" id="coinBtn">
@@ -233,7 +232,6 @@
             </div>
         </div>
 
-        <!-- ÉCRAN DES GAINS (Gagner) -->
         <div class="page" id="page-gagner">
             <div class="earn-container">
                 <div class="card">
@@ -259,7 +257,6 @@
 
     </div>
 
-    <!-- Barre de navigation bas -->
     <div class="nav-menu">
         <div class="nav-item" id="btn-gagner">
             <div class="icon">💰</div>
@@ -291,14 +288,17 @@
         const pageGagner = document.getElementById('page-gagner');
         const pageMon = document.getElementById('page-mon');
 
-        // Clic sur les onglets
-        btnGagner.onclick = function() {
+        function showGagner() {
             btnGagner.classList.add('active');
             btnMon.classList.remove('active');
             pageGagner.classList.add('active');
             pageMon.classList.remove('active');
-        };
+        }
 
-        btnMon.onclick = function() {
+        function showMon() {
             btnMon.classList.add('active');
             btnGagner.classList.remove('active');
+            pageMon.classList.add('active');
+            pageGagner.classList.remove('active');
+        }
+
