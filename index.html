@@ -42,7 +42,6 @@
             border: 1px solid rgba(241, 196, 15, 0.3);
         }
         
-        /* Conteneur de pages dynamiques */
         .page-content {
             width: 100%;
             flex-grow: 1;
@@ -62,7 +61,7 @@
             display: flex;
         }
 
-        /* Style Onglet Principal (Mon) */
+        /* Onglet principal */
         .coin-box {
             display: flex;
             justify-content: center;
@@ -100,7 +99,6 @@
         .energy-bg { width: 100%; height: 12px; background-color: #2d1f5d; border-radius: 10px; overflow: hidden; }
         .energy-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #f1c40f, #e67e22); border-radius: 10px; }
 
-        /* Cartes de listes (Gains, Tâches, Profil) */
         .card {
             background-color: #251752;
             border: 1px solid rgba(241, 196, 15, 0.15);
@@ -109,7 +107,6 @@
             width: 100%;
             box-sizing: border-box;
             margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .card-title { font-size: 17px; font-weight: bold; color: #f1c40f; margin-bottom: 10px; }
         .item-row {
@@ -138,13 +135,13 @@
             align-items: center; justify-content: center; gap: 8px;
         }
 
-        /* Barre de navigation basse moderne */
+        /* Navigation basse obligatoire */
         .nav-bar {
             width: 100%;
             background-color: #251752;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0 22px 0;
+            padding: 12px 0 24px 0;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
             z-index: 100;
@@ -166,16 +163,13 @@
 </head>
 <body>
 
-    <!-- Entête fixe commune -->
     <div class="header">
         <div class="level-badge" id="levelLabel">Niveau 1 : Débutant 🪙</div>
         <div class="score-container" id="totalScore">0</div>
     </div>
 
-    <!-- Zone d'affichage des écrans -->
     <div class="page-content">
-        
-        <!-- PAGE 1 : MON (ACCUEIL JEU) -->
+        <!-- MON -->
         <div class="page active" id="page-mon">
             <div class="coin-box">
                 <button class="coin-btn" id="clickArea">
@@ -188,11 +182,10 @@
             </div>
         </div>
 
-        <!-- PAGE 2 : GAINS (LOTERIE / TOURNOI) -->
+        <!-- GAINS -->
         <div class="page" id="page-gains">
             <div class="card">
                 <div class="card-title">🥇 Tournoi Quotidien (20$)</div>
-                <div style="font-size: 11px; color:#b2bec3; margin-bottom:8px;">Classement mis à jour toutes les 24h</div>
                 <div class="item-row" style="color:#f1c40f; font-weight:bold;"><span>1. 👑 Joueur_9843</span><span>450k HRC</span></div>
                 <div class="item-row"><span>2. 🥈 CryptoKing</span><span>320k HRC</span></div>
                 <div class="item-row"><span>3. 🥉 Razaf_Tech</span><span>210k HRC</span></div>
@@ -202,38 +195,59 @@
             </div>
             <div class="card">
                 <div class="card-title">🎟️ Loterie Hebdomadaire</div>
-                <div style="font-size: 12px; color:#b2bec3; margin-bottom:10px;">Ticket : 500 HRC. Multipliez vos tickets pour le tirage au sort de 20$.</div>
                 <button class="action-btn" style="width:100%; padding:10px;" id="buyTicketBtn">Acheter 1 Ticket (500 HRC)</button>
-                <div style="font-size:13px; color:#a29bfe; text-align:center; margin-top:8px; font-weight:bold;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
+                <div style="font-size:13px; color:#a29bfe; text-align:center; margin-top:8px;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
             </div>
         </div>
 
-        <!-- PAGE 3 : TASKS (TÂCHES) -->
+        <!-- TASKS -->
         <div class="page" id="page-tasks">
             <div class="card">
                 <div class="card-title">📋 Missions Haroldcoin</div>
-                <div style="font-size: 12px; color:#b2bec3; margin-bottom:12px;">Complétez les tâches pour débloquer de grosses primes instantanées !</div>
-                
                 <div class="item-row">
                     <div><b>📢 Rejoindre le Canal Telegram</b><br><span style="color:#2ecc71;">+10 000 HRC</span></div>
-                    <button class="action-btn" id="task1Btn" onclick="claimTask(1, 10000, this)">Faire</button>
+                    <button class="action-btn" onclick="claimTask(1, 10000, this)">Faire</button>
                 </div>
                 <div class="item-row">
-                    <div><b>🐦 Suivre notre compte X (Twitter)</b><br><span style="color:#2ecc71;">+5 000 HRC</span></div>
-                    <button class="action-btn" id="task2Btn" onclick="claimTask(2, 5000, this)">Faire</button>
-                </div>
-                <div class="item-row">
-                    <div><b>📺 Regarder la vidéo de lancement</b><br><span style="color:#2ecc71;">+8 000 HRC</span></div>
-                    <button class="action-btn" id="task3Btn" onclick="claimTask(3, 8000, this)">Faire</button>
+                    <div><b>🐦 Suivre notre compte X</b><br><span style="color:#2ecc71;">+5 000 HRC</span></div>
+                    <button class="action-btn" onclick="claimTask(2, 5000, this)">Faire</button>
                 </div>
             </div>
         </div>
 
-        <!-- PAGE 4 : AMIS (PARRAINAGE) -->
+        <!-- AMIS -->
         <div class="page" id="page-amis">
             <div class="card">
                 <div class="card-title">👥 Programme d'Invitation</div>
-                <div style="font-size: 13px; color: #b2bec3; margin-bottom: 12px;">Partagez votre lien. Pour chaque ami invité, gagnez immédiatement <b style="color:#2ecc71;">+5 000 HRC</b> bonus !</div>
-                <div class="card-title" style="font-size: 14px;">Votre lien exclusif :</div>
                 <div class="share-box" id="refLinkBox">https://t.me</div>
+                <button class="action-btn" style="width:100%; padding:10px;" id="copyLinkBtn">Copier le lien</button>
+            </div>
+        </div>
+
+        <!-- WALLET / PROFIL -->
+        <div class="page" id="page-profil">
+            <div class="card">
+                <div class="card-title">👤 Tableau de bord</div>
+                <div class="item-row"><span>Solde :</span><span class="user-score-view" style="color:#f1c40f;">0 HRC</span></div>
+            </div>
+            <div class="card">
+                <div class="card-title">💎 Intégration Web3 Wallet</div>
+                <button class="wallet-btn" id="connectWalletBtn">
+                    <span id="walletBtnText">Connecter Tonkeeper</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre basse d'onglets -->
+    <div class="nav-bar">
+        <div class="nav-tab active" data-page="page-mon"><div class="icon">🏠</div><div>Mon</div></div>
+        <div class="nav-tab" data-page="page-gains"><div class="icon">💰</div><div>Gains</div></div>
+        <div class="nav-tab" data-page="page-tasks"><div class="icon">📋</div><div>Tasks</div></div>
+        <div class="nav-tab" data-page="page-amis"><div class="icon">👥</div><div>Amis</div></div>
+        <div class="nav-tab" data-page="page-profil"><div class="icon">👛</div><div>Wallet</div></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://gstatic.com";
     
