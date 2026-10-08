@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Secours Local</title>
+    <title>Haroldcoin - Version Officielle Stable</title>
     <style>
         body {
             margin: 0;
@@ -23,17 +23,44 @@
             margin-top: 30px;
             text-align: center;
             width: 100%;
+            position: relative;
         }
         .username {
-            font-size: 18px;
+            font-size: 16px;
             color: #a29bfe;
             font-weight: bold;
         }
         .score-container {
-            font-size: 54px;
+            font-size: 48px;
             font-weight: 900;
             color: #f1c40f;
             margin-top: 5px;
+        }
+        .event-btn {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            background-color: #251752;
+            border: 2px solid #f1c40f;
+            color: #f1c40f;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .ref-btn {
+            position: absolute;
+            top: 0;
+            left: 20px;
+            background-color: #251752;
+            border: 2px solid #a29bfe;
+            color: #a29bfe;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
         }
         .coin-container {
             display: flex;
@@ -42,12 +69,11 @@
             flex-grow: 1;
             width: 100%;
         }
-        /* Bouton ultra-robuste sans fioritures */
-        .gros-bouton-piece {
-            width: 260px;
-            height: 260px;
+        .coin-clickable-area {
+            width: 270px;
+            height: 270px;
             border-radius: 50%;
-            border: 6px solid #f1c40f;
+            border: 5px solid #f1c40f;
             overflow: hidden;
             background-color: #0b061d;
             cursor: pointer;
@@ -56,30 +82,30 @@
             align-items: center;
             justify-content: center;
             padding: 0;
-            outline: none;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
-        .gros-bouton-piece img {
+        .coin-clickable-area img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             pointer-events: none;
         }
-        .gros-bouton-piece:active {
+        .coin-clickable-area:active {
             transform: scale(0.92);
         }
         .game-status {
             width: 85%;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
         .energy-text {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 8px;
         }
         .energy-bar-bg {
             width: 100%;
-            height: 16px;
+            height: 14px;
             background-color: #2d1f5d;
             border-radius: 10px;
             overflow: hidden;
@@ -89,83 +115,170 @@
             height: 100%;
             background: linear-gradient(90deg, #f1c40f, #e67e22);
             border-radius: 10px;
-            transition: width 0.1s linear;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(11, 6, 29, 0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background-color: #251752;
+            border: 2px solid #f1c40f;
+            width: 85%;
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: white;
+        }
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f1c40f;
+        }
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #b2bec3;
+            padding: 5px 10px;
+        }
+        .card {
+            background-color: #1a103c;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-weight: bold;
+            color: #f1c40f;
+            margin-bottom: 8px;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 4px 0;
+        }
+        .lottery-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .share-box {
+            background-color: #1a103c;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            word-break: break-all;
+            color: #a29bfe;
+            margin-bottom: 10px;
+            border: 1px dashed #a29bfe;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="username">⭐ Harold Trader (Mode Local)</div>
-        <div class="score-container" id="affichageScore">0</div>
+        <button class="ref-btn" id="openFriendsBtn">👥 Amis</button>
+        <div class="username">⭐ Harold Trader</div>
+        <div class="score-container" id="totalScore">0</div>
+        <button class="event-btn" id="openGainsBtn">🎁 Gains</button>
     </div>
 
     <div class="coin-container">
-        <!-- Utilisation d'un bouton HTML standard, le plus robuste pour mobile -->
-        <button class="gros-bouton-piece" id="zoneClic">
+        <div class="coin-clickable-area" id="clickArea">
             <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Logo">
-        </button>
-    </div>
-
-    <div class="game-status">
-        <div class="energy-text">🟡 <span id="texteEnergie">1000/1000</span></div>
-        <div class="energy-bar-bg">
-            <div class="energy-bar-fill" id="barreEnergie"></div>
         </div>
     </div>
 
-    <script>
-        // Logique 100% autonome et immédiate sans aucun script externe
-        let scoreActuel = parseInt(localStorage.getItem('harold_score_local')) || 0;
-        let energieActuelle = 1000;
-        const energieMax = 1000;
+    <div class="game-status">
+        <div class="energy-text">🟡 <span id="energyText">1000/1000</span></div>
+        <div class="energy-bar-bg">
+            <div class="energy-bar-fill" id="energyFill"></div>
+        </div>
+    </div>
 
-        const affichageScore = document.getElementById('affichageScore');
-        const texteEnergie = document.getElementById('texteEnergie');
-        const barreEnergie = document.getElementById('barreEnergie');
-        const zoneClic = document.getElementById('zoneClic');
+    <!-- MENU CONCOURS -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏆 Zone de Cashprize</div>
+                <div class="close-btn" id="closeGainsBtn">✕</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🥇 Tournoi Hebdo (20$)</div>
+                <div class="leaderboard-item" style="color:#f1c40f;"><span>1. 👑 Joueur_9843</span><span>450k HRC</span></div>
+                <div class="leaderboard-item"><span>2. 🥈 CryptoKing</span><span>320k HRC</span></div>
+                <div class="leaderboard-item"><span>3. 🥉 Razaf_Tech</span><span>210k HRC</span></div>
+                <div class="leaderboard-item" style="color:#a29bfe; font-weight:bold; margin-top:4px;">
+                    <span>Vous :</span><span id="yourRankScore">0 HRC</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎟️ Grand Tirage (20$)</div>
+                <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (500 HRC)</button>
+                <div style="font-size: 12px; color: #a29bfe; text-align: center; margin-top: 6px;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
+            </div>
+        </div>
+    </div>
 
-        // Affichage de départ instantané
-        affichageScore.innerText = scoreActuel.toLocaleString();
-        texteEnergie.innerText = energieActuelle + "/1000";
-        barreEnergie.style.width = "100%";
+    <!-- MENU INVITATION -->
+    <div class="modal" id="friendsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">👥 Inviter des Amis</div>
+                <div class="close-btn" id="closeFriendsBtn">✕</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎁 Bonus de parrainage</div>
+                <div style="font-size: 13px; color: #b2bec3; margin-bottom: 12px;">Partagez votre lien exclusif. Pour chaque ami qui commence à jouer grâce à vous, vous recevez immédiatement <b style="color:#2ecc71;">+5 000 HRC</b> bonus !</div>
+                <div class="card-title" style="font-size: 14px;">Votre lien de parrainage :</div>
+                <div class="share-box" id="refLinkBox">https://t.me</div>
+                <button class="lottery-btn" style="background:linear-gradient(90deg, #a29bfe, #6c5ce7);" id="copyLinkBtn">Copier le lien</button>
+            </div>
+        </div>
+    </div>
 
-        // Fonction d'action de clic pure
-        function executerClic() {
-            if (energieActuelle > 0) {
-                scoreActuel = scoreActuel + 14;
-                energieActuelle = energieActuelle - 1;
+    <script type="module">
+        import { initializeApp } from "https://gstatic.com";
+        import { getDatabase, ref, set, get, update } from "https://gstatic.com";
 
-                // Mise à jour visuelle instantanée de l'écran
-                affichageScore.innerText = scoreActuel.toLocaleString();
-                texteEnergie.innerText = energieActuelle + "/1000";
-                barreEnergie.style.width = (energieActuelle / energieMax * 100) + "%";
-
-                // Sauvegarde immédiate dans la mémoire du téléphone
-                localStorage.setItem('harold_score_local', scoreActuel);
-            }
-        }
-
-        // Branchement des écouteurs tactiles universels de force brute
-        zoneClic.onclick = function(e) {
-            e.preventDefault();
-            executerClic();
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9Bo1B8Pxvc_szGMf_3TOxgOoMne0yV8w",
+            authDomain: "://firebaseapp.com",
+            databaseURL: "https://firebaseio.com",
+            projectId: "haroldcoin-game",
+            storageBucket: "haroldcoin-game.firebasestorage.app",
+            messagingSenderId: "508155963084",
+            appId: "1:508155963084:web:26971d48cba0165e100469",
+            measurementId: "G-9PKB9QLKWM"
         };
-        
-        zoneClic.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            executerClic();
-        }, { passive: false });
 
-        // Recharge automatique de l'énergie (+1 par seconde)
-        setInterval(function() {
-            if (energieActuelle < energieMax) {
-                energieActuelle = energieActuelle + 1;
-                texteEnergie.innerText = energieActuelle + "/1000";
-                barreEnergie.style.width = (energieActuelle / energieMax * 100) + "%";
-            }
-        }, 1000);
-    </script>
+        let score = parseInt(localStorage.getItem('hrc_score')) || 0;
+        let myTickets = parseInt(localStorage.getItem('hrc_tickets')) || 0;
+        let energy = 1000;
+        const maxEnergy = 1000;
+        let userId = "local_player";
 
-</body>
-</html>
+        const scoreDisplay = document.getElementById('totalScore');
+        const yourRankScore = document.getElementById('yourRankScore');
+        const energyText = document.getElementById('energyText');
+        const energyFill = document.getElementById('energyFill');
+        const clickArea = document.getElementById('clickArea');
+        const ticketDisplay = document.getElementById('ticketDisplay');
+
+        scoreDisplay.innerText = score.toLocaleString();
