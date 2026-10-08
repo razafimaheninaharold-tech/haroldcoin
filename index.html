@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Étape Finale</title>
+    <title>Haroldcoin - Base de données & Parrainage</title>
     <style>
         body {
             margin: 0;
@@ -43,6 +43,19 @@
             background-color: #251752;
             border: 2px solid #f1c40f;
             color: #f1c40f;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .ref-btn {
+            position: absolute;
+            top: 0;
+            left: 20px;
+            background-color: #251752;
+            border: 2px solid #a29bfe;
+            color: #a29bfe;
             padding: 8px 14px;
             border-radius: 12px;
             font-size: 14px;
@@ -103,7 +116,6 @@
             border-radius: 10px;
         }
         
-        /* Fenêtre Pop-up renforcée */
         .modal {
             display: none;
             position: fixed;
@@ -165,116 +177,114 @@
             font-weight: bold;
             cursor: pointer;
         }
+        .share-box {
+            background-color: #1a103c;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            word-break: break-all;
+            color: #a29bfe;
+            margin-bottom: 10px;
+            border: 1px dashed #a29bfe;
+        }
     </style>
-</head>
-<body>
+    
+    <!-- Scripts officiels Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://gstatic.com";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://gstatic.com";
 
-    <div class="header">
-        <div class="username">⭐ Harold Trader</div>
-        <div class="score-container" id="totalScore">0</div>
-        <button class="event-btn" id="openMenuBtn">🎁 Gains</button>
-    </div>
+        // Votre configuration injectée au cœur du moteur du jeu
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9Bo1B8Pxvc_szGMf_3TOxgOoMne0yV8w",
+            authDomain: "haroldcoin-game.firebaseapp.com",
+            projectId: "haroldcoin-game",
+            storageBucket: "haroldcoin-game.firebasestorage.app",
+            messagingSenderId: "508155963084",
+            appId: "1:508155963084:web:26971d48cba0165e100469",
+            measurementId: "G-9PKB9QLKWM"
+        };
 
-    <div class="coin-container">
-        <button class="coin-btn" id="clickArea">
-            <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Logo">
-        </button>
-    </div>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    <div class="game-status">
-        <div class="energy-text">🟡 <span id="energyText">1000/1000</span></div>
-        <div class="energy-bar-bg">
-            <div class="energy-bar-fill" id="energyFill"></div>
-        </div>
-    </div>
+        // Récupération automatique de l'identifiant Telegram du joueur
+        let userId = "joueur_local";
+        let userName = "⭐ Harold Trader";
 
-    <!-- LA BOÎTE POP-UP -->
-    <div class="modal" id="eventModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">🏆 Zone de Cashprize</div>
-                <div class="close-btn" id="closeMenuBtn">✕</div>
-            </div>
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                userId = "tg_" + tg.initDataUnsafe.user.id;
+                userName = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Harold Trader";
+            }
+        }
 
-            <div class="card">
-                <div class="card-title">🥇 Tournoi Hebdo (20$)</div>
-                <div class="leaderboard-item" style="color:#f1c40f;"><span>1. 👑 Joueur_9843</span><span>450k HRC</span></div>
-                <div class="leaderboard-item"><span>2. 🥈 CryptoKing</span><span>320k HRC</span></div>
-                <div class="leaderboard-item"><span>3. 🥉 Razaf_Tech</span><span>210k HRC</span></div>
-                <div class="leaderboard-item" style="color:#a29bfe; font-weight:bold; margin-top:4px;">
-                    <span>Vous :</span><span id="yourRankScore">0 HRC</span>
-                </div>
-            </div>
+        // Système de gestion d'URL pour le parrainage
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrerId = urlParams.get('ref');
 
-            <div class="card">
-                <div class="card-title">🎟️ Grand Tirage (20$)</div>
-                <button class="lottery-btn" id="buyTicketBtn">Acheter 1 Ticket (500 HRC)</button>
-                <div style="font-size: 12px; color: #a29bfe; text-align: center; margin-top: 6px;" id="ticketDisplay">Vos tickets : 0 🎟️</div>
-            </div>
-        </div>
-    </div>
-
-    <script>
         let score = 0;
         let energy = 1000;
         const maxEnergy = 1000;
         let myTickets = 0;
 
-        const scoreDisplay = document.getElementById('totalScore');
-        const yourRankScore = document.getElementById('yourRankScore');
-        const energyText = document.getElementById('energyText');
-        const energyFill = document.getElementById('energyFill');
-        const clickArea = document.getElementById('clickArea');
+        window.addEventListener('DOMContentLoaded', async () => {
+            const scoreDisplay = document.getElementById('totalScore');
+            const yourRankScore = document.getElementById('yourRankScore');
+            const energyText = document.getElementById('energyText');
+            const energyFill = document.getElementById('energyFill');
+            const clickArea = document.getElementById('clickArea');
+            const refLinkBox = document.getElementById('refLinkBox');
 
-        const modal = document.getElementById('eventModal');
-        const openMenuBtn = document.getElementById('openMenuBtn');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-        const buyTicketBtn = document.getElementById('buyTicketBtn');
-        const ticketDisplay = document.getElementById('ticketDisplay');
+            // Génération du lien de parrainage unique pour le joueur
+            const myRefLink = "https://t.me" + userId;
+            if(refLinkBox) refLinkBox.innerText = myRefLink;
 
-        // CLIC PIÈCE
-        clickArea.onclick = function() {
-            if (energy > 0) {
-                score = score + 14;
-                energy = energy - 1;
-                scoreDisplay.innerText = score.toLocaleString();
-                yourRankScore.innerText = score.toLocaleString() + " HRC";
-                energyText.innerText = energy + "/1000";
-                energyFill.style.width = (energy / maxEnergy * 100) + "%";
-            }
-        };
+            // Connexion et récupération des données du joueur dans Firebase
+            const userDocRef = doc(db, "players", userId);
+            const userDoc = await getDoc(userDocRef);
 
-        // COMMANDES DIRECTES POUR LA BOÎTE POP-UP
-        openMenuBtn.onclick = function() {
-            modal.style.display = 'flex';
-        };
-
-        closeMenuBtn.onclick = function() {
-            modal.style.display = 'none';
-        };
-
-        // ACHAT TICKET
-        buyTicketBtn.onclick = function() {
-            if (score >= 500) {
-                score = score - 500;
-                myTickets = myTickets + 1;
-                scoreDisplay.innerText = score.toLocaleString();
-                yourRankScore.innerText = score.toLocaleString() + " HRC";
-                ticketDisplay.innerText = "Vos tickets : " + myTickets + " 🎟️";
-                alert("🎟️ Ticket acheté ! Bonne chance.");
+            if (!userDoc.exists()) {
+                score = 0;
+                await setDoc(userDocRef, { name: userName, score: 0, tickets: 0 });
+                
+                // Si l'utilisateur a été parrainé par un ami, on offre +5000 points au parrain
+                if (referrerId && referrerId !== userId) {
+                    const refDocRef = doc(db, "players", referrerId);
+                    const refDoc = await getDoc(refDocRef);
+                    if (refDoc.exists()) {
+                        await updateDoc(refDocRef, { score: increment(5000) });
+                    }
+                }
             } else {
-                alert("❌ Solde insuffisant ! (Il faut 500 HRC)");
+                const data = userDoc.data();
+                score = data.score || 0;
+                myTickets = data.tickets || 0;
             }
-        };
 
-        // ENERGIE
-        setInterval(function() {
-            if (energy < maxEnergy) {
-                energy = energy + 1;
-                energyText.innerText = energy + "/1000";
-                energyFill.style.width = (energy / maxEnergy * 100) + "%";
-            }
-        }, 1000);
-    </script>
-</body>
-</html>
+            scoreDisplay.innerText = score.toLocaleString();
+            yourRankScore.innerText = score.toLocaleString() + " HRC";
+            document.getElementById('ticketDisplay').innerText = "Vos tickets : " + myTickets + " 🎟️";
+
+            // Clic sur la pièce synchrone avec Firebase
+            clickArea.onclick = async function() {
+                if (energy > 0) {
+                    score = score + 14;
+                    energy = energy - 1;
+                    scoreDisplay.innerText = score.toLocaleString();
+                    yourRankScore.innerText = score.toLocaleString() + " HRC";
+                    energyText.innerText = energy + "/1000";
+                    energyFill.style.width = (energy / maxEnergy * 100) + "%";
+
+                    // Sauvegarde directe asynchrone pour éviter tout ralentissement tactile
+                    updateDoc(userDocRef, { score: score });
+                }
+            };
+
+            // Achat ticket lié à la base de données
+            document.getElementById('buyTicketBtn').onclick = async function() {
+                if (score >= 500) {
+                    score = score - 500;
+                    myTickets = myTickets + 1;
