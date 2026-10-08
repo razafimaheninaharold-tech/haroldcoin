@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Écosystème Global</title>
+    <title>Haroldcoin - Fix Tactile Absolu</title>
     <style>
         body {
             margin: 0;
@@ -61,7 +61,7 @@
             display: flex;
         }
 
-        /* Onglet principal */
+        /* Zone de la pièce - Modifiée en élément simple tactile */
         .coin-box {
             display: flex;
             justify-content: center;
@@ -69,31 +69,17 @@
             flex-grow: 1;
             min-height: 280px;
         }
-        .coin-btn {
+        .coin-touch-zone {
             width: 260px;
             height: 260px;
             border-radius: 50%;
             border: 5px solid #f1c40f;
-            overflow: hidden;
-            background-color: #0b061d;
-            cursor: pointer;
             box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
+            cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            transition: transform 0.05s ease;
         }
-        .coin-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-        }
-        .coin-btn:active { transform: scale(0.93); }
-        
+
         .status-box { width: 100%; margin-bottom: 20px; }
         .energy-text { font-size: 15px; font-weight: bold; margin-bottom: 6px; }
         .energy-bg { width: 100%; height: 12px; background-color: #2d1f5d; border-radius: 10px; overflow: hidden; }
@@ -135,7 +121,7 @@
             align-items: center; justify-content: center; gap: 8px;
         }
 
-        /* Navigation basse obligatoire */
+        /* Navigation basse */
         .nav-bar {
             width: 100%;
             background-color: #251752;
@@ -172,9 +158,8 @@
         <!-- MON -->
         <div class="page active" id="page-mon">
             <div class="coin-box">
-                <button class="coin-btn" id="clickArea">
-                    <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" alt="Logo">
-                </button>
+                <!-- Remplacement du bouton par une image tactile brute directe -->
+                <img src="téléchargement (63) (1) (2) (1) (2) (1).jpeg" class="coin-touch-zone" id="clickArea" alt="Logo" draggable="false">
             </div>
             <div class="status-box">
                 <div class="energy-text">🟡 <span id="energyText">1000/1000</span></div>
@@ -224,7 +209,7 @@
             </div>
         </div>
 
-        <!-- WALLET / PROFIL -->
+        <!-- WALLET -->
         <div class="page" id="page-profil">
             <div class="card">
                 <div class="card-title">👤 Tableau de bord</div>
@@ -239,7 +224,6 @@
         </div>
     </div>
 
-    <!-- Barre basse d'onglets -->
     <div class="nav-bar">
         <div class="nav-tab active" data-page="page-mon"><div class="icon">🏠</div><div>Mon</div></div>
         <div class="nav-tab" data-page="page-gains"><div class="icon">💰</div><div>Gains</div></div>
@@ -248,6 +232,14 @@
         <div class="nav-tab" data-page="page-profil"><div class="icon">👛</div><div>Wallet</div></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://gstatic.com";
-    
+    <script>
+        let score = parseInt(localStorage.getItem('hrc_total_score')) || 0;
+        let myTickets = parseInt(localStorage.getItem('hrc_total_tickets')) || 0;
+        let walletAddress = localStorage.getItem('hrc_wallet') || "";
+        let energy = 1000;
+        const maxEnergy = 1000;
+
+        const scoreDisplay = document.getElementById('totalScore');
+        const viewsScore = document.querySelectorAll('.user-score-view');
+        const energyText = document.getElementById('energyText');
+        const energyFill = document.getElementById('energyFill');
