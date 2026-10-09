@@ -1,5 +1,145 @@
-        <div id="leaderboardLoading" style="text-align:center; color:var(--text-muted);">Chargement du Top 5...</div>
-        <ul class="leaderboard-list" id="leaderboardList"></ul>
+    <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Haroldcoin Premium</title>
+    <!-- SDK Officiels légers -->
+    <script src="https://telegram.org"></script>
+    <script src="https://unpkg.com"></script>
+    <style>
+        :root {
+            --bg-color: #050312;
+            --surface-blur: rgba(255, 255, 255, 0.05);
+            --accent-gold: #ffd700;
+            --text-main: #ffffff;
+            --text-muted: #8a91a5;
+        }
+        body {
+            background-color: var(--bg-color); margin: 0; padding: 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            height: 100vh; box-sizing: border-box; overflow: hidden;
+            user-select: none; -webkit-user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .top-status-bar {
+            width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; box-sizing: border-box;
+        }
+        .league-badge {
+            background: rgba(255, 215, 0, 0.1); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .score-container { text-align: center; margin-top: 5px; }
+        .score-value {
+            font-size: 46px; font-weight: 800; color: #ffffff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.3); letter-spacing: 1px;
+        }
+        .status-sync { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .game-zone {
+            position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center;
+        }
+        .coin-glow {
+            position: absolute; width: 270px; height: 270px; background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%); border-radius: 50%; pointer-events: none; z-index: 1;
+        }
+        .main-coin-btn {
+            position: relative; z-index: 2; width: 210px; height: 210px; border-radius: 50%; cursor: pointer; border: none; outline: none; touch-action: manipulation; transition: transform 0.05s ease; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7); background: url('coin.png') center/cover no-repeat; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent;
+        }
+        .main-coin-btn:active { transform: scale(0.94) translateY(2px); }
+        .floating-click {
+            position: absolute; color: #ffffff; font-size: 32px; font-weight: 800; pointer-events: none; z-index: 10; text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8); animation: moveUpFade 0.5s ease-out forwards;
+        }
+        @keyframes moveUpFade {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(0.85); opacity: 0; }
+        }
+        .energy-container { width: 100%; max-width: 380px; display: flex; align-items: center; gap: 12px; padding: 0 8px; box-sizing: border-box; }
+        .energy-text { font-size: 14px; font-weight: 700; color: #ffffff; white-space: nowrap; }
+        .energy-bar-bg { flex-grow: 1; height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
+        .energy-bar-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #ff9900, #ffd700); border-radius: 10px; transition: width 0.1s ease; }
+        .bottom-nav {
+            width: 100%; max-width: 380px; background: var(--surface-blur); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 16px; display: flex; justify-content: space-around; padding: 12px 4px; box-sizing: border-box; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 5px;
+        }
+        .nav-item {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: none; border: none; color: var(--text-main); font-size: 11px; font-weight: 600; cursor: pointer; opacity: 0.8; -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item:active { transform: scale(0.92); }
+        .nav-icon { font-size: 18px; margin-bottom: 2px; }
+        .game-modal {
+            display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #110d29; border-top: 2px solid var(--accent-gold); border-radius: 24px 24px 0 0; padding: 24px; z-index: 100; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); animation: slideUp 0.25s ease-out; max-height: 75vh; overflow-y: auto;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-title { font-size: 20px; font-weight: 700; color: #ffffff; }
+        .close-btn { background: none; border: none; color: #ff4a4a; font-size: 26px; font-weight: bold; cursor: pointer; }
+        .item-card {
+            background: rgba(255,255,255,0.04); border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px;
+        }
+        .card-info-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #ffffff; }
+        .card-info-desc { font-size: 12px; color: var(--text-muted); }
+        .action-card-btn { background: var(--accent-gold); color: #000000; border: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; }
+        .action-card-btn:disabled { background: #2b254a; color: var(--text-muted); cursor: not-allowed; }
+        .leaderboard-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255, 255, 255, 0.03); margin-bottom: 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05); color: white; font-size: 14px; }
+        .rank-badge { font-weight: bold; margin-right: 10px; color: var(--accent-gold); }
+    </style>
+</head>
+<body>
+
+    <div class="top-status-bar">
+        <div class="status-sync" id="syncStatus">Synchro...</div>
+        <div class="league-badge" id="leagueDisplay">🥉 Bronze</div>
+    </div>
+
+    <div class="score-container">
+        <div class="score-value" id="scoreDisplay">0</div>
+    </div>
+
+    <div class="game-zone">
+        <div class="coin-glow"></div>
+        <button class="main-coin-btn" id="coinBtn"></button>
+    </div>
+
+    <div class="energy-container">
+        <div class="energy-text">⚡ <span id="energyText">1000</span>/<span id="maxEnergyDisplay">1000</span></div>
+        <div class="energy-bar-bg"><div class="energy-bar-fill" id="energyBarFill"></div></div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="openModal('modalFrens')"><span class="nav-icon">🎁</span><span>Frens</span></button>
+        <button class="nav-item" onclick="openModal('modalEarn')"><span class="nav-icon">🪙</span><span>Earn</span></button>
+        <button class="nav-item" onclick="openModal('modalBoosts')"><span class="nav-icon">🚀</span><span>Boosts</span></button>
+        <button class="nav-item" onclick="openLeaderboard()"><span class="nav-icon">🏆</span><span>Tops</span></button>
+    </div>
+
+    <div class="game-modal" id="modalFrens">
+        <div class="modal-header"><div class="modal-title">🎁 Inviter des Amis</div><button class="close-btn" onclick="closeModal('modalFrens')">×</button></div>
+        <div class="item-card">
+            <div><div class="card-info-title">Inviter un contact</div><div class="card-info-desc">Gagnez +1,000 pièces par invité</div></div>
+            <button class="action-card-btn" onclick="inviteFriend()">Inviter</button>
+        </div>
+    </div>
+
+    <div class="game-modal" id="modalEarn">
+        <div class="modal-header"><div class="modal-title">🪙 Tâches & Communauté</div><button class="close-btn" onclick="closeModal('modalEarn')">×</button></div>
+        <div class="item-card">
+            <div><div class="card-info-title">Rejoindre notre Canal</div><div class="card-info-desc">Récompense : +5,000 🪙</div></div>
+            <button class="action-card-btn" id="btnTaskChannel" onclick="joinChannelTask()">Rejoindre</button>
+        </div>
+    </div>
+
+    <div class="game-modal" id="modalBoosts">
+        <div class="modal-header"><div class="modal-title">🚀 Boutique</div><button class="close-btn" onclick="closeModal('modalBoosts')">×</button></div>
+        <div class="item-card">
+            <div><div class="card-info-title">Multitap</div><div class="card-info-desc">Donne (<span id="clickValueTxt">+1</span>) par tap</div></div>
+            <button class="action-card-btn" id="buyBoostBtn" onclick="buyMultitap()">Acheter (100 🪙)</button>
+        </div>
+        <div class="item-card">
+            <div><div class="card-info-title">Énergie Maximum</div><div class="card-info-desc">Augmente la jauge max de +500</div></div>
+            <button class="action-card-btn" id="buyEnergyBtn" onclick="buyEnergyLimit()">Acheter (500 🪙)</button>
+        </div>
+    </div>
+
+    <div class="game-modal" id="modalLeaderboard">
+        <div class="modal-header"><div class="modal-title">🏆 Classement Mondial</div><button class="close-btn" onclick="closeModal('modalLeaderboard')">×</button></div>
+        <div id="leaderboardLoading" style="color: white; text-align: center;">Chargement du Top 5...</div>
+        <div id="leaderboardList"></div>
     </div>
 
     <script>
@@ -8,172 +148,3 @@
 
         const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        const BOT_USERNAME = "HaroldcoinBot";
-        const TELEGRAM_CHANNEL_URL = "https://t.me"; // Mettez votre canal ici
-
-        let score = parseInt(localStorage.getItem('h_cloud_score')) || 0;
-        let maxEnergy = parseInt(localStorage.getItem('h_max_energy')) || 1000;
-        let energy = parseInt(localStorage.getItem('h_game_energy')) || maxEnergy;
-        let clickValue = parseInt(localStorage.getItem('h_click_value')) || 1;
-        let boostPrice = parseInt(localStorage.getItem('h_boost_price')) || 100;
-        let energyPrice = parseInt(localStorage.getItem('h_energy_price')) || 500;
-
-        let userId = "joueur_local"; let userName = "Utilisateur"; let hasChanges = false;
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playCoinSound() {
-            try {
-                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-                osc.type = "sine"; osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-            } catch(e) {}
-        }
-
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const syncStatus = document.getElementById('syncStatus');
-        const leagueDisplay = document.getElementById('leagueDisplay');
-        const energyText = document.getElementById('energyText');
-        const maxEnergyDisplay = document.getElementById('maxEnergyDisplay');
-        const energyBarFill = document.getElementById('energyBarFill');
-        const coinBtn = document.getElementById('coinBtn');
-        const clickValueTxt = document.getElementById('clickValueTxt');
-        const buyBoostBtn = document.getElementById('buyBoostBtn');
-        const buyEnergyBtn = document.getElementById('buyEnergyBtn');
-        const btnTaskChannel = document.getElementById('btnTaskChannel');
-
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            userId = tg.initDataUnsafe.user.id.toString();
-            userName = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
-        }
-
-        if(localStorage.getItem('h_task_channel_done') === 'true') {
-            btnTaskChannel.innerText = "Récupéré ✓"; btnTaskChannel.disabled = true;
-        }
-
-        function updateLeagueAndCoin(userScore) {
-            let leagueName = "🥉 Bronze"; let coinImg = "coin_bronze.png";
-            if (userScore >= 100000) { leagueName = "💎 Diamond"; coinImg = "coin_diamond.png"; }
-            else if (userScore >= 50000) { leagueName = "🥇 Platinum"; coinImg = "coin_platinum.png"; }
-            else if (userScore >= 10000) { leagueName = "🔱 Gold"; coinImg = "coin_gold.png"; }
-            else if (userScore >= 1000) { leagueName = "🥈 Silver"; coinImg = "coin_silver.png"; }
-            leagueDisplay.innerText = leagueName;
-            coinBtn.style.backgroundImage = "url('" + coinImg + "')";
-        }
-
-        function updateUI() {
-            scoreDisplay.innerText = score.toLocaleString('en-US');
-            energyText.innerText = energy; maxEnergyDisplay.innerText = maxEnergy;
-            energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
-            clickValueTxt.innerText = "+" + clickValue;
-            buyBoostBtn.innerText = "Acheter (" + boostPrice + " 🪙)";
-            buyEnergyBtn.innerText = "Acheter (" + energyPrice + " 🪙)";
-            updateLeagueAndCoin(score);
-        }
-        updateUI();
-
-        async function loadPlayerData() {
-            try {
-                let { data, error } = await supabase.from('users').select('score').eq('telegram_id', userId).single();
-                if (!error && data) {
-                    if(data.score > score) { score = data.score; localStorage.setItem('h_cloud_score', score); }
-                } else if (error && error.code === 'PGRST116') {
-                    await supabase.from('users').insert([{ telegram_id: userId, username: userName, score: score }]);
-                }
-                syncStatus.innerText = "Synchronisé ☁️"; updateUI();
-            } catch (err) { syncStatus.innerText = "Local 🔒"; }
-        }
-        loadPlayerData();
-
-        coinBtn.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            if (energy >= clickValue) {
-                score += clickValue; energy -= clickValue; hasChanges = true;
-                localStorage.setItem('h_cloud_score', score); localStorage.setItem('h_game_energy', energy);
-                updateUI(); playCoinSound();
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-                generateClickEffect(e.clientX, e.clientY);
-            } else {
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-            }
-        });
-
-        function generateClickEffect(clientX, clientY) {
-            const boundary = coinBtn.getBoundingClientRect();
-            const posX = clientX - boundary.left; const posY = clientY - boundary.top;
-            const element = document.createElement('div');
-            element.className = 'floating-click'; element.innerText = "+" + clickValue;
-            element.style.left = posX + "px"; element.style.top = posY + "px";
-            coinBtn.appendChild(element); setTimeout(() => element.remove(), 500);
-        }
-
-        window.openModal = function(modalId) {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            document.getElementById(modalId).style.display = 'block';
-        }
-        window.closeModal = function(modalId) { document.getElementById(modalId).style.display = 'none'; }
-
-        window.buyMultitap = function() {
-            if (score >= boostPrice) {
-                score -= boostPrice; clickValue += 1; boostPrice = Math.round(boostPrice * 2.5);
-                localStorage.setItem('h_cloud_score', score); localStorage.setItem('h_click_value', clickValue); localStorage.setItem('h_boost_price', boostPrice);
-                hasChanges = true; updateUI();
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            }
-        }
-
-        window.buyEnergyLimit = function() {
-            if (score >= energyPrice) {
-                score -= energyPrice; maxEnergy += 500; energy = maxEnergy; energyPrice = Math.round(energyPrice * 2.2);
-                localStorage.setItem('h_cloud_score', score); localStorage.setItem('h_max_energy', maxEnergy); localStorage.setItem('h_game_energy', energy); localStorage.setItem('h_energy_price', energyPrice);
-                hasChanges = true; updateUI();
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert("Jauge max augmentée ! ⚡");
-            } else { alert("Pas assez de pièces ! 🪙"); }
-        }
-
-        window.openLeaderboard = function() {
-            openModal('modalLeaderboard');
-            const listContainer = document.getElementById('leaderboardList');
-            const loadingText = document.getElementById('leaderboardLoading');
-            listContainer.innerHTML = ""; loadingText.style.display = "block";
-            supabase.from('users').select('username, score').order('score', { ascending: false }).limit(5)
-                .then(({ data: topUsers, error }) => {
-                    loadingText.style.display = "none";
-                    if (!error && topUsers) {
-                        topUsers.forEach((user, index) => {
-                            const li = document.createElement('li'); li.className = 'leaderboard-item';
-                            li.innerHTML = "<span class='rank-badge'>#" + (index + 1) + "</span> @" + user.username + " <span>" + user.score.toLocaleString() + " 🪙</span>";
-                            listContainer.appendChild(li);
-                        });
-                    }
-                }).catch(() => { loadingText.innerText = "Erreur de chargement."; });
-        }
-
-        window.inviteFriend = function() {
-            const textUrl = "Rejoins Haroldcoin ! 🚀";
-            const inviteUrl = "https://t.me" + BOT_USERNAME + "?start=" + userId;
-            tg.openTelegramLink("https://t.meshare/url?url=" + encodeURIComponent(inviteUrl) + "&text=" + encodeURIComponent(textUrl));
-        }
-
-        window.joinChannelTask = function() {
-            tg.openLink(TELEGRAM_CHANNEL_URL);
-            setTimeout(() => {
-                score += 5000; localStorage.setItem('h_cloud_score', score); localStorage.setItem('h_task_channel_done', 'true');
-                hasChanges = true; btnTaskChannel.innerText = "Récupéré ✓"; btnTaskChannel.disabled = true; updateUI();
-            }, 2000);
-        }
-
-        setInterval(() => {
-            if (energy < maxEnergy) { energy = Math.min(maxEnergy, energy + 3); localStorage.setItem('h_game_energy', energy); updateUI(); }
-        }, 1000);
-
-        async function savePlayerData() {
-            if (!hasChanges) return;
-            try {
-                await supabase.from('users').update({ score: score, username: userName }).eq('telegram_id', userId);
-                hasChanges = false;
-            } catch (err) {}
