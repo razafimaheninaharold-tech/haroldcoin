@@ -41,7 +41,7 @@
             z-index: 1;
         }
 
-        /* Le bouton contenant VOTRE logo Harold Coins */
+        /* Le bouton contenant VOTRE logo Harold Coins lié à GitHub */
         .main-coin-btn {
             position: relative;
             z-index: 2;
@@ -55,8 +55,8 @@
             transition: transform 0.05s ease;
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
             
-            /* Lien direct et sécurisé vers votre logo original */
-            background: url('https://ibb.co') center/cover no-repeat;
+            /* Connexion directe avec votre fichier coin.png sur GitHub */
+            background: url('coin.png') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -96,7 +96,7 @@
         tg.expand();
         tg.ready();
 
-        let score = parseInt(localStorage.getItem('h_final_score')) || 0;
+        let score = parseInt(localStorage.getItem('h_github_score')) || 0;
         const clickValue = 1;
 
         const coinBtn = document.getElementById('coinBtn');
@@ -106,7 +106,7 @@
             e.preventDefault();
             
             score += clickValue;
-            localStorage.setItem('h_final_score', score);
+            localStorage.setItem('h_github_score', score);
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('light');
