@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Evolving Coin</title>
+    <title>Haroldcoin - Community Update</title>
     <!-- SDK Telegram Officiel -->
     <script src="https://telegram.org"></script>
     <!-- Script de connexion à votre Base de Données Supabase -->
@@ -111,7 +111,6 @@
             transition: transform 0.05s ease, background-image 0.3s ease;
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
             
-            /* Image par défaut initiale */
             background: url('coin_bronze.png') center/cover no-repeat;
             display: flex;
             align-items: center;
@@ -285,11 +284,17 @@
             cursor: pointer;
             font-size: 13px;
         }
+        
+        .action-card-btn:disabled {
+            background: #2b254a;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Barre supérieure : Ligue et synchronisation -->
+    <!-- Barre supérieure -->
     <div class="top-status-bar">
         <div class="status-sync" id="syncStatus">Synchro...</div>
         <div class="league-badge" id="leagueDisplay">🥉 Bronze</div>
@@ -325,9 +330,3 @@
             <span>Earn</span>
         </button>
         <button class="nav-item" onclick="openModal('modalBoosts')">
-            <span class="nav-icon">🚀</span>
-            <span>Boosts</span>
-        </button>
-    </div>
-
-    <!-- Fenêtre Frens -->
