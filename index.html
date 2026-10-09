@@ -6,8 +6,8 @@
     <title>Haroldcoin</title>
     <!-- SDK Telegram Officiel -->
     <script src="https://telegram.org"></script>
-    <!-- Script de connexion à votre Base de Données Supabase -->
-    <script src="https://jsdelivr.net"></script>
+    <!-- Script de connexion à votre Base de Données Supabase (Version Cloud ultra-compatible) -->
+    <script src="https://unpkg.com"></script>
     <style>
         :root {
             --bg-color: #050312;
@@ -117,7 +117,7 @@
             100% { transform: translateY(-80px) scale(0.85); opacity: 0; }
         }
 
-        /* 🛠️ NOUVEAU MENU INFERIEUR NOTCOIN */
+        /* Menu inférieur Notcoin */
         .bottom-nav {
             width: 100%;
             max-width: 380px;
@@ -160,7 +160,7 @@
             margin-bottom: 2px;
         }
 
-        /* 🛠️ INTEGRAION DES FENETRES (MODALES) */
+        /* Fenêtres surgissantes (Modales) */
         .game-modal {
             display: none;
             position: fixed;
@@ -230,19 +230,16 @@
 </head>
 <body>
 
-    <!-- Affichage du Score -->
     <div class="score-container">
         <div class="score-value" id="scoreDisplay">0</div>
-        <div class="status-sync" id="syncStatus">Connexion au Cloud...</div>
+        <div class="status-sync" id="syncStatus">Nuage synchronisé ☁️</div>
     </div>
 
-    <!-- Zone de jeu -->
     <div class="game-zone" id="gameZone">
         <div class="coin-glow"></div>
         <button class="main-coin-btn" id="coinBtn"></button>
     </div>
 
-    <!-- 🛠️ MENU INFERIEUR NOTCOIN -->
     <div class="bottom-nav">
         <button class="nav-item" onclick="openModal('modalFrens')">
             <span class="nav-icon">🎁</span>
@@ -258,7 +255,7 @@
         </button>
     </div>
 
-    <!-- 🛠️ FENETRE FRENS (INVITATIONS) -->
+    <!-- Fenêtre Frens -->
     <div class="game-modal" id="modalFrens">
         <div class="modal-header">
             <div class="modal-title">🎁 Inviter des Amis</div>
@@ -273,7 +270,7 @@
         </div>
     </div>
 
-    <!-- 🛠️ FENETRE EARN (MISSIONS) -->
+    <!-- Fenêtre Earn -->
     <div class="game-modal" id="modalEarn">
         <div class="modal-header">
             <div class="modal-title">🪙 Tâches et Communauté</div>
@@ -288,7 +285,7 @@
         </div>
     </div>
 
-    <!-- 🛠️ FENETRE BOOSTS (BOUTIQUE MULTITAP) -->
+    <!-- Fenêtre Boosts -->
     <div class="game-modal" id="modalBoosts">
         <div class="modal-header">
             <div class="modal-title">🚀 Améliorations</div>
@@ -308,5 +305,8 @@
         tg.expand();
         tg.ready();
 
-        // Vos identifiants Supabase officiels injectés
         const SUPABASE_URL = "https://supabase.co";
+        const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
