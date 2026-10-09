@@ -41,7 +41,7 @@
             z-index: 1;
         }
 
-        /* Le bouton contenant VOTRE logo Harold Coins lié à GitHub */
+        /* Le bouton contenant votre logo Harold Coins avec le nouveau contour jaune */
         .main-coin-btn {
             position: relative;
             z-index: 2;
@@ -49,7 +49,6 @@
             height: 230px;
             border-radius: 50%;
             cursor: pointer;
-            border: none;
             outline: none;
             touch-action: manipulation;
             transition: transform 0.05s ease;
@@ -61,7 +60,11 @@
             align-items: center;
             justify-content: center;
 
-            /* 🛠️ CORRECTION DU CLIC BLEU : Supprime l'effet de surbrillance */
+            /* 🛠️ NOUVEAU CONTOUR JAUNE ÉPAIS : Cache les tâches blanches */
+            border: 6px solid #ffd700;
+            box-sizing: border-box;
+
+            /* Supprime l'effet de surbrillance bleu au clic */
             -webkit-tap-highlight-color: transparent;
         }
 
