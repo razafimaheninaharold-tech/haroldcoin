@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin - Version Notcoin</title>
+    <title>Haroldcoin - Play to Earn</title>
     <!-- SDK Telegram Officiel -->
     <script src="https://telegram.org"></script>
     <style>
         :root {
-            --bg-gradient: linear-gradient(180deg, #1b2236 0%, #0d111b 100%);
-            --accent-gold: #f3ba2f;
+            --bg-gradient: linear-gradient(180deg, #120c31 0%, #050312 100%);
+            --accent-gold: #ffd700;
+            --coin-secondary: #f3ba2f;
             --text-main: #ffffff;
             --text-muted: #8a91a5;
-            --surface-blur: rgba(255, 255, 255, 0.06);
+            --surface-blur: rgba(255, 255, 255, 0.04);
         }
 
         body {
@@ -31,11 +32,12 @@
             -webkit-user-select: none;
         }
 
-        /* 1. Bannière d'information supérieure (Wallet News / Status) */
+        /* 1. Bannière supérieure */
         .top-banner {
             width: 100%;
             max-width: 400px;
-            background: #181c26;
+            background: rgba(22, 17, 49, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.1);
             border-radius: 16px;
             padding: 12px;
             display: flex;
@@ -53,7 +55,7 @@
         .wallet-icon {
             width: 40px;
             height: 40px;
-            background: #007aff;
+            background: #2481cc;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -73,7 +75,8 @@
         }
 
         .league-badge-top {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--accent-gold);
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 12px;
@@ -81,33 +84,36 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
-        /* 2. Affichage du Score géant */
+        /* 2. Zone du Score global */
         .score-section {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .score-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .mini-coin {
-            width: 35px;
-            height: 35px;
-            background: var(--accent-gold);
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--coin-secondary));
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(243, 186, 47, 0.5);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
         }
 
         .main-score {
-            font-size: 44px;
-            font-weight: 700;
+            font-size: 46px;
+            font-weight: 800;
             letter-spacing: 0.5px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .league-navigation {
@@ -115,13 +121,13 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 8px;
+            margin-top: 6px;
             font-size: 13px;
             color: var(--text-muted);
             cursor: pointer;
         }
 
-        /* 3. Zone Centrale du Jeton de jeu */
+        /* 3. Zone Centrale : Le Jeton Harold Coins */
         .game-zone {
             position: relative;
             width: 280px;
@@ -131,81 +137,129 @@
             justify-content: center;
         }
 
-        .main-coin-btn {
-            width: 100%;
-            height: 100%;
+        /* Halo lumineux derrière la pièce */
+        .coin-glow {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, rgba(255, 215, 0, 0) 70%);
             border-radius: 50%;
-            /* METTEZ L'URL DE VOTRE IMAGE ICI DANS LES GUILLEMETS */
-            background: url('') center/cover no-repeat, var(--accent-gold); 
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .main-coin-btn {
+            position: relative;
+            z-index: 2;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            cursor: pointer;
             border: none;
             outline: none;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 -8px 0px rgba(0,0,0,0.15);
-            cursor: pointer;
+            touch-action: manipulation;
             transition: transform 0.05s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            
+            /* Configuration de secours : Jeton Or si l'image ne charge pas */
+            background: linear-gradient(135deg, #ffe552 0%, #cc9900 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Intégration transparente de votre logo Haroldcoins */
+        .main-coin-btn::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            /* Remplacer coin.png par le nom exact de votre image si nécessaire */
+            background: url('coin.png') center/cover no-repeat; 
+            z-index: 3;
+        }
+
+        /* Lettre de secours affichée en fond si votre image manque */
+        .coin-fallback-text {
+            font-size: 90px;
+            font-weight: 900;
+            color: #7a5800;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.2);
+            z-index: 2;
         }
 
         .main-coin-btn:active {
-            transform: scale(0.96) translateY(2px);
+            transform: scale(0.95) translateY(3px);
         }
 
-        /* Effet du +1 flottant */
+        /* Nombre +1 flottant au clic */
         .floating-click {
             position: absolute;
             color: #ffffff;
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 800;
             pointer-events: none;
+            z-index: 10;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
             animation: moveUpFade 0.6s ease-out forwards;
         }
 
         @keyframes moveUpFade {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-80px); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(0.85); opacity: 0; }
         }
 
-        /* 4. Section Basse : Énergie */
+        /* 4. Barre de statut d'Énergie */
         .energy-section {
             width: 100%;
             max-width: 400px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 5px;
+            padding: 0 8px;
+            box-sizing: border-box;
         }
 
         .energy-icon-text {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .energy-progress-bg {
             flex-grow: 1;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .energy-progress-fill {
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #ffd700, #ffa500);
+            background: linear-gradient(90deg, #ffb700, #ffd700);
             border-radius: 10px;
             transition: width 0.1s ease;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
         }
 
-        /* 5. Menu de navigation inférieur (Frens, Earn, Boosts) */
+        /* 5. Menu inférieur de navigation */
         .bottom-nav {
             width: 100%;
             max-width: 400px;
             background: var(--surface-blur);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 18px;
             display: flex;
-            padding: 8px 4px;
+            padding: 10px 4px;
             box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .nav-item {
@@ -214,59 +268,62 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             background: none;
             border: none;
             color: var(--text-main);
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s;
+            opacity: 0.75;
+            transition: all 0.2s;
         }
 
         .nav-item:active {
             opacity: 1;
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .nav-icon {
-            font-size: 20px;
+            font-size: 22px;
         }
     </style>
 </head>
 <body>
 
-    <!-- En-tête (Style Notcoin) -->
+    <!-- En-tête Statut -->
     <div class="top-banner">
         <div class="banner-left">
             <div class="wallet-icon">👛</div>
             <div>
-                <div class="banner-text-title">Wallet News</div>
-                <div class="banner-text-value">8,184,977,457</div>
+                <div class="banner-text-title">Harold Wallet</div>
+                <div class="banner-text-value">Connecté</div>
             </div>
         </div>
         <div class="league-badge-top">💎 Diamond</div>
     </div>
 
-    <!-- Affichage des points et de la Ligue -->
+    <!-- Section Points et Ligue -->
     <div class="score-section">
         <div class="score-row">
             <div class="mini-coin"></div>
             <div class="main-score" id="scoreDisplay">0</div>
         </div>
         <div class="league-navigation" onclick="openLeague()">
-            <span>🏆 Silver</span>
+            <span>🏆 Ligue Silver</span>
             <span>›</span>
         </div>
     </div>
 
-    <!-- Zone de Click du Jeton principal -->
+    <!-- Zone de jeu et Pièce Haroldcoins -->
     <div class="game-zone" id="gameZone">
-        <button class="main-coin-btn" id="coinBtn"></button>
+        <div class="coin-glow"></div>
+        <button class="main-coin-btn" id="coinBtn">
+            <span class="coin-fallback-text">H</span>
+        </button>
     </div>
 
-    <!-- Indicateur d'Énergie -->
+    <!-- Section Énergie -->
     <div class="energy-section">
         <div class="energy-icon-text">⚡ <span id="energyText">1000</span></div>
         <div class="energy-progress-bg">
@@ -274,63 +331,7 @@
         </div>
     </div>
 
-    <!-- Menu de navigation inférieur -->
+    <!-- Menu Inférieur -->
     <div class="bottom-nav">
         <button class="nav-item" onclick="navigate('frens')">
             <span class="nav-icon">🎁</span>
-            <span>Frens</span>
-        </button>
-        <button class="nav-item" onclick="navigate('earn')">
-            <span class="nav-icon">🪙</span>
-            <span>Earn</span>
-        </button>
-        <button class="nav-item" onclick="navigate('boosts')">
-            <span class="nav-icon">🚀</span>
-            <span>Boosts</span>
-        </button>
-    </div>
-
-    <script>
-        // Init Telegram WebApp
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-
-        // Variables de jeu
-        let score = parseInt(localStorage.getItem('not_score')) || 0;
-        let energy = parseInt(localStorage.getItem('not_energy')) || 1000;
-        const maxEnergy = 1000;
-
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const energyText = document.getElementById('energyText');
-        const energyBar = document.getElementById('energyBar');
-        const coinBtn = document.getElementById('coinBtn');
-        const gameZone = document.getElementById('gameZone');
-
-        function updateDisplay() {
-            scoreDisplay.innerText = score.toLocaleString('en-US'); // Format avec virgules (ex: 13,578)
-            energyText.innerText = energy;
-            energyBar.style.width = `${(energy / maxEnergy) * 100}%`;
-        }
-        updateDisplay();
-
-        // Système de Tap
-        coinBtn.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            if (energy > 0) {
-                score += 1;
-                energy -= 1;
-                
-                localStorage.setItem('not_score', score);
-                localStorage.setItem('not_energy', energy);
-                
-                updateDisplay();
-
-                if (tg.HapticFeedback) {
-                    tg.HapticFeedback.impactOccurred('light');
-                }
-
-                // Génération du texte flottant
-                createFloatingText(e.clientX, e.clientY);
-            } else {
-    
