@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin</title>
+    <title>Haroldcoin - Evolving Coin</title>
     <!-- SDK Telegram Officiel -->
     <script src="https://telegram.org"></script>
-    <!-- Script de connexion à votre Base de Données Supabase (Version Cloud ultra-compatible) -->
+    <!-- Script de connexion à votre Base de Données Supabase -->
     <script src="https://unpkg.com"></script>
     <style>
         :root {
@@ -33,14 +33,36 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
+        /* Barre supérieure de statut avec Niveau */
+        .top-status-bar {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            box-sizing: border-box;
+        }
+
+        .league-badge {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--accent-gold);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+        }
+
         /* Zone d'affichage du score */
         .score-container {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .score-value {
-            font-size: 44px;
+            font-size: 46px;
             font-weight: 800;
             color: #ffffff;
             text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
@@ -48,17 +70,17 @@
         }
 
         .status-sync {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
-            margin-top: 6px;
+            margin-top: 4px;
             font-weight: 500;
         }
 
         /* Zone centrale de jeu */
         .game-zone {
             position: relative;
-            width: 230px;
-            height: 230px;
+            width: 220px;
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -67,15 +89,15 @@
         /* Halo lumineux jaune autour du cercle */
         .coin-glow {
             position: absolute;
-            width: 280px;
-            height: 280px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, rgba(255, 215, 0, 0) 70%);
+            width: 270px;
+            height: 270px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
         }
 
-        /* Le bouton contenant votre logo Harold Coins parfait */
+        /* Le bouton contenant votre logo Harold Coins évolutif */
         .main-coin-btn {
             position: relative;
             z-index: 2;
@@ -86,10 +108,11 @@
             border: none;
             outline: none;
             touch-action: manipulation;
-            transition: transform 0.05s ease;
+            transition: transform 0.05s ease, background-image 0.3s ease;
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
             
-            background: url('coin.png') center/cover no-repeat;
+            /* Image par défaut initiale */
+            background: url('coin_bronze.png') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -115,6 +138,42 @@
         @keyframes moveUpFade {
             0% { transform: translateY(0) scale(1); opacity: 1; }
             100% { transform: translateY(-80px) scale(0.85); opacity: 0; }
+        }
+
+        /* Section Energie */
+        .energy-container {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px;
+            box-sizing: border-box;
+        }
+
+        .energy-text {
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            color: #ffffff;
+        }
+
+        .energy-bar-bg {
+            flex-grow: 1;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .energy-bar-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff9900, #ffd700);
+            border-radius: 10px;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
         }
 
         /* Menu inférieur Notcoin */
@@ -230,16 +289,32 @@
 </head>
 <body>
 
-    <div class="score-container">
-        <div class="score-value" id="scoreDisplay">0</div>
-        <div class="status-sync" id="syncStatus">Nuage synchronisé ☁️</div>
+    <!-- Barre supérieure : Ligue et synchronisation -->
+    <div class="top-status-bar">
+        <div class="status-sync" id="syncStatus">Synchro...</div>
+        <div class="league-badge" id="leagueDisplay">🥉 Bronze</div>
     </div>
 
+    <!-- Affichage du Score -->
+    <div class="score-container">
+        <div class="score-value" id="scoreDisplay">0</div>
+    </div>
+
+    <!-- Zone de jeu -->
     <div class="game-zone" id="gameZone">
         <div class="coin-glow"></div>
         <button class="main-coin-btn" id="coinBtn"></button>
     </div>
 
+    <!-- Jauge d'énergie -->
+    <div class="energy-container">
+        <div class="energy-text">⚡ <span id="energyText">1000</span></div>
+        <div class="energy-bar-bg">
+            <div class="energy-bar-fill" id="energyBarFill"></div>
+        </div>
+    </div>
+
+    <!-- Menu inférieur -->
     <div class="bottom-nav">
         <button class="nav-item" onclick="openModal('modalFrens')">
             <span class="nav-icon">🎁</span>
@@ -256,57 +331,3 @@
     </div>
 
     <!-- Fenêtre Frens -->
-    <div class="game-modal" id="modalFrens">
-        <div class="modal-header">
-            <div class="modal-title">🎁 Inviter des Amis</div>
-            <button class="close-btn" onclick="closeModal('modalFrens')">×</button>
-        </div>
-        <div class="item-card">
-            <div>
-                <div class="card-info-title">Lien de parrainage</div>
-                <div class="card-info-desc">Gagnez +1,000 pièces par invité</div>
-            </div>
-            <button class="action-card-btn" onclick="copyInviteLink()">Partager</button>
-        </div>
-    </div>
-
-    <!-- Fenêtre Earn -->
-    <div class="game-modal" id="modalEarn">
-        <div class="modal-header">
-            <div class="modal-title">🪙 Tâches et Communauté</div>
-            <button class="close-btn" onclick="closeModal('modalEarn')">×</button>
-        </div>
-        <div class="item-card">
-            <div>
-                <div class="card-info-title">Rejoindre notre Canal</div>
-                <div class="card-info-desc">Récompense : +5,000 🪙</div>
-            </div>
-            <button class="action-card-btn" onclick="claimTask(5000)">Rejoindre</button>
-        </div>
-    </div>
-
-    <!-- Fenêtre Boosts -->
-    <div class="game-modal" id="modalBoosts">
-        <div class="modal-header">
-            <div class="modal-title">🚀 Améliorations</div>
-            <button class="close-btn" onclick="closeModal('modalBoosts')">×</button>
-        </div>
-        <div class="item-card">
-            <div>
-                <div class="card-info-title">Multitap</div>
-                <div class="card-info-desc">Donne (<span id="clickValueTxt">+1</span>) par tap</div>
-            </div>
-            <button class="action-card-btn" id="buyBoostBtn" onclick="buyMultitap()">Acheter (100 🪙)</button>
-        </div>
-    </div>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-
-        const SUPABASE_URL = "https://supabase.co";
-        const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
