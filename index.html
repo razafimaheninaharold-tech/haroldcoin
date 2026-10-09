@@ -12,12 +12,28 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             overflow: hidden;
             user-select: none;
             -webkit-user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Zone d'affichage du score */
+        .score-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-value {
+            font-size: 44px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            letter-spacing: 1px;
         }
 
         /* Zone centrale de jeu */
@@ -41,7 +57,7 @@
             z-index: 1;
         }
 
-        /* Le bouton contenant VOTRE logo Harold Coins lié à GitHub */
+        /* Le bouton contenant votre logo Harold Coins parfait */
         .main-coin-btn {
             position: relative;
             z-index: 2;
@@ -61,7 +77,7 @@
             align-items: center;
             justify-content: center;
 
-            /* 🛠️ CORRECTION DU CLIC BLEU : Supprime l'effet de surbrillance */
+            /* Supprime l'effet de surbrillance bleu au clic */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -89,6 +105,12 @@
 </head>
 <body>
 
+    <!-- Affichage du Score au-dessus de la pièce -->
+    <div class="score-container">
+        <div class="score-value" id="scoreDisplay">0</div>
+    </div>
+
+    <!-- Zone de jeu -->
     <div class="game-zone" id="gameZone">
         <div class="coin-glow"></div>
         <button class="main-coin-btn" id="coinBtn"></button>
@@ -99,17 +121,26 @@
         tg.expand();
         tg.ready();
 
+        // Récupération du score stocké localement
         let score = parseInt(localStorage.getItem('h_github_score')) || 0;
         const clickValue = 1;
 
+        const scoreDisplay = document.getElementById('scoreDisplay');
         const coinBtn = document.getElementById('coinBtn');
         const gameZone = document.getElementById('gameZone');
+
+        // Mettre à jour l'affichage au chargement de la page
+        function updateUI() {
+            scoreDisplay.innerText = score.toLocaleString('en-US'); // Met des séparateurs (ex: 1,250)
+        }
+        updateUI();
 
         coinBtn.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             
             score += clickValue;
             localStorage.setItem('h_github_score', score);
+            updateUI();
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('light');
