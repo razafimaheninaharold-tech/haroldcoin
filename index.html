@@ -41,7 +41,7 @@
             z-index: 1;
         }
 
-        /* Le bouton contenant votre logo Harold Coins avec découpe des pixels blancs */
+        /* Le bouton contenant votre logo Harold Coins nettoyé */
         .main-coin-btn {
             position: relative;
             z-index: 2;
@@ -52,18 +52,23 @@
             outline: none;
             touch-action: manipulation;
             transition: transform 0.05s ease;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
             
             /* Connexion directe avec votre fichier coin.png sur GitHub */
-            background: url('coin.png') center/cover no-repeat;
+            background: #ffd700 url('coin.png') center/101% 101% no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
 
-            /* 🛠️ DOUBLE PROTECTION : Bordure + Découpe forcée de l'image */
+            /* 🛠️ TRIPLE PROTECTION ANTI-BLANC : */
             border: 8px solid #ffd700;
             box-sizing: border-box;
-            overflow: hidden; /* Masque et coupe tout ce qui dépasse du rond, adieu le blanc ! */
+            overflow: hidden;
+            
+            /* Cette ligne coupe 1.5% des bords extérieurs pour supprimer définitivement le blanc */
+            clip-path: circle(48.5% at 50% 50%); 
+            
+            /* Ombre portée externe et interne pour lisser le tout */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0,0,0,0.5);
 
             /* Supprime l'effet de surbrillance bleu au clic */
             -webkit-tap-highlight-color: transparent;
