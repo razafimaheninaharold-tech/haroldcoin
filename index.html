@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Haroldcoin</title>
-    <!-- SDK Telegram Officiel (Correction de l'adresse) -->
+    <!-- SDK Telegram Officiel -->
     <script src="https://telegram.org"></script>
     <!-- Script de connexion à votre Base de Données Supabase -->
     <script src="https://jsdelivr.net"></script>
     <style>
+        :root {
+            --bg-color: #050312;
+            --surface-blur: rgba(255, 255, 255, 0.05);
+            --accent-gold: #ffd700;
+            --text-main: #ffffff;
+            --text-muted: #8a91a5;
+        }
+
         body {
-            background-color: #050312; 
+            background-color: var(--bg-color); 
             margin: 0;
-            padding: 0;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             height: 100vh;
+            box-sizing: border-box;
             overflow: hidden;
             user-select: none;
             -webkit-user-select: none;
@@ -27,7 +36,7 @@
         /* Zone d'affichage du score */
         .score-container {
             text-align: center;
-            margin-bottom: 30px;
+            margin-top: 10px;
         }
 
         .score-value {
@@ -38,10 +47,9 @@
             letter-spacing: 1px;
         }
 
-        /* Petit texte pour voir l'état de la connexion cloud */
         .status-sync {
             font-size: 13px;
-            color: #8a91a5;
+            color: var(--text-muted);
             margin-top: 6px;
             font-weight: 500;
         }
@@ -49,8 +57,8 @@
         /* Zone centrale de jeu */
         .game-zone {
             position: relative;
-            width: 250px;
-            height: 250px;
+            width: 230px;
+            height: 230px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -59,8 +67,8 @@
         /* Halo lumineux jaune autour du cercle */
         .coin-glow {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 280px;
+            height: 280px;
             background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, rgba(255, 215, 0, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
@@ -71,8 +79,8 @@
         .main-coin-btn {
             position: relative;
             z-index: 2;
-            width: 230px;
-            height: 230px;
+            width: 210px;
+            height: 210px;
             border-radius: 50%;
             cursor: pointer;
             border: none;
@@ -81,13 +89,10 @@
             transition: transform 0.05s ease;
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
             
-            /* Connexion directe avec votre fichier coin.png sur GitHub */
             background: url('coin.png') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            /* Supprime l'effet de surbrillance bleu au clic */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -111,14 +116,123 @@
             0% { transform: translateY(0) scale(1); opacity: 1; }
             100% { transform: translateY(-80px) scale(0.85); opacity: 0; }
         }
+
+        /* 🛠️ NOUVEAU MENU INFERIEUR NOTCOIN */
+        .bottom-nav {
+            width: 100%;
+            max-width: 380px;
+            background: var(--surface-blur);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 4px;
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 5px;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            opacity: 0.8;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-item:active {
+            transform: scale(0.92);
+            opacity: 1;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        /* 🛠️ INTEGRAION DES FENETRES (MODALES) */
+        .game-modal {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #110d29;
+            border-top: 2px solid var(--accent-gold);
+            border-radius: 24px 24px 0 0;
+            padding: 24px;
+            z-index: 100;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.9);
+            animation: slideUp 0.25s ease-out;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .close-btn {
+            background: none; border: none; color: #ff4a4a;
+            font-size: 26px; font-weight: bold; cursor: pointer;
+        }
+
+        .item-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 12px;
+        }
+
+        .card-info-title {
+            font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #ffffff;
+        }
+
+        .card-info-desc {
+            font-size: 12px; color: var(--text-muted);
+        }
+
+        .action-card-btn {
+            background: var(--accent-gold);
+            color: #000000;
+            border: none; padding: 10px 14px;
+            border-radius: 10px; font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Affichage du Score au-dessus de la pièce -->
+    <!-- Affichage du Score -->
     <div class="score-container">
         <div class="score-value" id="scoreDisplay">0</div>
-        <!-- Statut de sauvegarde cloud -->
         <div class="status-sync" id="syncStatus">Connexion au Cloud...</div>
     </div>
 
@@ -128,6 +242,67 @@
         <button class="main-coin-btn" id="coinBtn"></button>
     </div>
 
+    <!-- 🛠️ MENU INFERIEUR NOTCOIN -->
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="openModal('modalFrens')">
+            <span class="nav-icon">🎁</span>
+            <span>Frens</span>
+        </button>
+        <button class="nav-item" onclick="openModal('modalEarn')">
+            <span class="nav-icon">🪙</span>
+            <span>Earn</span>
+        </button>
+        <button class="nav-item" onclick="openModal('modalBoosts')">
+            <span class="nav-icon">🚀</span>
+            <span>Boosts</span>
+        </button>
+    </div>
+
+    <!-- 🛠️ FENETRE FRENS (INVITATIONS) -->
+    <div class="game-modal" id="modalFrens">
+        <div class="modal-header">
+            <div class="modal-title">🎁 Inviter des Amis</div>
+            <button class="close-btn" onclick="closeModal('modalFrens')">×</button>
+        </div>
+        <div class="item-card">
+            <div>
+                <div class="card-info-title">Lien de parrainage</div>
+                <div class="card-info-desc">Gagnez +1,000 pièces par invité</div>
+            </div>
+            <button class="action-card-btn" onclick="copyInviteLink()">Partager</button>
+        </div>
+    </div>
+
+    <!-- 🛠️ FENETRE EARN (MISSIONS) -->
+    <div class="game-modal" id="modalEarn">
+        <div class="modal-header">
+            <div class="modal-title">🪙 Tâches et Communauté</div>
+            <button class="close-btn" onclick="closeModal('modalEarn')">×</button>
+        </div>
+        <div class="item-card">
+            <div>
+                <div class="card-info-title">Rejoindre notre Canal</div>
+                <div class="card-info-desc">Récompense : +5,000 🪙</div>
+            </div>
+            <button class="action-card-btn" onclick="claimTask(5000)">Rejoindre</button>
+        </div>
+    </div>
+
+    <!-- 🛠️ FENETRE BOOSTS (BOUTIQUE MULTITAP) -->
+    <div class="game-modal" id="modalBoosts">
+        <div class="modal-header">
+            <div class="modal-title">🚀 Améliorations</div>
+            <button class="close-btn" onclick="closeModal('modalBoosts')">×</button>
+        </div>
+        <div class="item-card">
+            <div>
+                <div class="card-info-title">Multitap</div>
+                <div class="card-info-desc">Donne (<span id="clickValueTxt">+1</span>) par tap</div>
+            </div>
+            <button class="action-card-btn" id="buyBoostBtn" onclick="buyMultitap()">Acheter (100 🪙)</button>
+        </div>
+    </div>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -135,106 +310,3 @@
 
         // Vos identifiants Supabase officiels injectés
         const SUPABASE_URL = "https://supabase.co";
-        const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        let score = 0;
-        const clickValue = 1;
-        let userId = "joueur_local"; 
-        let userName = "Utilisateur Harold";
-        let hasChanges = false;
-
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const syncStatus = document.getElementById('syncStatus');
-        const coinBtn = document.getElementById('coinBtn');
-        const gameZone = document.getElementById('gameZone');
-
-        // Récupération des informations de l'utilisateur Telegram
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            userId = tg.initDataUnsafe.user.id.toString();
-            userName = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
-        }
-
-        // Mettre à jour l'affichage
-        function updateUI() {
-            scoreDisplay.innerText = score.toLocaleString('en-US'); 
-        }
-
-        // Charger le score depuis Supabase au démarrage
-        async function loadPlayerData() {
-            syncStatus.innerText = "Chargement du solde Cloud...";
-            try {
-                let { data, error } = await supabase
-                    .from('users')
-                    .select('score')
-                    .eq('telegram_id', userId)
-                    .single();
-
-                if (error && error.code === 'PGRST116') {
-                    // Nouvel utilisateur : on l'ajoute à la base de données
-                    await supabase.from('users').insert([{ telegram_id: userId, username: userName, score: 0 }]);
-                    score = 0;
-                } else if (data) {
-                    score = data.score;
-                }
-                syncStatus.innerText = "Nuage synchronisé ☁️";
-                updateUI();
-            } catch (err) {
-                syncStatus.innerText = "Erreur de connexion cloud";
-            }
-        }
-        loadPlayerData();
-
-        // Action au tap sur la pièce
-        coinBtn.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            
-            score += clickValue;
-            hasChanges = true;
-            updateUI();
-
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
-            }
-
-            generateClickEffect(e.clientX, e.clientY);
-        });
-
-        function generateClickEffect(clientX, clientY) {
-            const boundary = gameZone.getBoundingClientRect();
-            const posX = clientX - boundary.left;
-            const posY = clientY - boundary.top;
-
-            const element = document.createElement('div');
-            element.className = 'floating-click';
-            element.innerText = `+${clickValue}`;
-            element.style.left = `${posX}px`;
-            element.style.top = `${posY}px`;
-
-            gameZone.appendChild(element);
-            setTimeout(() => element.remove(), 500);
-        }
-
-        // Sauvegarde automatique toutes les 4 secondes s'il y a eu des clics
-        async function savePlayerData() {
-            if (!hasChanges) return;
-            try {
-                const { error } = await supabase
-                    .from('users')
-                    .update({ score: score, username: userName })
-                    .eq('telegram_id', userId);
-
-                if (!error) {
-                    hasChanges = false;
-                    syncStatus.innerText = "Sauvegarde réussie ✓";
-                    setTimeout(() => { syncStatus.innerText = "Nuage synchronisé ☁️"; }, 1500);
-                }
-            } catch (err) {
-                console.log("Erreur de sauvegarde");
-            }
-        }
-        setInterval(savePlayerData, 4000);
-    </script>
-</body>
-</html>
