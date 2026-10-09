@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin</title>
+    <title>Haroldcoin - Nettoyé</title>
     <!-- SDK Telegram Officiel -->
     <script src="https://telegram.org"></script>
     <style>
@@ -41,34 +41,25 @@
             z-index: 1;
         }
 
-        /* Le bouton contenant votre logo Harold Coins nettoyé */
+        /* Le bouton contenant votre logo Harold Coins ENFIN SANS BLANC */
         .main-coin-btn {
             position: relative;
             z-index: 2;
-            width: 220px;
-            height: 220px;
+            width: 230px;
+            height: 230px;
             border-radius: 50%;
             cursor: pointer;
+            border: none;
             outline: none;
             touch-action: manipulation;
             transition: transform 0.05s ease;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
             
-            /* Connexion directe avec votre fichier coin.png sur GitHub */
-            background: #ffd700 url('coin.png') center/101% 101% no-repeat;
+            /* Lien direct vers votre logo entièrement nettoyé sans le damier blanc */
+            background: url('https://postimg.cc') center/contain no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            /* 🛠️ TRIPLE PROTECTION ANTI-BLANC : */
-            border: 8px solid #ffd700;
-            box-sizing: border-box;
-            overflow: hidden;
-            
-            /* Cette ligne coupe 1.5% des bords extérieurs pour supprimer définitivement le blanc */
-            clip-path: circle(48.5% at 50% 50%); 
-            
-            /* Ombre portée externe et interne pour lisser le tout */
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0,0,0,0.5);
 
             /* Supprime l'effet de surbrillance bleu au clic */
             -webkit-tap-highlight-color: transparent;
