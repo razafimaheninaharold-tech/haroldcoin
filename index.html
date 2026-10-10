@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Haroldcoin Premium</title>
-    <!-- SDK Telegram Officiel avec la bonne adresse corrigée -->
+    <!-- L'ADRESSE EXACTE DU SCRIPT TELEGRAM CORRIGÉE ICI -->
     <script src="https://telegram.org"></script>
     <style>
         :root {
@@ -25,11 +25,9 @@
         .league-badge { background: rgba(255, 215, 0, 0.1); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255, 215, 0, 0.2); }
         .score-container { text-align: center; margin-top: 5px; }
         .score-value { font-size: 46px; font-weight: 800; color: #ffffff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.3); letter-spacing: 1px; }
-        .status-sync { font-size: 12px; color: var(--text-muted); font-weight: 500; }
         .game-zone { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
         .coin-glow { position: absolute; width: 270px; height: 270px; background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%); border-radius: 50%; pointer-events: none; z-index: 1; }
         
-        /* Bouton de la pièce Harold Coins configuré proprement */
         .main-coin-btn { 
             position: relative; z-index: 2; width: 210px; height: 210px; 
             border-radius: 50%; cursor: pointer; border: none; outline: none; 
@@ -56,8 +54,8 @@
 <body>
 
     <div class="top-status-bar">
-        <div class="status-sync" id="syncStatus">Local 🔒</div>
-        <div class="league-badge" id="leagueDisplay">🏅 Bronze</div>
+        <div class="status-sync">Local 🔒</div>
+        <div class="league-badge">🏅 Bronze</div>
     </div>
 
     <div class="score-container">
@@ -83,7 +81,7 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); tg.ready();
+        if (tg) { tg.expand(); tg.ready(); }
 
         let score = parseInt(localStorage.getItem('h_local_score')) || 0;
         let maxEnergy = 1000;
@@ -96,49 +94,50 @@
         const coinBtn = document.getElementById('coinBtn');
 
         function updateUI() {
-            if(scoreDisplay) scoreDisplay.innerText = score.toLocaleString('en-US');
-            if(energyText) energyText.innerText = energy;
-            if(energyBarFill) energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
+            if (scoreDisplay) scoreDisplay.innerText = score.toLocaleString('en-US');
+            if (energyText) energyText.innerText = energy;
+            if (energyBarFill) energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
         }
         updateUI();
 
-        if(coinBtn) {
-            // Utilisation de pointerdown pour une réactivité instantanée au toucher
-            coinBtn.addEventListener('pointerdown', (e) => {
+        if (coinBtn) {
+            // "touchstart" garantit une réaction immédiate sur tous les téléphones mobiles
+            coinBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 if (energy >= clickValue) {
-                    score += clickValue; 
+                    score += clickValue;
                     energy -= clickValue;
                     
-                    localStorage.setItem('h_local_score', score); 
+                    localStorage.setItem('h_local_score', score);
                     localStorage.setItem('h_game_energy', energy);
                     updateUI();
 
-                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+                    if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-                    // Effet du chiffre +1 qui flotte
+                    // Animation du chiffre qui monte
+                    const touch = e.touches[0];
                     const boundary = coinBtn.getBoundingClientRect();
                     const element = document.createElement('div');
-                    element.className = 'floating-click'; element.innerText = "+" + clickValue;
-                    element.style.left = (e.clientX - boundary.left) + "px";
-                    element.style.top = (e.clientY - boundary.top) + "px";
-                    coinBtn.appendChild(element); 
+                    element.className = 'floating-click';
+                    element.innerText = "+" + clickValue;
+                    element.style.left = (touch.clientX - boundary.left) + "px";
+                    element.style.top = (touch.clientY - boundary.top) + "px";
+                    coinBtn.appendChild(element);
                     setTimeout(() => element.remove(), 500);
                 } else {
-                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
                 }
             });
         }
 
-        // Recharge automatique de la barre d'énergie (+3 points par seconde)
+        // Recharge passive d'énergie (+3/s)
         setInterval(() => {
-            if (energy < maxEnergy) { 
-                energy = Math.min(maxEnergy, energy + 3); 
-                localStorage.setItem('h_game_energy', energy); 
-                updateUI(); 
+            if (energy < maxEnergy) {
+                energy = Math.min(maxEnergy, energy + 3);
+                localStorage.setItem('h_game_energy', energy);
+                updateUI();
             }
         }, 1000);
     </script>
 </body>
-    </html>
-    
+</html>
