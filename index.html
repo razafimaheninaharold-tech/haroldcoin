@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin</title>
+    <title>Haroldcoin Premium</title>
     <script src="https://telegram.org"></script>
+    <script src="https://unpkg.com"></script>
     <style>
         :root {
             --bg-color: #050312;
@@ -55,7 +56,7 @@
 <body>
 
     <div class="top-status-bar">
-        <div class="status-sync" id="syncStatus">Local 🔒</div>
+        <div class="status-sync" id="syncStatus">Connexion...</div>
         <div class="league-badge" id="leagueDisplay">🏅 Bronze</div>
     </div>
 
@@ -77,7 +78,7 @@
         <button class="nav-item" onclick="openModal('modalFrens')"><span class="nav-icon">🎁</span><span>Frens</span></button>
         <button class="nav-item" onclick="openModal('modalEarn')"><span class="nav-icon">🪙</span><span>Earn</span></button>
         <button class="nav-item" onclick="openModal('modalBoosts')"><span class="nav-icon">🚀</span><span>Boosts</span></button>
-        <button class="nav-item" onclick="openModal('modalLeaderboard')"><span class="nav-icon">🏆</span><span>Tops</span></button>
+        <button class="nav-item" onclick="openLeaderboard()"><span class="nav-icon">🏆</span><span>Tops</span></button>
     </div>
 
     <div class="game-modal" id="modalFrens">
@@ -110,21 +111,21 @@
 
     <div class="game-modal" id="modalLeaderboard">
         <div class="modal-header"><div class="modal-title">🏆 Classement Mondial</div><button class="close-btn" onclick="closeModal('modalLeaderboard')">×</button></div>
-        <div class="leaderboard-item"><div><span class="rank-badge">#1</span> @Harold_Admin</div><div>99,500 🪙</div></div>
-        <div class="leaderboard-item"><div><span class="rank-badge">#2</span> Joueur_Test</div><div>12,400 🪙</div></div>
+        <div id="leaderboardLoading" style="color: white; text-align: center; display:none;">Chargement...</div>
+        <div id="leaderboardList"></div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand(); tg.ready();
 
+        const SUPABASE_URL = "https://supabase.co";
+        const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const BOT_USERNAME = "HaroldcoinBot";
+        const TELEGRAM_CHANNEL_URL = "https://t.me";
+
         let score = parseInt(localStorage.getItem('h_local_score')) || 0;
         let maxEnergy = parseInt(localStorage.getItem('h_max_energy')) || 1000;
         let energy = parseInt(localStorage.getItem('h_game_energy')) || maxEnergy;
-        let clickValue = parseInt(localStorage.getItem('h_click_value')) || 1;
-        let boostPrice = parseInt(localStorage.getItem('h_boost_price')) || 100;
-        let energyPrice = parseInt(localStorage.getItem('h_energy_price')) || 500;
-
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const leagueDisplay = document.getElementById('leagueDisplay');
-                                                                                                                             
