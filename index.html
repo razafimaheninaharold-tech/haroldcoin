@@ -2,7 +2,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand(); tg.ready();
 
-        // Connexion Supabase
+        // Vos identifiants Supabase officiels
         const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -10,7 +10,7 @@
         const BOT_USERNAME = "HaroldcoinBot";
         const TELEGRAM_CHANNEL_URL = "https://t.me";
 
-        // Chargement du score et de l'énergie
+        // Chargement initial des valeurs locales
         let score = parseInt(localStorage.getItem('h_cloud_score')) || 0;
         let maxEnergy = parseInt(localStorage.getItem('h_max_energy')) || 1000;
         let energy = parseInt(localStorage.getItem('h_game_energy')) || maxEnergy;
@@ -18,11 +18,8 @@
         let boostPrice = parseInt(localStorage.getItem('h_boost_price')) || 100;
         let energyPrice = parseInt(localStorage.getItem('h_energy_price')) || 500;
 
-        let userId = "joueur_local"; 
-        let userName = "Utilisateur"; 
-        let hasChanges = false;
+        let userId = "joueur_local"; let userName = "Utilisateur"; let hasChanges = false;
 
-        // Éléments HTML
         const scoreDisplay = document.getElementById('scoreDisplay');
         const syncStatus = document.getElementById('syncStatus');
         const leagueDisplay = document.getElementById('leagueDisplay');
@@ -40,11 +37,11 @@
             userName = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
         }
 
-        if(localStorage.getItem('h_task_channel_done') === 'true') {
-            if(btnTaskChannel) { btnTaskChannel.innerText = "Récupéré ✓"; btnTaskChannel.disabled = true; }
+        if(localStorage.getItem('h_task_channel_done') === 'true' && btnTaskChannel) {
+            btnTaskChannel.innerText = "Récupéré ✓"; btnTaskChannel.disabled = true;
         }
 
-        // Son de pièce
+        // Son de la pièce
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playCoinSound() {
             try {
@@ -56,15 +53,6 @@
             } catch(e) {}
         }
 
-        function updateLeague(userScore) {
-            let leagueName = "🥉 Bronze";
-            if (userScore >= 100000) { leagueName = "💎 Diamond"; }
-            else if (userScore >= 50000) { leagueName = "🥇 Platinum"; }
-            else if (userScore >= 10000) { leagueName = "🔱 Gold"; }
-            else if (userScore >= 1000) { leagueName = "🥈 Silver"; }
-            if(leagueDisplay) leagueDisplay.innerText = leagueName;
-        }
-
         function updateUI() {
             if(scoreDisplay) scoreDisplay.innerText = score.toLocaleString('en-US');
             if(energyText) energyText.innerText = energy; 
@@ -73,66 +61,54 @@
             if(clickValueTxt) clickValueTxt.innerText = "+" + clickValue;
             if(buyBoostBtn) buyBoostBtn.innerText = "Acheter (" + boostPrice + " 🪙)";
             if(buyEnergyBtn) buyEnergyBtn.innerText = "Acheter (" + energyPrice + " 🪙)";
-            updateLeague(score);
+            
+            let leagueName = "🥉 Bronze";
+            if (score >= 100000) leagueName = "💎 Diamond";
+            else if (score >= 50000) leagueName = "🥇 Platinum";
+            else if (score >= 10000) leagueName = "🔱 Gold";
+            else if (score >= 1000) leagueName = "🥈 Silver";
+            if(leagueDisplay) leagueDisplay.innerText = leagueName;
         }
         updateUI();
-
-        // Forcer l'affichage immédiat du score local
-        syncStatus.innerText = "Synchronisé ☁️";
+        if(syncStatus) syncStatus.innerText = "Nuage synchronisé ☁️";
 
         async function loadPlayerData() {
             try {
                 let { data, error } = await supabase.from('users').select('score').eq('telegram_id', userId).single();
-                if (!error && data) {
-                    if(data.score > score) { 
-                        score = data.score; 
-                        localStorage.setItem('h_cloud_score', score); 
-                    }
+                if (!error && data && data.score > score) {
+                    score = data.score;
+                    localStorage.setItem('h_cloud_score', score);
                 } else if (error && error.code === 'PGRST116') {
                     await supabase.from('users').insert([{ telegram_id: userId, username: userName, score: score }]);
                 }
                 updateUI();
-            } catch (err) { console.log("Mode offline"); }
+            } catch (err) {}
         }
         loadPlayerData();
 
-        // ÉCOUTEUR DE CLIC CORRIGÉ ET FORCÉ
         if(coinBtn) {
             coinBtn.addEventListener('pointerdown', (e) => {
                 e.preventDefault();
                 if (energy >= clickValue) {
-                    score += clickValue; 
-                    energy -= clickValue; 
-                    hasChanges = true;
-                    
-                    localStorage.setItem('h_cloud_score', score); 
+                    score += clickValue; energy -= clickValue; hasChanges = true;
+                    localStorage.setItem('h_cloud_score', score);
                     localStorage.setItem('h_game_energy', energy);
-                    
-                    updateUI(); 
-                    playCoinSound();
-                    
+                    updateUI(); playCoinSound();
                     if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-                    generateClickEffect(e.clientX, e.clientY);
+                    
+                    const boundary = coinBtn.getBoundingClientRect();
+                    const element = document.createElement('div');
+                    element.className = 'floating-click'; element.innerText = "+" + clickValue;
+                    element.style.left = (e.clientX - boundary.left) + "px";
+                    element.style.top = (e.clientY - boundary.top) + "px";
+                    coinBtn.appendChild(element); setTimeout(() => element.remove(), 500);
                 } else {
                     if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
                 }
             });
         }
 
-        function generateClickEffect(clientX, clientY) {
-            if(!coinBtn) return;
-            const boundary = coinBtn.getBoundingClientRect();
-            const posX = clientX - boundary.left; const posY = clientY - boundary.top;
-            const element = document.createElement('div');
-            element.className = 'floating-click'; element.innerText = "+" + clickValue;
-            element.style.left = posX + "px"; element.style.top = posY + "px";
-            coinBtn.appendChild(element); setTimeout(() => element.remove(), 500);
-        }
-
-        window.openModal = function(modalId) {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            document.getElementById(modalId).style.display = 'block';
-        }
+        window.openModal = function(modalId) { document.getElementById(modalId).style.display = 'block'; }
         window.closeModal = function(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
         window.buyMultitap = function() {
@@ -140,7 +116,6 @@
                 score -= boostPrice; clickValue += 1; boostPrice = Math.round(boostPrice * 2.5);
                 localStorage.setItem('h_cloud_score', score); localStorage.setItem('h_click_value', clickValue); localStorage.setItem('h_boost_price', boostPrice);
                 hasChanges = true; updateUI();
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             }
         }
 
@@ -149,33 +124,31 @@
                 score -= energyPrice; maxEnergy += 500; energy = maxEnergy; energyPrice = Math.round(energyPrice * 2.2);
                 localStorage.setItem('h_cloud_score', score); localStorage.setItem('h_max_energy', maxEnergy); localStorage.setItem('h_game_energy', energy); localStorage.setItem('h_energy_price', energyPrice);
                 hasChanges = true; updateUI();
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             }
         }
 
         window.openLeaderboard = function() {
             openModal('modalLeaderboard');
-            const listContainer = document.getElementById('leaderboardList');
-            const loadingText = document.getElementById('leaderboardLoading');
-            if(!listContainer || !loadingText) return;
-            listContainer.innerHTML = ""; loadingText.style.display = "block";
+            const list = document.getElementById('leaderboardList');
+            const load = document.getElementById('leaderboardLoading');
+            if(!list || !load) return;
+            list.innerHTML = ""; load.style.display = "block";
             supabase.from('users').select('username, score').order('score', { ascending: false }).limit(5)
-                .then(({ data: topUsers, error }) => {
-                    loadingText.style.display = "none";
-                    if (!error && topUsers) {
-                        topUsers.forEach((user, index) => {
-                            const li = document.createElement('li'); li.className = 'leaderboard-item';
-                            li.innerHTML = "<span class='rank-badge'>#" + (index + 1) + "</span> @" + user.username + " <span>" + user.score.toLocaleString() + " 🪙</span>";
-                            listContainer.appendChild(li);
-                        });
-                    }
-                }).catch(() => { loadingText.innerText = "Erreur de classement."; });
+            .then(({ data, error }) => {
+                load.style.display = "none";
+                if (!error && data) {
+                    data.forEach((user, idx) => {
+                        const li = document.createElement('li'); li.className = 'leaderboard-item';
+                        li.innerHTML = "<span class='rank-badge'>#" + (idx + 1) + "</span> @" + user.username + " <span>" + user.score.toLocaleString() + " 🪙</span>";
+                        list.appendChild(li);
+                    });
+                }
+            });
         }
 
         window.inviteFriend = function() {
-            const textUrl = "Rejoins Haroldcoin ! 🚀";
-            const inviteUrl = "https://t.me" + BOT_USERNAME + "?start=" + userId;
-            tg.openTelegramLink("https://t.meshare/url?url=" + encodeURIComponent(inviteUrl) + "&text=" + encodeURIComponent(textUrl));
+            const url = "https://t.me" + BOT_USERNAME + "?start=" + userId;
+            tg.openTelegramLink("https://t.meshare/url?url=" + encodeURIComponent(url) + "&text=" + encodeURIComponent("Rejoins Haroldcoin ! 🚀"));
         }
 
         window.joinChannelTask = function() {
@@ -186,5 +159,17 @@
             }, 2000);
         }
 
-        // Recharge passive d'énergie (+3/s)
         setInterval(() => {
+            if (energy < maxEnergy) { energy = Math.min(maxEnergy, energy + 3); localStorage.setItem('h_game_energy', energy); updateUI(); }
+        }, 1000);
+
+        setInterval(async () => {
+            if (!hasChanges) return;
+            try {
+                await supabase.from('users').update({ score: score, username: userName }).eq('telegram_id', userId);
+                hasChanges = false;
+            } catch (err) {}
+        }, 4000);
+    </script>
+</body>
+</html>
