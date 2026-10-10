@@ -3,52 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin</title>
+    <title>Haroldcoin Premium</title>
+    <!-- SDK Telegram Officiel avec la bonne adresse corrigée -->
     <script src="https://telegram.org"></script>
     <style>
+        :root {
+            --bg-color: #050312;
+            --surface-blur: rgba(255, 255, 255, 0.05);
+            --accent-gold: #ffd700;
+            --text-main: #ffffff;
+            --text-muted: #8a91a5;
+        }
         body {
-            background-color: #050312; margin: 0; padding: 0;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; overflow: hidden; font-family: sans-serif;
+            background-color: var(--bg-color); margin: 0; padding: 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            height: 100vh; box-sizing: border-box; overflow: hidden;
             user-select: none; -webkit-user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-        .score { font-size: 50px; font-weight: bold; color: white; margin-bottom: 30px; }
-        .coin-btn {
-            width: 220px; height: 220px; border-radius: 50%;
-            border: none; outline: none; cursor: pointer;
-            background: url('coin.png') center/cover no-repeat;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.05s ease;
-            -webkit-tap-highlight-color: transparent;
+        .top-status-bar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; box-sizing: border-box; }
+        .league-badge { background: rgba(255, 215, 0, 0.1); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255, 215, 0, 0.2); }
+        .score-container { text-align: center; margin-top: 5px; }
+        .score-value { font-size: 46px; font-weight: 800; color: #ffffff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.3); letter-spacing: 1px; }
+        .status-sync { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .game-zone { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
+        .coin-glow { position: absolute; width: 270px; height: 270px; background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%); border-radius: 50%; pointer-events: none; z-index: 1; }
+        
+        /* Bouton de la pièce Harold Coins configuré proprement */
+        .main-coin-btn { 
+            position: relative; z-index: 2; width: 210px; height: 210px; 
+            border-radius: 50%; cursor: pointer; border: none; outline: none; 
+            touch-action: manipulation; transition: transform 0.05s ease; 
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7); 
+            background: url('coin.png') center/cover no-repeat; 
+            display: flex; align-items: center; justify-content: center; 
+            -webkit-tap-highlight-color: transparent; 
         }
-        .coin-btn:active { transform: scale(0.95); }
+        .main-coin-btn:active { transform: scale(0.94) translateY(2px); }
+        
+        .floating-click { position: absolute; color: #ffffff; font-size: 32px; font-weight: 800; pointer-events: none; z-index: 10; text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8); animation: moveUpFade 0.5s ease-out forwards; }
+        @keyframes moveUpFade { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(0.85); opacity: 0; } }
+        .energy-container { width: 100%; max-width: 380px; display: flex; align-items: center; gap: 12px; padding: 0 8px; box-sizing: border-box; }
+        .energy-text { font-size: 14px; font-weight: 700; color: #ffffff; white-space: nowrap; }
+        .energy-bar-bg { flex-grow: 1; height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
+        .energy-bar-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #ff9900, #ffd700); border-radius: 10px; transition: width 0.1s ease; }
+        .bottom-nav { width: 100%; max-width: 380px; background: var(--surface-blur); backdrop-filter: blur(15px); border-radius: 16px; display: flex; justify-content: space-around; padding: 12px 4px; box-sizing: border-box; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 5px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: none; border: none; color: var(--text-main); font-size: 11px; font-weight: 600; cursor: pointer; opacity: 0.8; -webkit-tap-highlight-color: transparent; }
+        .nav-item:active { transform: scale(0.92); }
+        .nav-icon { font-size: 18px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="score" id="scoreDisplay">0</div>
-    <button class="coin-btn" id="coinBtn"></button>
+    <div class="top-status-bar">
+        <div class="status-sync" id="syncStatus">Local 🔒</div>
+        <div class="league-badge" id="leagueDisplay">🏅 Bronze</div>
+    </div>
+
+    <div class="score-container">
+        <div class="score-value" id="scoreDisplay">0</div>
+    </div>
+
+    <div class="game-zone">
+        <div class="coin-glow"></div>
+        <button class="main-coin-btn" id="coinBtn"></button>
+    </div>
+
+    <div class="energy-container">
+        <div class="energy-text">⚡ <span id="energyText">1000</span>/<span id="maxEnergyDisplay">1000</span></div>
+        <div class="energy-bar-bg"><div class="energy-bar-fill" id="energyBarFill"></div></div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item"><span class="nav-icon">🎁</span><span>Frens</span></div>
+        <div class="nav-item"><span class="nav-icon">🪙</span><span>Earn</span></div>
+        <div class="nav-item"><span class="nav-icon">🚀</span><span>Boosts</span></div>
+        <div class="nav-item"><span class="nav-icon">🏆</span><span>Tops</span></div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand(); tg.ready();
 
-        let score = parseInt(localStorage.getItem('h_score')) || 0;
+        let score = parseInt(localStorage.getItem('h_local_score')) || 0;
+        let maxEnergy = 1000;
+        let energy = parseInt(localStorage.getItem('h_game_energy')) || maxEnergy;
+        let clickValue = 1;
+
         const scoreDisplay = document.getElementById('scoreDisplay');
+        const energyText = document.getElementById('energyText');
+        const energyBarFill = document.getElementById('energyBarFill');
         const coinBtn = document.getElementById('coinBtn');
 
-        scoreDisplay.innerText = score;
+        function updateUI() {
+            if(scoreDisplay) scoreDisplay.innerText = score.toLocaleString('en-US');
+            if(energyText) energyText.innerText = energy;
+            if(energyBarFill) energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
+        }
+        updateUI();
 
-        coinBtn.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            score += 1;
-            scoreDisplay.innerText = score;
-            localStorage.setItem('h_score', score);
+        if(coinBtn) {
+            // Utilisation de pointerdown pour une réactivité instantanée au toucher
+            coinBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                if (energy >= clickValue) {
+                    score += clickValue; 
+                    energy -= clickValue;
+                    
+                    localStorage.setItem('h_local_score', score); 
+                    localStorage.setItem('h_game_energy', energy);
+                    updateUI();
 
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
+                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+                    // Effet du chiffre +1 qui flotte
+                    const boundary = coinBtn.getBoundingClientRect();
+                    const element = document.createElement('div');
+                    element.className = 'floating-click'; element.innerText = "+" + clickValue;
+                    element.style.left = (e.clientX - boundary.left) + "px";
+                    element.style.top = (e.clientY - boundary.top) + "px";
+                    coinBtn.appendChild(element); 
+                    setTimeout(() => element.remove(), 500);
+                } else {
+                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                }
+            });
+        }
+
+        // Recharge automatique de la barre d'énergie (+3 points par seconde)
+        setInterval(() => {
+            if (energy < maxEnergy) { 
+                energy = Math.min(maxEnergy, energy + 3); 
+                localStorage.setItem('h_game_energy', energy); 
+                updateUI(); 
             }
-        });
+        }, 1000);
     </script>
 </body>
-</html>
+    </html>
+    
