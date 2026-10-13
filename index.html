@@ -3,79 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Haroldcoin</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Harold Tap</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:radial-gradient(circle at top,#1e1c42 0%,#080516 70%);color:white;font-family:sans-serif;height:100vh;overflow:hidden}
-#app{height:100vh;display:flex;flex-direction:column}
-.header{padding:14px 16px;display:flex;justify-content:space-between}
-.balance-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px}
-.balance{font-size:44px;font-weight:800}
-.profit{text-align:center;margin:10px;opacity:0.8;font-size:13px}
-.center{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
-.coin-wrapper{
-  width:300px;height:300px;
-  border-radius:50%;
-  overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  background:#080516;
-  box-shadow:0 0 60px rgba(245,213,72,0.5), 0 0 0 2px #f5d548;
-}
-.coin{
-  width:108%;height:108%;
-  object-fit:cover;
-  display:block;
-  transform:scale(1.08);
-  transition:transform 0.07s;
-}
-.coin:active{transform:scale(1.02)}
-.energy{padding:10px 16px;display:flex;justify-content:space-between}
-.energy-bar{height:8px;background:#1e1c3a;margin:6px 16px;border-radius:10px;overflow:hidden}
-.energy-fill{height:100%;background:linear-gradient(90deg,#f5d548,#ffaa00);width:100%}
-.nav{display:flex;justify-content:space-around;background:#13111f;padding:10px 0;border-top:1px solid #24224a}
-.nav-item{opacity:0.5;font-size:11px;text-align:center}
-.nav-item.active{opacity:1;color:#f5d548}
-.tap-effect{position:absolute;color:#f5d548;font-weight:800;font-size:30px;animation:up 0.8s forwards;pointer-events:none}
-@keyframes up{to{transform:translateY(-130px);opacity:0}}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
+body{background:#0f0f0f;color:#fff;font-family:'Segoe UI',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.top{width:100%;max-width:420px;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.balance-box{background:#1e1e1e;border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:8px;border:1px solid #333}
+.balance-box span{font-weight:800;font-size:18px}
+.stats{width:100%;max-width:420px;padding:0 16px;display:flex;gap:10px;margin-top:8px}
+.stat{flex:1;background:#1c1c1c;border-radius:16px;padding:10px;text-align:center;border:1px solid #2a2a2a}
+.stat small{color:#888;display:block;font-size:11px}
+.stat b{font-size:14px}
+.bar{height:8px;background:#222;border-radius:10px;overflow:hidden}
+.bar-fill{height:100%;width:35%;background:linear-gradient(90deg,#ffcc00,#ff9900);transition:width.3s}
+.game-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}
+#harold{width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #3a3a3a, #111);border:6px solid #2a2a2a;box-shadow:0 0 80px rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:120px;cursor:pointer;transition:transform.08s}
+#harold:active{transform:scale(.94)}
+.tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:28px;pointer-events:none;animation:floatUp.7s ease-out forwards}
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-120px) scale(1.5);opacity:0}}
+.footer{width:100%;max-width:420px;padding:16px;display:flex;justify-content:space-between;align-items:center;background:#151515;border-top:1px solid #222;border-radius:24px 24px 0 0}
+button.save{padding:8px 14px;border-radius:12px;border:0;background:#ffcc00;font-weight:800}
+#status{font-size:10px;color:#666;margin-top:4px;text-align:center}
 </style>
 </head>
 <body>
-<div id="app">
-<div class="header"><div>Level 1 • Harold Beginner</div><div>⚙️</div></div>
-<div class="balance-row"><div class="balance" id="balance">3286</div></div>
-<div class="profit">💰 Profit per hour +1,000</div>
-<div class="center" id="coinContainer">
-<div class="coin-wrapper">
-<img src="./coin.png" class="coin" id="coin">
+<div class="top">
+  <div class="balance-box">💰 <span id="balance">0</span></div>
+  <div style="text-align:right"><div style="font-size:12px;color:#888">HAROLD TAP</div><div id="status">Connexion...</div></div>
 </div>
+<div class="stats">
+  <div class="stat"><small>ENERGY</small><b id="energyText">1500 / 1500</b></div>
+  <div class="stat"><small>LEVEL</small><b id="levelText">1</b></div>
+  <div class="stat"><small>TAP</small><b>+1</b></div>
 </div>
-<div class="energy"><div>⚡ <span id="energy">1500</span>/1500</div><div>Boost</div></div>
-<div class="energy-bar"><div class="energy-fill" id="fill"></div></div>
-<div class="nav">
-<div class="nav-item active">🪙<br>Exchange</div>
-<div class="nav-item">⛏️<br>Mine</div>
-<div class="nav-item">👥<br>Frens</div>
-<div class="nav-item">💰<br>Earn</div>
-<div class="nav-item">🏆<br>Tops</div>
-</div>
+<div style="width:100%;max-width:420px;padding:0 16px;margin-top:12px"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
+<div class="game-area" id="gameArea"><div id="harold">🥸</div></div>
+<div class="footer">
+  <div>⚡ <b id="energyFooter">1500</b> / 1500</div>
+  <button class="save" onclick="saveNow()">SYNC</button>
 </div>
 <script>
-const tg=Telegram.WebApp; tg.expand();
-let bal=parseInt(localStorage.getItem('harold_bal')||'3286');
-let en=1500;
-const balEl=document.getElementById('balance');
-const enEl=document.getElementById('energy');
-const fill=document.getElementById('fill');
-const container=document.getElementById('coinContainer');
-const coin=document.getElementById('coin');
-function upd(){balEl.textContent=bal.toLocaleString('fr-FR');enEl.textContent=en;fill.style.width=en/1500*100+'%';localStorage.setItem('harold_bal',bal);}
-function showEffect(x,y){const d=document.createElement('div');d.className='tap-effect';d.textContent='+2';d.style.left=x+'px';d.style.top=y+'px';container.appendChild(d);setTimeout(()=>d.remove(),800);}
-function tap(e){e.preventDefault();if(en<=0)return;const t=e.touches?e.touches[0]:e;bal+=2;en-=1;showEffect(t.clientX,t.clientY);if(navigator.vibrate)navigator.vibrate(20);upd();}
-coin.addEventListener('touchstart',tap,{passive:false});
-coin.addEventListener('mousedown',tap);
-setInterval(()=>{if(en<1500){en+=2;if(en>1500)en=1500;upd();}},1000);
-upd();
+const SUPABASE_URL = "https://kgmatxqbdyusxpiuavbw.supabase.co";
+const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let userId = localStorage.getItem('harold_uid');
+if(!userId){ userId = Math.floor(Date.now()/1000).toString(); localStorage.setItem('harold_uid', userId); }
+let username = localStorage.getItem('harold_username') || 'player_' + userId.slice(-4);
+let balance = 0, energy = 1500, level = 1; const MAX_ENERGY = 1500; let isSaving = false;
+const balanceEl = document.getElementById('balance'), energyText = document.getElementById('energyText'), energyFooter = document.getElementById('energyFooter'), levelText = document.getElementById('levelText'), barFill = document.getElementById('barFill'), statusEl = document.getElementById('status'), haroldEl = document.getElementById('harold');
+function render(){ balanceEl.textContent = balance.toLocaleString(); energyText.textContent = energy + ' / ' + MAX_ENERGY; energyFooter.textContent = energy; levelText.textContent = level; barFill.style.width = (energy/MAX_ENERGY*100) + '%'; }
+async function loadUser(){
+  try{
+    statusEl.textContent = 'Chargement...';
+    let { data, error } = await supabaseClient.from('harold_users').select('*').eq('id', userId).single();
+    if(error && error.code === 'PGRST116'){
+      const { data: newData, error: insErr } = await supabaseClient.from('harold_users').insert([{ id: parseInt(userId), username: username, balance: 0, energy: 1500, level: 1 }]).select().single();
+      if(insErr) throw insErr; data = newData; statusEl.textContent = 'Nouveau profil créé ✅';
+    } else if(error) throw error; else statusEl.textContent = 'Connecté ✅';
+    if(data){ balance = data.balance?? 0; energy = data.energy?? 1500; level = data.level?? 1; render(); }
+  }catch(e){ statusEl.textContent = 'Mode hors-ligne'; balance = parseInt(localStorage.getItem('h_balance')||0); energy = parseInt(localStorage.getItem('h_energy')||1500); level = parseInt(localStorage.getItem('h_level')||1); render(); }
+}
+async function saveNow(){
+  if(isSaving) return; isSaving = true; statusEl.textContent = 'Sync...';
+  try{ const { error } = await supabaseClient.from('harold_users').upsert({ id: parseInt(userId), username: username, balance: balance, energy: energy, level: level }, { onConflict: 'id' }); if(error) throw error; statusEl.textContent = 'Sauvegardé ✅ ' + new Date().toLocaleTimeString(); }catch(e){ statusEl.textContent = 'Erreur save, local OK'; }
+  localStorage.setItem('h_balance', balance); localStorage.setItem('h_energy', energy); localStorage.setItem('h_level', level);
+  isSaving = false; setTimeout(()=>{ if(!isSaving) statusEl.textContent='Connecté ✅'; }, 1500);
+}
+function tap(e){ if(energy <=0) return; energy = Math.max(0, energy-1); balance += level; if(balance % 1000 === 0 && balance>0) level++; const clientX = (e.touches? e.touches[0].clientX : e.clientX); const clientY = (e.touches? e.touches[0].clientY : e.clientY); const plus = document.createElement('div'); plus.className='tap-plus'; plus.textContent='+'+level; plus.style.left = clientX + 'px'; plus.style.top = clientY - 20 + 'px'; document.body.appendChild(plus); setTimeout(()=>plus.remove(),700); render(); }
+haroldEl.addEventListener('click', tap); haroldEl.addEventListener('touchstart', (e)=>{ e.preventDefault(); tap(e); }, {passive:false});
+setInterval(saveNow, 3000); setInterval(()=>{ if(energy < MAX_ENERGY){ energy = Math.min(MAX_ENERGY, energy+2); render(); } }, 1000);
+window.addEventListener('beforeunload', saveNow); document.addEventListener('visibilitychange', ()=>{ if(document.hidden) saveNow(); });
+loadUser(); render();
 </script>
 </body>
 </html>
