@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Harold Tap</title>
+<title>Harold Tap FIXED</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
 body{background:#0f0f0f;color:#fff;font-family:'Segoe UI',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
@@ -15,66 +16,56 @@ body{background:#0f0f0f;color:#fff;font-family:'Segoe UI',sans-serif;height:100v
 .stat{flex:1;background:#1c1c1c;border-radius:16px;padding:10px;text-align:center;border:1px solid #2a2a2a}
 .stat small{color:#888;display:block;font-size:11px}
 .stat b{font-size:14px}
+.level-bar{width:100%;max-width:420px;padding:0 16px;margin-top:12px}
 .bar{height:8px;background:#222;border-radius:10px;overflow:hidden}
 .bar-fill{height:100%;width:35%;background:linear-gradient(90deg,#ffcc00,#ff9900);transition:width.3s}
 .game-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}
-#harold{width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #3a3a3a, #111);border:6px solid #2a2a2a;box-shadow:0 0 80px rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:120px;cursor:pointer;transition:transform.08s}
+#harold{width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #3a3a3a, #111);border:6px solid #2a2a2a;box-shadow:0 0 80px rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:120px;cursor:pointer;transition:transform.08s;touch-action:manipulation}
 #harold:active{transform:scale(.94)}
 .tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:28px;pointer-events:none;animation:floatUp.7s ease-out forwards}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-120px) scale(1.5);opacity:0}}
 .footer{width:100%;max-width:420px;padding:16px;display:flex;justify-content:space-between;align-items:center;background:#151515;border-top:1px solid #222;border-radius:24px 24px 0 0}
+.energy{font-size:14px;color:#ffcc00}.energy b{color:#fff}
 button.save{padding:8px 14px;border-radius:12px;border:0;background:#ffcc00;font-weight:800}
 #status{font-size:10px;color:#666;margin-top:4px;text-align:center}
 </style>
 </head>
 <body>
 <div class="top">
-  <div class="balance-box">💰 <span id="balance">0</span></div>
+  <div class="balance-box">💰 <span id="balance">7036</span></div>
   <div style="text-align:right"><div style="font-size:12px;color:#888">HAROLD TAP</div><div id="status">Connexion...</div></div>
 </div>
 <div class="stats">
-  <div class="stat"><small>ENERGY</small><b id="energyText">1500 / 1500</b></div>
+  <div class="stat"><small>ENERGY</small><b id="energyText">717 / 1500</b></div>
   <div class="stat"><small>LEVEL</small><b id="levelText">1</b></div>
   <div class="stat"><small>TAP</small><b>+1</b></div>
 </div>
-<div style="width:100%;max-width:420px;padding:0 16px;margin-top:12px"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
+<div class="level-bar"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
 <div class="game-area" id="gameArea"><div id="harold">🥸</div></div>
 <div class="footer">
-  <div>⚡ <b id="energyFooter">1500</b> / 1500</div>
+  <div class="energy">⚡ <b id="energyFooter">717</b> / 1500</div>
   <button class="save" onclick="saveNow()">SYNC</button>
 </div>
 <script>
 const SUPABASE_URL = "https://kgmatxqbdyusxpiuavbw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let userId = localStorage.getItem('harold_uid');
-if(!userId){ userId = Math.floor(Date.now()/1000).toString(); localStorage.setItem('harold_uid', userId); }
-let username = localStorage.getItem('harold_username') || 'player_' + userId.slice(-4);
-let balance = 0, energy = 1500, level = 1; const MAX_ENERGY = 1500; let isSaving = false;
+let tg = window.Telegram?.WebApp;
+let telegramId = tg?.initDataUnsafe?.user?.id?.toString();
+let userId = telegramId || localStorage.getItem('harold_uid') || '12345';
+localStorage.setItem('harold_uid', userId);
+let username = tg?.initDataUnsafe?.user?.username || 'harold_owner';
+let balance = 7036, energy = 717, level = 1;
+const MAX_ENERGY = 1500;
+let isSaving = false;
 const balanceEl = document.getElementById('balance'), energyText = document.getElementById('energyText'), energyFooter = document.getElementById('energyFooter'), levelText = document.getElementById('levelText'), barFill = document.getElementById('barFill'), statusEl = document.getElementById('status'), haroldEl = document.getElementById('harold');
-function render(){ balanceEl.textContent = balance.toLocaleString(); energyText.textContent = energy + ' / ' + MAX_ENERGY; energyFooter.textContent = energy; levelText.textContent = level; barFill.style.width = (energy/MAX_ENERGY*100) + '%'; }
-async function loadUser(){
-  try{
-    statusEl.textContent = 'Chargement...';
-    let { data, error } = await supabaseClient.from('harold_users').select('*').eq('id', userId).single();
-    if(error && error.code === 'PGRST116'){
-      const { data: newData, error: insErr } = await supabaseClient.from('harold_users').insert([{ id: parseInt(userId), username: username, balance: 0, energy: 1500, level: 1 }]).select().single();
-      if(insErr) throw insErr; data = newData; statusEl.textContent = 'Nouveau profil créé ✅';
-    } else if(error) throw error; else statusEl.textContent = 'Connecté ✅';
-    if(data){ balance = data.balance?? 0; energy = data.energy?? 1500; level = data.level?? 1; render(); }
-  }catch(e){ statusEl.textContent = 'Mode hors-ligne'; balance = parseInt(localStorage.getItem('h_balance')||0); energy = parseInt(localStorage.getItem('h_energy')||1500); level = parseInt(localStorage.getItem('h_level')||1); render(); }
-}
-async function saveNow(){
-  if(isSaving) return; isSaving = true; statusEl.textContent = 'Sync...';
-  try{ const { error } = await supabaseClient.from('harold_users').upsert({ id: parseInt(userId), username: username, balance: balance, energy: energy, level: level }, { onConflict: 'id' }); if(error) throw error; statusEl.textContent = 'Sauvegardé ✅ ' + new Date().toLocaleTimeString(); }catch(e){ statusEl.textContent = 'Erreur save, local OK'; }
-  localStorage.setItem('h_balance', balance); localStorage.setItem('h_energy', energy); localStorage.setItem('h_level', level);
-  isSaving = false; setTimeout(()=>{ if(!isSaving) statusEl.textContent='Connecté ✅'; }, 1500);
-}
-function tap(e){ if(energy <=0) return; energy = Math.max(0, energy-1); balance += level; if(balance % 1000 === 0 && balance>0) level++; const clientX = (e.touches? e.touches[0].clientX : e.clientX); const clientY = (e.touches? e.touches[0].clientY : e.clientY); const plus = document.createElement('div'); plus.className='tap-plus'; plus.textContent='+'+level; plus.style.left = clientX + 'px'; plus.style.top = clientY - 20 + 'px'; document.body.appendChild(plus); setTimeout(()=>plus.remove(),700); render(); }
-haroldEl.addEventListener('click', tap); haroldEl.addEventListener('touchstart', (e)=>{ e.preventDefault(); tap(e); }, {passive:false});
-setInterval(saveNow, 3000); setInterval(()=>{ if(energy < MAX_ENERGY){ energy = Math.min(MAX_ENERGY, energy+2); render(); } }, 1000);
-window.addEventListener('beforeunload', saveNow); document.addEventListener('visibilitychange', ()=>{ if(document.hidden) saveNow(); });
-loadUser(); render();
+function render(){balanceEl.textContent=balance.toLocaleString();energyText.textContent=energy+' / '+MAX_ENERGY;energyFooter.textContent=energy;levelText.textContent=level;barFill.style.width=(energy/MAX_ENERGY*100)+'%';}
+async function loadUser(){try{statusEl.textContent='Chargement...';let {data,error}=await supabaseClient.from('harold_users').select('*').eq('id',parseInt(userId)).single();if(error&&error.code==='PGRST116'){let {data:maxData}=await supabaseClient.from('harold_users').select('*').order('balance',{ascending:false}).limit(1).single();if(maxData&&maxData.balance>=1000){data=maxData;userId=maxData.id.toString();localStorage.setItem('harold_uid',userId);}else{const {data:newData}=await supabaseClient.from('harold_users').insert([{id:parseInt(userId),username,balance,energy,level}]).select().single();data=newData;}}if(data){balance=data.balance??7036;energy=data.energy??717;level=data.level??1;statusEl.textContent='Connecté ✅';render();}}catch(e){statusEl.textContent='Local ✅';render();}}
+async function saveNow(){if(isSaving)return;isSaving=true;statusEl.textContent='Sync...';try{await supabaseClient.from('harold_users').upsert({id:parseInt(userId),username,balance:Math.floor(balance),energy,level,last_profit_claim:new Date().toISOString()},{onConflict:'id'});statusEl.textContent='Sauvegardé ✅ '+new Date().toLocaleTimeString();}catch(e){statusEl.textContent='Erreur local OK';}isSaving=false;setTimeout(()=>statusEl.textContent='Connecté ✅',1500);}
+function tap(e){if(energy<=0)return;energy=Math.max(0,energy-1);balance+=level;const x=e.touches?e.touches[0].clientX:e.clientX;const y=e.touches?e.touches[0].clientY:e.clientY;const plus=document.createElement('div');plus.className='tap-plus';plus.textContent='+'+level;plus.style.left=x+'px';plus.style.top=(y-20)+'px';document.body.appendChild(plus);setTimeout(()=>plus.remove(),700);render();}
+haroldEl.addEventListener('click',tap);haroldEl.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
+setInterval(saveNow,3000);setInterval(()=>{if(energy<MAX_ENERGY){energy=Math.min(MAX_ENERGY,energy+2);render();}},1000);
+loadUser();render();if(tg){tg.ready();tg.expand();}
 </script>
 </body>
 </html>
