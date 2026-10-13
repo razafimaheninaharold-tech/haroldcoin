@@ -1,179 +1,104 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Haroldcoin Premium</title>
-    <script src="https://telegram.org"></script>
-    <script src="https://jsdelivr.net"></script>
-    <style>
-        :root {
-            --bg-color: #050312;
-            --surface-blur: rgba(255, 255, 255, 0.05);
-            --accent-gold: #ffd700;
-            --text-main: #ffffff;
-            --text-muted: #8a91a5;
-        }
-        body {
-            background-color: var(--bg-color); margin: 0; padding: 12px;
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            height: 100vh; box-sizing: border-box; overflow: hidden;
-            user-select: none; -webkit-user-select: none;
-            font-family: sans-serif;
-        }
-        .top-status-bar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; box-sizing: border-box; }
-        .status-sync { font-size: 13px; color: var(--text-muted); font-weight: 600; }
-        .league-badge { background: rgba(255, 215, 0, 0.1); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255, 215, 0, 0.2); }
-        .score-container { text-align: center; margin-top: 5px; }
-        .score-value { font-size: 46px; font-weight: 800; color: #ffffff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
-        .game-zone { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
-        .coin-glow { position: absolute; width: 270px; height: 270px; background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%); border-radius: 50%; pointer-events: none; }
-        .main-coin-btn { 
-            position: relative; z-index: 2; width: 210px; height: 210px; 
-            border-radius: 50%; cursor: pointer; border: none; outline: none; 
-            touch-action: manipulation; transition: transform 0.05s ease; 
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7); 
-            background: #ffd700 url('coin.png') center/cover no-repeat; 
-            display: flex; align-items: center; justify-content: center; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-        .main-coin-btn:active { transform: scale(0.94) translateY(2px); }
-        .floating-click { position: absolute; color: #ffffff; font-size: 32px; font-weight: 800; pointer-events: none; z-index: 10; text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8); animation: moveUpFade 0.5s ease-out forwards; }
-        @keyframes moveUpFade { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(0.85); opacity: 0; } }
-        .energy-container { width: 100%; max-width: 380px; display: flex; align-items: center; gap: 12px; padding: 0 8px; box-sizing: border-box; }
-        .energy-text { font-size: 14px; font-weight: 700; color: #ffffff; white-space: nowrap; }
-        .energy-bar-bg { flex-grow: 1; height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
-        .energy-bar-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #ff9900, #ffd700); border-radius: 10px; transition: width 0.1s ease; }
-        .bottom-nav { width: 100%; max-width: 380px; background: var(--surface-blur); backdrop-filter: blur(15px); border-radius: 16px; display: flex; justify-content: space-around; padding: 12px 4px; box-sizing: border-box; border: 1px solid rgba(255, 255, 255, 0.06); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: none; border: none; color: var(--text-main); font-size: 11px; font-weight: 600; cursor: pointer; opacity: 0.8; }
-        .nav-icon { font-size: 18px; margin-bottom: 2px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Haroldcoin Premium</title>
+<script src="https://telegram.org"></script>
+<script src="https://jsdelivr.net"></script>
+<style>
+:root { --bg:#050312; --gold:#ffd700; --txt:#ffffff; --mut:#8a91a5; }
+body { background:var(--bg); margin:0; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; height:100vh; box-sizing:border-box; overflow:hidden; user-select:none; -webkit-user-select:none; font-family:sans-serif; }
+.top-bar { width:100%; max-width:380px; display:flex; justify-content:space-between; align-items:center; padding:4px 8px; box-sizing:border-box; }
+.status-sync { font-size:13px; color:var(--mut); font-weight:600; }
+.badge { background:rgba(255,215,0,0.1); color:var(--gold); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; border:1px solid rgba(255,215,0,0.2); }
+.score-box { text-align:center; margin-top:5px; }
+.score-val { font-size:46px; font-weight:800; color:#fff; text-shadow:0 0 15px rgba(255,215,0,0.3); }
+.game-zone { position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center; }
+.btn-coin { width:210px; height:210px; border-radius:50%; cursor:pointer; border:none; outline:none; touch-action:manipulation; transition:transform 0.05s ease; box-shadow:0 12px 35px rgba(0,0,0,0.7); background:#ffd700 url('coin.png') center/cover no-repeat; -webkit-tap-highlight-color:transparent; }
+.btn-coin:active { transform:scale(0.94); }
+.float-txt { position:absolute; color:#fff; font-size:32px; font-weight:800; pointer-events:none; text-shadow:0 3px 6px #000; animation:upFade 0.5s ease-out forwards; }
+@keyframes upFade { 0% { transform:translateY(0); opacity:1; } 100% { transform:translateY(-80px); opacity:0; } }
+.energy-box { width:100%; max-width:380px; display:flex; align-items:center; gap:12px; padding:0 8px; box-sizing:border-box; color:#fff; font-size:14px; font-weight:700; }
+.bar-bg { flex-grow:1; height:10px; background:rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; }
+.bar-fill { width:100%; height:100%; background:linear-gradient(90deg,#ff9900,#ffd700); transition:width 0.1s ease; }
+.nav-bar { width:100%; max-width:380px; background:rgba(255,255,255,0.05); backdrop-filter:blur(15px); border-radius:16px; display:flex; justify-content:space-around; padding:12px 4px; box-sizing:border-box; border:1px solid rgba(255,255,255,0.06); }
+.nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; background:none; border:none; color:#fff; font-size:11px; font-weight:600; opacity:0.8; }
+</style>
 </head>
 <body>
-
-    <div class="top-status-bar">
-        <div class="status-sync" id="syncStatus">Connexion... ⏳</div>
-        <div class="league-badge">🏅 Bronze</div>
-    </div>
-
-    <div class="score-container">
-        <div class="score-value" id="scoreDisplay">0</div>
-    </div>
-
-    <div class="game-zone">
-        <div class="coin-glow"></div>
-        <button class="main-coin-btn" id="coinBtn"></button>
-    </div>
-
-    <div class="energy-container">
-        <div class="energy-text">⚡ <span id="energyText">1000</span>/<span id="maxEnergyDisplay">1000</span></div>
-        <div class="energy-bar-bg"><div class="energy-bar-fill" id="energyBarFill"></div></div>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="nav-item"><span class="nav-icon">🎁</span><span>Frens</span></button>
-        <button class="nav-item"><span class="nav-icon">🪙</span><span>Earn</span></button>
-        <button class="nav-item"><span class="nav-icon">🚀</span><span>Boosts</span></button>
-        <button class="nav-item"><span class="nav-icon">🏆</span><span>Tops</span></button>
-    </div>
-
-    <script>
-        const SUPABASE_URL = "https://supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-        
-        let supabaseClient = null;
-        try {
-            if (typeof supabase !== 'undefined') {
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch(e) { console.error(e); }
-
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
-        let userId = 123456789;
-        let username = "Joueur_Test";
-
-        if (tg) { 
-            tg.expand(); tg.ready(); 
-            if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                userId = tg.initDataUnsafe.user.id;
-                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Utilisateur";
-            }
-        }
-
-        let score = parseInt(localStorage.getItem('h_local_score')) || 0;
-        let maxEnergy = 1000;
-        let energy = parseInt(localStorage.getItem('h_game_energy')) || maxEnergy;
-        let clickValue = 1;
-        let isOnline = false;
-
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const energyText = document.getElementById('energyText');
-        const energyBarFill = document.getElementById('energyBarFill');
-        const coinBtn = document.getElementById('coinBtn');
-        const syncStatus = document.getElementById('syncStatus');
-
-        function updateUI() {
-            if (scoreDisplay) scoreDisplay.innerText = score.toLocaleString('en-US');
-            if (energyText) energyText.innerText = energy;
-            if (energyBarFill) energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
-        }
-        
-        updateUI();
-
-        async function loadUserData() {
-            if (!supabaseClient) {
-                if(syncStatus) syncStatus.innerText = "Mode Local ⚠️";
-                return;
-            }
-            try {
-                let { data, error } = await supabaseClient.from('users').select('*').eq('telegram_id', userId).maybeSingle();
-                if (error) throw error;
-                if (!data) {
-                    const { data: newUser, error: createError } = await supabaseClient.from('users').insert([{ telegram_id: userId, username: username, score: score, energy: energy }]).select().maybeSingle();
-                    if (createError) throw createError;
-                    if (newUser) data = newUser;
-                }
-                if (data) {
-                    score = data.score; energy = data.energy; isOnline = true;
-                    if(syncStatus) syncStatus.innerText = "En ligne 🟢";
-                    updateUI();
-                }
-            } catch (err) {
-                if(syncStatus) syncStatus.innerText = "Mode Hors-ligne 🔴";
-            }
-        }
-
-        async function saveUserData() {
-            localStorage.setItem('h_local_score', score);
-            localStorage.setItem('h_game_energy', energy);
-            if (!supabaseClient || !isOnline) return;
-            try {
-                await supabaseClient.from('users').update({ score: score, energy: energy, last_sync: new Date() }).eq('telegram_id', userId);
-            } catch (e) {}
-        }
-
-        function handleTap(clientX, clientY) {
-            if (energy >= clickValue) {
-                score += clickValue; energy -= clickValue; updateUI();
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-                const boundary = coinBtn.getBoundingClientRect();
-                const element = document.createElement('div');
-                element.className = 'floating-click'; element.innerText = "+" + clickValue;
-                element.style.left = (clientX - boundary.left) + "px"; element.style.top = (clientY - boundary.top) + "px";
-                coinBtn.appendChild(element); setTimeout(() => element.remove(), 500);
-            } else {
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-            }
-        }
-
-        if (coinBtn) {
-            coinBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e.touches[0].clientX, e.touches[0].clientY); });
-            coinBtn.addEventListener('mousedown', (e) => { handleTap(e.clientX, e.clientY); });
-        }
-
-        setInterval(() => { if (energy < maxEnergy) { energy = Math.min(maxEnergy, energy + 3); updateUI(); } }, 1000);
-        setInterval(saveUserData, 3000);
-        loadUserData();
-    </script>
+<div class="top-bar">
+<div class="status-sync" id="syncStatus">Connexion... ⏳</div>
+<div class="badge">🏅 Bronze</div>
+</div>
+<div class="score-box"><div class="score-val" id="scoreDisplay">0</div></div>
+<div class="game-zone"><button class="btn-coin" id="coinBtn"></button></div>
+<div class="energy-box">
+<div>⚡ <span id="energyText">1000</span>/<span id="maxDisplay">1000</span></div>
+<div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
+</div>
+<div class="nav-bar">
+<button class="nav-btn">🎁<br>Frens</button>
+<button class="nav-btn">🪙<br>Earn</button>
+<button class="nav-btn">🚀<br>Boosts</button>
+<button class="nav-btn">🏆<br>Tops</button>
+</div>
+<script>
+const URL_SB = "https://supabase.co";
+const KEY_SB = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+let client = null;
+try { if (typeof supabase !== 'undefined') { client = supabase.createClient(URL_SB, KEY_SB); } } catch(e) {}
+const tg = window.Telegram ? window.Telegram.WebApp : null;
+let uid = 123456789; let uname = "Joueur_Test";
+if (tg) { tg.expand(); tg.ready(); if(tg.initDataUnsafe && tg.initDataUnsafe.user) { uid = tg.initDataUnsafe.user.id; uname = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Joueur"; } }
+let score = parseInt(localStorage.getItem('h_score')) || 0;
+let maxE = 1000;
+let energy = parseInt(localStorage.getItem('h_energy')) || maxE;
+let val = 1; let online = false;
+const dScore = document.getElementById('scoreDisplay');
+const dEnergy = document.getElementById('energyText');
+const dFill = document.getElementById('barFill');
+const btn = document.getElementById('coinBtn');
+const dSync = document.getElementById('syncStatus');
+function updateUI() {
+if (dScore) dScore.innerText = score.toLocaleString('en-US');
+if (dEnergy) dEnergy.innerText = energy;
+if (dFill) dFill.style.width = ((energy / maxE) * 100) + "%";
+}
+updateUI();
+async function loadData() {
+if (!client) { if(dSync) dSync.innerText = "Mode Local ⚠️"; return; }
+try {
+let { data, error } = await client.from('users').select('*').eq('telegram_id', uid).maybeSingle();
+if (!data && !error) {
+let { data: nUser } = await client.from('users').insert([{ telegram_id: uid, username: uname, score: score, energy: energy }]).select().maybeSingle();
+if (nUser) data = nUser;
+}
+if (data) { score = data.score; energy = data.energy; online = true; if(dSync) dSync.innerText = "En ligne 🟢"; updateUI(); }
+} catch (err) { if(dSync) dSync.innerText = "Mode Local ⚠️"; }
+}
+async function saveData() {
+localStorage.setItem('h_score', score); localStorage.setItem('h_energy', energy);
+if (!client || !online) return;
+try { await client.from('users').update({ score: score, energy: energy, last_sync: new Date() }).eq('telegram_id', uid); } catch (e) {}
+}
+function tap(x, y) {
+if (energy >= val) {
+score += val; energy -= val; updateUI();
+if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+const rect = btn.getBoundingClientRect();
+const e = document.createElement('div'); e.className = 'float-txt'; e.innerText = "+" + val;
+e.style.left = (x - rect.left) + "px"; e.style.top = (y - rect.top) + "px";
+btn.appendChild(e); setTimeout(() => e.remove(), 500);
+} else { if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error'); }
+}
+if (btn) {
+btn.addEventListener('touchstart', (e) => { e.preventDefault(); if(e.touches[0]) tap(e.touches[0].clientX, e.touches[0].clientY); });
+btn.addEventListener('mousedown', (e) => { tap(e.clientX, e.clientY); });
+}
+setInterval(() => { if (energy < maxE) { energy = Math.min(maxE, energy + 3); updateUI(); } }, 1000);
+setInterval(saveData, 3000);
+loadData();
+</script>
 </body>
 </html>
