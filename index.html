@@ -6,7 +6,7 @@
     <title>Haroldcoin Premium</title>
     <!-- SCRIPT TELEGRAM OFFICIEL -->
     <script src="https://telegram.org"></script>
-    <!-- CDN SUPABASE CORRIGÉ -->
+    <!-- LIEN SUPABASE CORRIGÉ ET VALIDE -->
     <script src="https://jsdelivr.net"></script>
     <style>
         :root {
@@ -36,7 +36,7 @@
             border-radius: 50%; cursor: pointer; border: none; outline: none; 
             touch-action: manipulation; transition: transform 0.05s ease; 
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7); 
-            background: url('coin.png') center/cover no-repeat; 
+            background: #ffd700 url('coin.png') center/cover no-repeat; 
             display: flex; align-items: center; justify-content: center; 
             -webkit-tap-highlight-color: transparent; 
         }
@@ -83,27 +83,25 @@
     </div>
 
     <script>
-        // CONFIGURATION SUPABASE INTEGRÉE
-        const SUPABASE_URL = "https://kgmatxqbdyusxpiuavbw.supabase.co";
+        const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
         
+        // Initialisation correcte du client de la bibliothèque officielle
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Initialisation de Telegram
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-        let userId = 999999; // ID par défaut si on teste sur PC
-        let username = "Joueur Local";
+        let userId = 123456789; // ID de test pour navigateur
+        let username = "Joueur_Test";
 
         if (tg) { 
             tg.expand(); 
             tg.ready(); 
             if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 userId = tg.initDataUnsafe.user.id;
-                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
+                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Utilisateur";
             }
         }
 
-        // Variables globales du jeu
         let score = 0;
         let maxEnergy = 1000;
         let energy = maxEnergy;
@@ -121,7 +119,6 @@
             if (energyBarFill) energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
         }
 
-        // Chargement ou création du joueur
         async function loadUserData() {
             try {
                 let { data, error } = await supabaseClient
@@ -130,38 +127,41 @@
                     .eq('telegram_id', userId)
                     .maybeSingle();
 
+                if (error) throw error;
+
                 if (!data) {
-                    // L'utilisateur n'existe pas, on l'ajoute
                     const { data: newUser, error: createError } = await supabaseClient
                         .from('users')
                         .insert([{ telegram_id: userId, username: username, score: 0, energy: maxEnergy }])
                         .select()
                         .maybeSingle();
                     
+                    if (createError) throw createError;
                     if (newUser) data = newUser;
                 }
 
                 if (data) {
                     score = data.score;
                     energy = data.energy;
-                    syncStatus.innerText = "En ligne 🟢";
+                    if(syncStatus) syncStatus.innerText = "En ligne 🟢";
                     updateUI();
                 }
             } catch (err) {
-                syncStatus.innerText = "Erreur de sync 🔴";
+                console.error(err);
+                if(syncStatus) syncStatus.innerText = "Erreur de sync 🔴";
             }
         }
 
-        // Sauvegarde automatique vers Supabase
         async function saveUserData() {
             try {
-                await supabaseClient
+                const { error } = await supabaseClient
                     .from('users')
                     .update({ score: score, energy: energy, last_sync: new Date() })
                     .eq('telegram_id', userId);
-                syncStatus.innerText = "En ligne 🟢";
+                if (error) throw error;
+                if(syncStatus) syncStatus.innerText = "En ligne 🟢";
             } catch (e) {
-                syncStatus.innerText = "Synchro échouée ⚠️";
+                if(syncStatus) syncStatus.innerText = "Synchro échouée ⚠️";
             }
         }
 
@@ -197,6 +197,3 @@
             });
         }
 
-        // Recharge d'énergie (+3/s)
-        setInterval(() => {
-            if (energy < maxEnergy) {
