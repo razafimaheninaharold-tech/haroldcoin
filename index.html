@@ -3,68 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Harold Tap FIXED</title>
+<title>Haroldcoin - Vrai Logo</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
-body{background:#0f0f0f;color:#fff;font-family:'Segoe UI',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
-.top{width:100%;max-width:420px;padding:16px;display:flex;justify-content:space-between;align-items:center}
-.balance-box{background:#1e1e1e;border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:8px;border:1px solid #333}
-.balance-box span{font-weight:800;font-size:18px}
-.stats{width:100%;max-width:420px;padding:0 16px;display:flex;gap:10px;margin-top:8px}
-.stat{flex:1;background:#1c1c1c;border-radius:16px;padding:10px;text-align:center;border:1px solid #2a2a2a}
-.stat small{color:#888;display:block;font-size:11px}
-.stat b{font-size:14px}
-.level-bar{width:100%;max-width:420px;padding:0 16px;margin-top:12px}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent;font-family:Inter,sans-serif}
+body{background:#0a0a0a;color:#fff;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.top{width:100%;max-width:420px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.balance-pill{background:#1e1e1e;border:1px solid #333;border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:8px;font-weight:900;font-size:20px}
+.stats{width:100%;max-width:420px;padding:0 12px;display:flex;gap:8px;margin-top:4px}
+.stat{flex:1;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:16px;padding:12px;text-align:center}
+.stat small{color:#888;font-size:10px;display:block;letter-spacing:1px}
+.stat b{font-size:14px;display:block;margin-top:4px}
+.progress-wrap{width:100%;max-width:420px;padding:12px 16px}
 .bar{height:8px;background:#222;border-radius:10px;overflow:hidden}
-.bar-fill{height:100%;width:35%;background:linear-gradient(90deg,#ffcc00,#ff9900);transition:width.3s}
-.game-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}
-#harold{width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #3a3a3a, #111);border:6px solid #2a2a2a;box-shadow:0 0 80px rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:120px;cursor:pointer;transition:transform.08s;touch-action:manipulation}
-#harold:active{transform:scale(.94)}
-.tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:28px;pointer-events:none;animation:floatUp.7s ease-out forwards}
-@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-120px) scale(1.5);opacity:0}}
-.footer{width:100%;max-width:420px;padding:16px;display:flex;justify-content:space-between;align-items:center;background:#151515;border-top:1px solid #222;border-radius:24px 24px 0 0}
-.energy{font-size:14px;color:#ffcc00}.energy b{color:#fff}
-button.save{padding:8px 14px;border-radius:12px;border:0;background:#ffcc00;font-weight:800}
-#status{font-size:10px;color:#666;margin-top:4px;text-align:center}
+.bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:48%;transition:width.3s}
+.game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}
+.coin{width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #ffec8b, #d4a000 35%, #8a5a00 70%, #3a2000);border:8px solid #e6b800;box-shadow:0 0 60px rgba(255,215,0,.4), inset 0 0 30px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform.08s;touch-action:manipulation}
+.coin:active{transform:scale(.93)}
+.coin-inner{width:82%;height:82%;border-radius:50%;background:radial-gradient(circle at 30% 20%, #1a1a1a, #000);border:3px solid #d4a000;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 20px rgba(255,215,0,.2)}
+.coin h1{font-size:110px;font-weight:900;color:#ffcc00;text-shadow:0 2px 15px rgba(0,0,0,.9);line-height:.9;margin-top:5px}
+.crown{font-size:20px}
+.sub{font-size:8px;letter-spacing:1.8px;color:#c89600;margin-top:6px;text-align:center;line-height:1.2;font-weight:700}
+.tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
+.footer{width:100%;max-width:420px;padding:12px 16px 18px;display:flex;justify-content:space-between;align-items:center;background:#151515;border-top:1px solid #222;border-radius:24px 24px 0 0}
+#status{font-size:10px;color:#555}
+.btn-sync{background:#ffcc00;color:#000;border:0;padding:10px 18px;border-radius:14px;font-weight:900;font-size:13px}
 </style>
 </head>
 <body>
 <div class="top">
-  <div class="balance-box">💰 <span id="balance">7036</span></div>
-  <div style="text-align:right"><div style="font-size:12px;color:#888">HAROLD TAP</div><div id="status">Connexion...</div></div>
+  <div class="balance-pill">💰 <span id="bal">7 044</span></div>
+  <div style="text-align:right"><div style="font-size:12px;letter-spacing:1px">HAROLD TAP</div><div id="status">Connecté ✅</div></div>
 </div>
 <div class="stats">
-  <div class="stat"><small>ENERGY</small><b id="energyText">717 / 1500</b></div>
-  <div class="stat"><small>LEVEL</small><b id="levelText">1</b></div>
+  <div class="stat"><small>ENERGY</small><b id="energyT">729 / 1500</b></div>
+  <div class="stat"><small>LEVEL</small><b id="levelT">1</b></div>
   <div class="stat"><small>TAP</small><b>+1</b></div>
 </div>
-<div class="level-bar"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
-<div class="game-area" id="gameArea"><div id="harold">🥸</div></div>
+<div class="progress-wrap"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
+<div class="game" id="gameArea">
+  <div class="coin" id="coin"><div class="coin-inner"><div class="crown">👑</div><h1>H</h1><div style="font-size:18px;color:#ffcc00;margin-top:-6px">↑</div><div class="sub">HAROLD COINS<br>THE FUTURE OF DIGITAL FINANCE</div></div></div>
+</div>
 <div class="footer">
-  <div class="energy">⚡ <b id="energyFooter">717</b> / 1500</div>
-  <button class="save" onclick="saveNow()">SYNC</button>
+  <div style="color:#ffcc00;font-weight:700">⚡ <span id="energyF" style="color:#fff">729</span> / 1500</div>
+  <button class="btn-sync" onclick="saveNow()">SYNC</button>
 </div>
 <script>
-const SUPABASE_URL = "https://kgmatxqbdyusxpiuavbw.supabase.co";
-const SUPABASE_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let tg = window.Telegram?.WebApp;
-let telegramId = tg?.initDataUnsafe?.user?.id?.toString();
-let userId = telegramId || localStorage.getItem('harold_uid') || '12345';
-localStorage.setItem('harold_uid', userId);
-let username = tg?.initDataUnsafe?.user?.username || 'harold_owner';
-let balance = 7036, energy = 717, level = 1;
-const MAX_ENERGY = 1500;
-let isSaving = false;
-const balanceEl = document.getElementById('balance'), energyText = document.getElementById('energyText'), energyFooter = document.getElementById('energyFooter'), levelText = document.getElementById('levelText'), barFill = document.getElementById('barFill'), statusEl = document.getElementById('status'), haroldEl = document.getElementById('harold');
-function render(){balanceEl.textContent=balance.toLocaleString();energyText.textContent=energy+' / '+MAX_ENERGY;energyFooter.textContent=energy;levelText.textContent=level;barFill.style.width=(energy/MAX_ENERGY*100)+'%';}
-async function loadUser(){try{statusEl.textContent='Chargement...';let {data,error}=await supabaseClient.from('harold_users').select('*').eq('id',parseInt(userId)).single();if(error&&error.code==='PGRST116'){let {data:maxData}=await supabaseClient.from('harold_users').select('*').order('balance',{ascending:false}).limit(1).single();if(maxData&&maxData.balance>=1000){data=maxData;userId=maxData.id.toString();localStorage.setItem('harold_uid',userId);}else{const {data:newData}=await supabaseClient.from('harold_users').insert([{id:parseInt(userId),username,balance,energy,level}]).select().single();data=newData;}}if(data){balance=data.balance??7036;energy=data.energy??717;level=data.level??1;statusEl.textContent='Connecté ✅';render();}}catch(e){statusEl.textContent='Local ✅';render();}}
-async function saveNow(){if(isSaving)return;isSaving=true;statusEl.textContent='Sync...';try{await supabaseClient.from('harold_users').upsert({id:parseInt(userId),username,balance:Math.floor(balance),energy,level,last_profit_claim:new Date().toISOString()},{onConflict:'id'});statusEl.textContent='Sauvegardé ✅ '+new Date().toLocaleTimeString();}catch(e){statusEl.textContent='Erreur local OK';}isSaving=false;setTimeout(()=>statusEl.textContent='Connecté ✅',1500);}
-function tap(e){if(energy<=0)return;energy=Math.max(0,energy-1);balance+=level;const x=e.touches?e.touches[0].clientX:e.clientX;const y=e.touches?e.touches[0].clientY:e.clientY;const plus=document.createElement('div');plus.className='tap-plus';plus.textContent='+'+level;plus.style.left=x+'px';plus.style.top=(y-20)+'px';document.body.appendChild(plus);setTimeout(()=>plus.remove(),700);render();}
-haroldEl.addEventListener('click',tap);haroldEl.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
-setInterval(saveNow,3000);setInterval(()=>{if(energy<MAX_ENERGY){energy=Math.min(MAX_ENERGY,energy+2);render();}},1000);
+const SUPABASE_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
+const SUPABASE_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let tg=window.Telegram?.WebApp;
+let telegramId=tg?.initDataUnsafe?.user?.id?.toString();
+let userId=telegramId||localStorage.getItem('harold_uid')||'12345';
+localStorage.setItem('harold_uid',userId);
+let username=tg?.initDataUnsafe?.user?.username||'harold_owner';
+let balance=7044,energy=729,level=1;
+const MAX=1500;
+const balEl=document.getElementById('bal'),eT=document.getElementById('energyT'),eF=document.getElementById('energyF'),lT=document.getElementById('levelT'),bar=document.getElementById('barFill'),status=document.getElementById('status'),coin=document.getElementById('coin');
+function render(){balEl.textContent=Math.floor(balance).toLocaleString('fr-FR').replace(/,/g,' ');eT.textContent=energy+' / '+MAX;eF.textContent=energy;lT.textContent=level;bar.style.width=(energy/MAX*100)+'%';}
+async function loadUser(){try{status.textContent='Chargement...';let {data,error}=await supabaseClient.from('harold_users').select('*').eq('id',parseInt(userId)).single();if(error&&error.code==='PGRST116'){let {data:maxD}=await supabaseClient.from('harold_users').select('*').order('balance',{ascending:false}).limit(1).single();if(maxD){data=maxD;userId=maxD.id.toString();localStorage.setItem('harold_uid',userId);}else{let {data:nd}=await supabaseClient.from('harold_users').insert([{id:parseInt(userId),username,balance,energy,level}]).select().single();data=nd;}}if(data){balance=data.balance??7044;energy=data.energy??729;level=data.level??1;status.textContent='Connecté ✅';render();}}catch(e){status.textContent='Local ✅';render();}}
+async function saveNow(){status.textContent='Sync...';try{await supabaseClient.from('harold_users').upsert({id:parseInt(userId),username,balance:Math.floor(balance),energy,level,last_profit_claim:new Date().toISOString()},{onConflict:'id'});status.textContent='Sauvegardé ✅ '+new Date().toLocaleTimeString();setTimeout(()=>status.textContent='Connecté ✅',1500);}catch(e){status.textContent='Erreur, local OK';}}
+function tap(ev){if(energy<=0)return;energy=Math.max(0,energy-1);balance+=level;const x=ev.touches?ev.touches[0].clientX:ev.clientX;const y=ev.touches?ev.touches[0].clientY:ev.clientY;const p=document.createElement('div');p.className='tap-plus';p.textContent='+'+level;p.style.left=x+'px';p.style.top=(y-20)+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),700);render();}
+coin.addEventListener('click',tap);coin.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
+setInterval(saveNow,3000);setInterval(()=>{if(energy<MAX){energy=Math.min(MAX,energy+1);render();}},1200);
 loadUser();render();if(tg){tg.ready();tg.expand();}
 </script>
 </body>
