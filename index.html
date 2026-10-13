@@ -2,109 +2,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Haroldcoin</title>
-
-<!-- VRAIS LIENS ICI -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root { --bg: #050312; --gold: #ffd700; }
-body {
- background: var(--bg); margin: 0; padding: 12px;
- display: flex; flex-direction: column; align-items: center;
- justify-content: space-between; height: 100vh;
- box-sizing: border-box; overflow: hidden;
- font-family: sans-serif; color: #fff;
-}
-.score-box { font-size: 46px; font-weight: 800; text-shadow: 0 0 15px rgba(255,215,0,0.3); margin-top: 20px; }
-.btn-coin {
- width: 200px; height: 200px; border-radius: 50%; border: none;
- background: var(--gold); cursor: pointer;
- box-shadow: 0 10px 30px rgba(0,0,0,0.5);
- font-size: 80px;
-}
-.btn-coin:active { transform: scale(0.95); }
-.energy { font-size: 16px; font-weight: bold; }
-.sync { font-size: 12px; color: #8a91a5; }
+body{background:#050312;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
+#score{font-size:50px;font-weight:800;color:#ffd700}
+#coin{width:200px;height:200px;border-radius:50%;background:#ffd700;border:none;font-size:80px}
 </style>
 </head>
 <body>
-
-<div class="sync" id="dSync">Connexion... ⏳</div>
-<div class="score-box" id="dScore">0</div>
-<button class="btn-coin" id="dBtn">🪙</button>
-<div class="energy" id="dEnergy">⚡ 1000/1000</div>
-
+<div id="score">0</div>
+<button id="coin">🪙</button>
+<div id="status">Test OK</div>
 <script>
-const U_SB = "https://kgmatxqbdyusxpiuavbw.supabase.co";
-const K_SB = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-
-const sb = supabase.createClient(U_SB, K_SB);
-
-const tg = window.Telegram ? window.Telegram.WebApp : null;
-let uid = 123456789;
-let name = "Joueur";
-
-if (tg) {
- tg.expand();
- tg.ready();
- if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-  uid = tg.initDataUnsafe.user.id;
-  name = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
- }
+const tg = window.Telegram.WebApp;
+tg.expand();
+tg.ready();
+let s = 0;
+document.getElementById('coin').onclick = ()=>{
+ s++; 
+ document.getElementById('score').innerText = s;
+ tg.HapticFeedback.impactOccurred('light');
 }
-
-let score = parseInt(localStorage.getItem('h_sc')) || 0;
-let energy = parseInt(localStorage.getItem('h_en')) || 1000;
-let online = false;
-
-const elSc = document.getElementById('dScore');
-const elEn = document.getElementById('dEnergy');
-const elBtn = document.getElementById('dBtn');
-const elSy = document.getElementById('dSync');
-
-function viaUI() {
- elSc.innerText = score.toLocaleString();
- elEn.innerText = "⚡ " + energy + "/1000";
- localStorage.setItem('h_sc', score);
- localStorage.setItem('h_en', energy);
-}
-viaUI();
-
-async function load() {
- if (!sb) { elSy.innerText = "Mode Local ⚠️"; return; }
- try {
-  let { data } = await sb.from('users').select('*').eq('telegram_id', uid).maybeSingle();
-  if (!data) {
-   let { data: nU } = await sb.from('users').insert([{ telegram_id: uid, username: name, score: score, energy: energy }]).select().single();
-   if (nU) data = nU;
-  }
-  if (data) {
-   score = data.score; energy = data.energy;
-   online = true; elSy.innerText = "En ligne 🟢"; viaUI();
-  }
- } catch (err) { elSy.innerText = "Mode Local ⚠️"; console.log(err); }
-}
-
-function tap() {
- if (energy >= 1) {
-  score += 1; energy -= 1; viaUI();
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
- }
-}
-
-elBtn.addEventListener('touchstart', (e) => { e.preventDefault(); tap(); });
-elBtn.addEventListener('click', tap);
-
-setInterval(() => { if (energy < 1000) { energy = Math.min(1000, energy + 3); viaUI(); } }, 1000);
-setInterval(async () => {
- if (!online) return;
- try { await sb.from('users').update({ score, energy }).eq('telegram_id', uid); } catch(e){}
-}, 3000);
-
-load();
+document.getElementById('status').innerText = "User: " + (tg.initDataUnsafe.user?.first_name || "Joueur");
 </script>
 </body>
- </html>
+</html>
