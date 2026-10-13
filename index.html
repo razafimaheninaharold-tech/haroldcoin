@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Haroldcoin Premium</title>
-    <!-- L'ADRESSE EXACTE DU SCRIPT TELEGRAM CORRIGÉE ICI -->
+    <!-- SCRIPT TELEGRAM OFFICIEL -->
     <script src="https://telegram.org"></script>
+    <!-- CDN SUPABASE CORRIGÉ -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         :root {
             --bg-color: #050312;
@@ -22,6 +24,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         .top-status-bar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; box-sizing: border-box; }
+        .status-sync { font-size: 13px; color: var(--text-muted); font-weight: 600; }
         .league-badge { background: rgba(255, 215, 0, 0.1); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255, 215, 0, 0.2); }
         .score-container { text-align: center; margin-top: 5px; }
         .score-value { font-size: 46px; font-weight: 800; color: #ffffff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.3); letter-spacing: 1px; }
@@ -54,7 +57,7 @@
 <body>
 
     <div class="top-status-bar">
-        <div class="status-sync">Local 🔒</div>
+        <div class="status-sync" id="syncStatus">Connexion... ⏳</div>
         <div class="league-badge">🏅 Bronze</div>
     </div>
 
@@ -73,71 +76,127 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item"><span class="nav-icon">🎁</span><span>Frens</span></div>
-        <div class="nav-item"><span class="nav-icon">🪙</span><span>Earn</span></div>
-        <div class="nav-item"><span class="nav-icon">🚀</span><span>Boosts</span></div>
-        <div class="nav-item"><span class="nav-icon">🏆</span><span>Tops</span></div>
+        <button class="nav-item"><span class="nav-icon">🎁</span><span>Frens</span></button>
+        <button class="nav-item"><span class="nav-icon">🪙</span><span>Earn</span></button>
+        <button class="nav-item"><span class="nav-icon">🚀</span><span>Boosts</span></button>
+        <button class="nav-item"><span class="nav-icon">🏆</span><span>Tops</span></button>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        if (tg) { tg.expand(); tg.ready(); }
+        // CONFIGURATION SUPABASE INTEGRÉE
+        const SUPABASE_URL = "https://kgmatxqbdyusxpiuavbw.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let score = parseInt(localStorage.getItem('h_local_score')) || 0;
+        // Initialisation de Telegram
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        let userId = 999999; // ID par défaut si on teste sur PC
+        let username = "Joueur Local";
+
+        if (tg) { 
+            tg.expand(); 
+            tg.ready(); 
+            if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                userId = tg.initDataUnsafe.user.id;
+                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
+            }
+        }
+
+        // Variables globales du jeu
+        let score = 0;
         let maxEnergy = 1000;
-        let energy = parseInt(localStorage.getItem('h_game_energy')) || maxEnergy;
+        let energy = maxEnergy;
         let clickValue = 1;
 
         const scoreDisplay = document.getElementById('scoreDisplay');
         const energyText = document.getElementById('energyText');
         const energyBarFill = document.getElementById('energyBarFill');
         const coinBtn = document.getElementById('coinBtn');
+        const syncStatus = document.getElementById('syncStatus');
 
         function updateUI() {
             if (scoreDisplay) scoreDisplay.innerText = score.toLocaleString('en-US');
             if (energyText) energyText.innerText = energy;
             if (energyBarFill) energyBarFill.style.width = ((energy / maxEnergy) * 100) + "%";
         }
-        updateUI();
+
+        // Chargement ou création du joueur
+        async function loadUserData() {
+            try {
+                let { data, error } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('telegram_id', userId)
+                    .maybeSingle();
+
+                if (!data) {
+                    // L'utilisateur n'existe pas, on l'ajoute
+                    const { data: newUser, error: createError } = await supabaseClient
+                        .from('users')
+                        .insert([{ telegram_id: userId, username: username, score: 0, energy: maxEnergy }])
+                        .select()
+                        .maybeSingle();
+                    
+                    if (newUser) data = newUser;
+                }
+
+                if (data) {
+                    score = data.score;
+                    energy = data.energy;
+                    syncStatus.innerText = "En ligne 🟢";
+                    updateUI();
+                }
+            } catch (err) {
+                syncStatus.innerText = "Erreur de sync 🔴";
+            }
+        }
+
+        // Sauvegarde automatique vers Supabase
+        async function saveUserData() {
+            try {
+                await supabaseClient
+                    .from('users')
+                    .update({ score: score, energy: energy, last_sync: new Date() })
+                    .eq('telegram_id', userId);
+                syncStatus.innerText = "En ligne 🟢";
+            } catch (e) {
+                syncStatus.innerText = "Synchro échouée ⚠️";
+            }
+        }
+
+        function handleTap(clientX, clientY) {
+            if (energy >= clickValue) {
+                score += clickValue;
+                energy -= clickValue;
+                updateUI();
+
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+                const boundary = coinBtn.getBoundingClientRect();
+                const element = document.createElement('div');
+                element.className = 'floating-click';
+                element.innerText = "+" + clickValue;
+                element.style.left = (clientX - boundary.left) + "px";
+                element.style.top = (clientY - boundary.top) + "px";
+                coinBtn.appendChild(element);
+                setTimeout(() => element.remove(), 500);
+            } else {
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+            }
+        }
 
         if (coinBtn) {
-            // "touchstart" garantit une réaction immédiate sur tous les téléphones mobiles
             coinBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                if (energy >= clickValue) {
-                    score += clickValue;
-                    energy -= clickValue;
-                    
-                    localStorage.setItem('h_local_score', score);
-                    localStorage.setItem('h_game_energy', energy);
-                    updateUI();
-
-                    if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-
-                    // Animation du chiffre qui monte
-                    const touch = e.touches[0];
-                    const boundary = coinBtn.getBoundingClientRect();
-                    const element = document.createElement('div');
-                    element.className = 'floating-click';
-                    element.innerText = "+" + clickValue;
-                    element.style.left = (touch.clientX - boundary.left) + "px";
-                    element.style.top = (touch.clientY - boundary.top) + "px";
-                    coinBtn.appendChild(element);
-                    setTimeout(() => element.remove(), 500);
-                } else {
-                    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                }
+                const touch = e.touches[0];
+                handleTap(touch.clientX, touch.clientY);
+            });
+            coinBtn.addEventListener('mousedown', (e) => {
+                handleTap(e.clientX, e.clientY);
             });
         }
 
-        // Recharge passive d'énergie (+3/s)
+        // Recharge d'énergie (+3/s)
         setInterval(() => {
             if (energy < maxEnergy) {
-                energy = Math.min(maxEnergy, energy + 3);
-                localStorage.setItem('h_game_energy', energy);
-                updateUI();
-            }
-        }, 1000);
-    </script>
-</body>
-</html>
