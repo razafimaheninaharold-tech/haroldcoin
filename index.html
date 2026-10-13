@@ -13,20 +13,20 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 .balance-pill{background:#1e1e2e;border:1px solid #333;border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:8px;font-weight:900;font-size:20px}
 .stats{width:100%;max-width:420px;padding:0 12px;display:flex;gap:8px;margin-top:4px}
 .stat{flex:1;background:#1c1c2e;border:1px solid #2a2a4a;border-radius:16px;padding:12px;text-align:center}
-.stat small{color:#888;font-size:10px;display:block} .stat b{font-size:14px;display:block;margin-top:4px}
-.progress-wrap{width:100%;max-width:420px;padding:12px 16px} 
-.bar{height:10px;background:#1a1a2e;border-radius:10px;overflow:hidden;border:1px solid #2a2a4a} 
-.bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:58%;transition:width .3s}
+.stat small{color:#888;font-size:10px;display:block;letter-spacing:1px}.stat b{font-size:14px;display:block;margin-top:4px}
+.progress-wrap{width:100%;max-width:420px;padding:12px 16px}
+.bar{height:10px;background:#1a1a2e;border-radius:10px;overflow:hidden;border:1px solid #2a2a4a}
+.bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:58%;transition:width.3s}
 .game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}
-.coin-img{width:320px;height:320px;border-radius:50%;box-shadow:0 0 80px rgba(255,215,0,.5);cursor:pointer;transition:transform .08s;touch-action:manipulation}
+.coin-img{width:320px;height:320px;border-radius:50%;box-shadow:0 0 80px rgba(255,215,0,.5);cursor:pointer;transition:transform.08s;touch-action:manipulation;object-fit:cover}
 .coin-img:active{transform:scale(.93)}
-.tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp .7s ease-out forwards;z-index:10}
+.tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
 .footer{width:100%;max-width:420px;padding:10px 16px 12px;display:flex;justify-content:space-between;align-items:center;background:#12121f;border-top:1px solid #222}
 .nav{width:100%;max-width:420px;background:#12121f;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0 12px}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#666;cursor:pointer;padding:6px 12px;border-radius:12px}
 .nav-item.active{color:#ffcc00;background:rgba(255,204,0,.1)}
-#status{font-size:10px;color:#666} .btn-sync{background:#ffcc00;color:#000;border:0;padding:8px 14px;border-radius:12px;font-weight:900;font-size:12px}
+#status{font-size:10px;color:#666}.btn-sync{background:#ffcc00;color:#000;border:0;padding:8px 14px;border-radius:12px;font-weight:900;font-size:12px}
 .profit{margin-top:6px;background:#1a1a2e;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;border:1px solid #2a2a4a}
 </style>
 </head>
@@ -42,8 +42,7 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 </div>
 <div class="progress-wrap"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
 <div class="game">
-  <!-- TON VRAI LOGO ICI - mets le nom exact de ton image github -->
-  <img class="coin-img" id="coin" src="harold_logo.png" alt="Harold Coin"/>
+  <img class="coin-img" id="coin" src="coin.png" alt="Harold Coin"/>
 </div>
 <div class="footer">
   <div style="color:#ffcc00;font-weight:700">⚡ <span id="energyF" style="color:#fff">874</span> / 1500</div>
@@ -51,4 +50,29 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 </div>
 <div class="nav">
   <div class="nav-item active">🪙<span>Exchange</span></div>
-  <div class="nav
+  <div class="nav-item">⛏️<span>Mine</span></div>
+  <div class="nav-item">👥<span>Frens</span></div>
+  <div class="nav-item">💰<span>Earn</span></div>
+  <div class="nav-item">🏆<span>Tops</span></div>
+</div>
+<script>
+const SUPABASE_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
+const SUPABASE_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let tg=window.Telegram?.WebApp;
+let telegramId=tg?.initDataUnsafe?.user?.id?.toString();
+let userId=telegramId||localStorage.getItem('harold_uid')||'12345';
+localStorage.setItem('harold_uid',userId);
+let username=tg?.initDataUnsafe?.user?.username||'harold_owner';
+let balance=7174,energy=874,level=1; const MAX=1500;
+const balEl=document.getElementById('bal'),eT=document.getElementById('energyT'),eF=document.getElementById('energyF'),lT=document.getElementById('levelT'),bar=document.getElementById('barFill'),status=document.getElementById('status'),coin=document.getElementById('coin'),lvl=document.getElementById('lvl');
+function render(){balEl.textContent=Math.floor(balance).toLocaleString('fr-FR').replace(/,/g,' ');eT.textContent=energy+' / '+MAX;eF.textContent=energy;lT.textContent=level;lvl.textContent='Level '+level+' • Harold Beginner';bar.style.width=(energy/MAX*100)+'%';}
+async function loadUser(){try{status.textContent='Chargement...';let {data,error}=await supabaseClient.from('harold_users').select('*').eq('id',parseInt(userId)).single();if(error&&error.code==='PGRST116'){let {data:maxD}=await supabaseClient.from('harold_users').select('*').order('balance',{ascending:false}).limit(1).single();if(maxD){data=maxD;userId=maxD.id.toString();localStorage.setItem('harold_uid',userId);}else{let {data:nd}=await supabaseClient.from('harold_users').insert([{id:parseInt(userId),username,balance,energy,level}]).select().single();data=nd;}}if(data){balance=data.balance??7174;energy=data.energy??874;level=data.level??1;status.textContent='Connecté ✅';render();}}catch(e){status.textContent='Local ✅';render();}}
+async function saveNow(){status.textContent='Sync...';try{await supabaseClient.from('harold_users').upsert({id:parseInt(userId),username,balance:Math.floor(balance),energy,level,last_profit_claim:new Date().toISOString()},{onConflict:'id'});status.textContent='Sauvegardé ✅ '+new Date().toLocaleTimeString();setTimeout(()=>status.textContent='Connecté ✅',1500);}catch(e){status.textContent='Erreur local OK';}}
+function tap(ev){if(energy<=0)return;energy=Math.max(0,energy-1);balance+=level;const x=ev.touches?ev.touches[0].clientX:ev.clientX;const y=ev.touches?ev.touches[0].clientY:ev.clientY;const p=document.createElement('div');p.className='tap-plus';p.textContent='+'+level;p.style.left=x+'px';p.style.top=(y-20)+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),700);render();}
+coin.addEventListener('click',tap);coin.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
+setInterval(saveNow,4000);setInterval(()=>{if(energy<MAX){energy=Math.min(MAX,energy+1);render();}},1200);
+loadUser();render();if(tg){tg.ready();tg.expand();}
+</script>
+</body>
+</html>
