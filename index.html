@@ -1,104 +1,247 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Haroldcoin Premium</title>
-<script src="https://telegram.org"></script>
-<script src="https://jsdelivr.net"></script>
+<meta name="viewport" 
+content="width=device-width,
+initial-scale=1.0,
+user-scalable=no">
+<title>Haroldcoin</title>
+<script 
+src="https://telegram.org">
+</script>
+<script 
+src="https://jsdelivr.net">
+</script>
 <style>
-:root { --bg:#050312; --gold:#ffd700; --txt:#ffffff; --mut:#8a91a5; }
-body { background:var(--bg); margin:0; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; height:100vh; box-sizing:border-box; overflow:hidden; user-select:none; -webkit-user-select:none; font-family:sans-serif; }
-.top-bar { width:100%; max-width:380px; display:flex; justify-content:space-between; align-items:center; padding:4px 8px; box-sizing:border-box; }
-.status-sync { font-size:13px; color:var(--mut); font-weight:600; }
-.badge { background:rgba(255,215,0,0.1); color:var(--gold); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; border:1px solid rgba(255,215,0,0.2); }
-.score-box { text-align:center; margin-top:5px; }
-.score-val { font-size:46px; font-weight:800; color:#fff; text-shadow:0 0 15px rgba(255,215,0,0.3); }
-.game-zone { position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center; }
-.btn-coin { width:210px; height:210px; border-radius:50%; cursor:pointer; border:none; outline:none; touch-action:manipulation; transition:transform 0.05s ease; box-shadow:0 12px 35px rgba(0,0,0,0.7); background:#ffd700 url('coin.png') center/cover no-repeat; -webkit-tap-highlight-color:transparent; }
-.btn-coin:active { transform:scale(0.94); }
-.float-txt { position:absolute; color:#fff; font-size:32px; font-weight:800; pointer-events:none; text-shadow:0 3px 6px #000; animation:upFade 0.5s ease-out forwards; }
-@keyframes upFade { 0% { transform:translateY(0); opacity:1; } 100% { transform:translateY(-80px); opacity:0; } }
-.energy-box { width:100%; max-width:380px; display:flex; align-items:center; gap:12px; padding:0 8px; box-sizing:border-box; color:#fff; font-size:14px; font-weight:700; }
-.bar-bg { flex-grow:1; height:10px; background:rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; }
-.bar-fill { width:100%; height:100%; background:linear-gradient(90deg,#ff9900,#ffd700); transition:width 0.1s ease; }
-.nav-bar { width:100%; max-width:380px; background:rgba(255,255,255,0.05); backdrop-filter:blur(15px); border-radius:16px; display:flex; justify-content:space-around; padding:12px 4px; box-sizing:border-box; border:1px solid rgba(255,255,255,0.06); }
-.nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; background:none; border:none; color:#fff; font-size:11px; font-weight:600; opacity:0.8; }
+:root {
+ --bg: #050312;
+ --gold: #ffd700;
+}
+body {
+ background: var(--bg);
+ margin: 0;
+ padding: 12px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: 
+ space-between;
+ height: 100vh;
+ box-sizing: border-box;
+ overflow: hidden;
+ font-family: sans-serif;
+ color: #fff;
+}
+.score-box {
+ font-size: 46px;
+ font-weight: 800;
+ text-shadow: 0 0 15px 
+ rgba(255,215,0,0.3);
+ margin-top: 20px;
+}
+.btn-coin {
+ width: 200px;
+ height: 200px;
+ border-radius: 50%;
+ border: none;
+ background: var(--gold);
+ cursor: pointer;
+ box-shadow: 0 10px 30px 
+ rgba(0,0,0,0.5);
+}
+.btn-coin:active {
+ transform: scale(0.95);
+}
+.energy {
+ font-size: 16px;
+ font-weight: bold;
+}
+.sync {
+ font-size: 12px;
+ color: #8a91a5;
+}
 </style>
 </head>
 <body>
-<div class="top-bar">
-<div class="status-sync" id="syncStatus">Connexion... ⏳</div>
-<div class="badge">🏅 Bronze</div>
+
+<div class="sync" 
+id="dSync">
+Connexion... ⏳
 </div>
-<div class="score-box"><div class="score-val" id="scoreDisplay">0</div></div>
-<div class="game-zone"><button class="btn-coin" id="coinBtn"></button></div>
-<div class="energy-box">
-<div>⚡ <span id="energyText">1000</span>/<span id="maxDisplay">1000</span></div>
-<div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
+
+<div class="score-box" 
+id="dScore">
+0
 </div>
-<div class="nav-bar">
-<button class="nav-btn">🎁<br>Frens</button>
-<button class="nav-btn">🪙<br>Earn</button>
-<button class="nav-btn">🚀<br>Boosts</button>
-<button class="nav-btn">🏆<br>Tops</button>
+
+<button class="btn-coin" 
+id="dBtn">
+</button>
+
+<div class="energy" 
+id="dEnergy">
+⚡ 1000/1000
 </div>
+
 <script>
-const URL_SB = "https://supabase.co";
-const KEY_SB = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-let client = null;
-try { if (typeof supabase !== 'undefined') { client = supabase.createClient(URL_SB, KEY_SB); } } catch(e) {}
-const tg = window.Telegram ? window.Telegram.WebApp : null;
-let uid = 123456789; let uname = "Joueur_Test";
-if (tg) { tg.expand(); tg.ready(); if(tg.initDataUnsafe && tg.initDataUnsafe.user) { uid = tg.initDataUnsafe.user.id; uname = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Joueur"; } }
-let score = parseInt(localStorage.getItem('h_score')) || 0;
-let maxE = 1000;
-let energy = parseInt(localStorage.getItem('h_energy')) || maxE;
-let val = 1; let online = false;
-const dScore = document.getElementById('scoreDisplay');
-const dEnergy = document.getElementById('energyText');
-const dFill = document.getElementById('barFill');
-const btn = document.getElementById('coinBtn');
-const dSync = document.getElementById('syncStatus');
-function updateUI() {
-if (dScore) dScore.innerText = score.toLocaleString('en-US');
-if (dEnergy) dEnergy.innerText = energy;
-if (dFill) dFill.style.width = ((energy / maxE) * 100) + "%";
-}
-updateUI();
-async function loadData() {
-if (!client) { if(dSync) dSync.innerText = "Mode Local ⚠️"; return; }
+const U_SB = "https://" +
+"kgmatxqbdyusxpiuavbw" +
+".supabase.co";
+
+const K_SB = 
+"sb_publishable_" +
+"vn5kPYncLS3TtBS7" +
+"5hSFew_LjeISc47";
+
+let sb = null;
 try {
-let { data, error } = await client.from('users').select('*').eq('telegram_id', uid).maybeSingle();
-if (!data && !error) {
-let { data: nUser } = await client.from('users').insert([{ telegram_id: uid, username: uname, score: score, energy: energy }]).select().maybeSingle();
-if (nUser) data = nUser;
+ if (typeof supabase 
+ !== 'undefined') {
+  sb = supabase
+  .createClient(U_SB, K_SB);
+ }
+} catch(e){}
+
+const tg = window.Telegram ? 
+window.Telegram.WebApp : null;
+let uid = 123456789;
+let name = "Joueur";
+
+if (tg) {
+ tg.expand();
+ tg.ready();
+ if (tg.initDataUnsafe && 
+ tg.initDataUnsafe.user) {
+  uid = tg.initDataUnsafe
+  .user.id;
+  name = tg.initDataUnsafe
+  .user.username || 
+  tg.initDataUnsafe
+  .user.first_name;
+ }
 }
-if (data) { score = data.score; energy = data.energy; online = true; if(dSync) dSync.innerText = "En ligne 🟢"; updateUI(); }
-} catch (err) { if(dSync) dSync.innerText = "Mode Local ⚠️"; }
+
+let score = 
+parseInt(
+localStorage.getItem('h_sc')
+) || 0;
+
+let energy = 
+parseInt(
+localStorage.getItem('h_en')
+) || 1000;
+
+let online = false;
+
+const elSc = 
+document.getElementById('dScore');
+const elEn = 
+document.getElementById('dEnergy');
+const elBtn = 
+document.getElementById('dBtn');
+const elSy = 
+document.getElementById('dSync');
+
+function viaUI() {
+ if (elSc) elSc.innerText = 
+ score.toLocaleString();
+ if (elEn) elEn.innerText = 
+ "⚡ " + energy + "/1000";
 }
-async function saveData() {
-localStorage.setItem('h_score', score); localStorage.setItem('h_energy', energy);
-if (!client || !online) return;
-try { await client.from('users').update({ score: score, energy: energy, last_sync: new Date() }).eq('telegram_id', uid); } catch (e) {}
+viaUI();
+
+async function load() {
+ if (!sb) {
+  if (elSy) elSy.innerText = 
+  "Mode Local ⚠️";
+  return;
+ }
+ try {
+  let { data, error } = 
+  await sb.from('users')
+  .select('*')
+  .eq('telegram_id', uid)
+  .maybeSingle();
+  
+  if (!data && !error) {
+   let { data: nU } = 
+   await sb.from('users')
+   .insert([{ 
+    telegram_id: uid, 
+    username: name, 
+    score: score, 
+    energy: energy 
+   }])
+   .select().maybeSingle();
+   if (nU) data = nU;
+  }
+  if (data) {
+   score = data.score;
+   energy = data.energy;
+   online = true;
+   if (elSy) elSy.innerText = 
+   "En ligne 🟢";
+   viaUI();
+  }
+ } catch (err) {
+  if (elSy) elSy.innerText = 
+  "Mode Local ⚠️";
+ }
 }
-function tap(x, y) {
-if (energy >= val) {
-score += val; energy -= val; updateUI();
-if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-const rect = btn.getBoundingClientRect();
-const e = document.createElement('div'); e.className = 'float-txt'; e.innerText = "+" + val;
-e.style.left = (x - rect.left) + "px"; e.style.top = (y - rect.top) + "px";
-btn.appendChild(e); setTimeout(() => e.remove(), 500);
-} else { if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error'); }
+
+function tap() {
+ if (energy >= 1) {
+  score += 1;
+  energy -= 1;
+  viaUI();
+  localStorage.setItem('h_sc', 
+  score);
+  localStorage.setItem('h_en', 
+  energy);
+  if (tg && 
+  tg.HapticFeedback) {
+   tg.HapticFeedback
+   .impactOccurred('light');
+  }
+ }
 }
-if (btn) {
-btn.addEventListener('touchstart', (e) => { e.preventDefault(); if(e.touches[0]) tap(e.touches[0].clientX, e.touches[0].clientY); });
-btn.addEventListener('mousedown', (e) => { tap(e.clientX, e.clientY); });
+
+if (elBtn) {
+ elBtn.addEventListener(
+ 'touchstart', (e) => {
+  e.preventDefault();
+  tap();
+ });
+ elBtn.addEventListener(
+ 'mousedown', () => {
+  tap();
+ });
 }
-setInterval(() => { if (energy < maxE) { energy = Math.min(maxE, energy + 3); updateUI(); } }, 1000);
-setInterval(saveData, 3000);
-loadData();
+
+setInterval(() => {
+ if (energy < 1000) {
+  energy = Math.min(1000, 
+  energy + 3);
+  viaUI();
+ }
+}, 1000);
+
+async function save() {
+ if (!sb || !online) return;
+ try {
+  await sb.from('users')
+  .update({ 
+   score: score, 
+   energy: energy, 
+   last_sync: new Date() 
+  })
+  .eq('telegram_id', uid);
+ } catch(e){}
+}
+setInterval(save, 3000);
+
+load();
 </script>
 </body>
 </html>
