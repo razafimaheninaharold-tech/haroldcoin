@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -7,61 +7,123 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
 <style>
-*{box-sizing:border-box}
-body{background:#080516;color:#fff;font-family:system-ui,sans-serif;margin:0;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.top{display:flex;justify-content:space-between;padding:14px 16px;font-size:12px;color:#8a91a5}
-.score{font-size:64px;font-weight:900;text-align:center;margin-top:5px;text-shadow:0 0 20px rgba(255,204,0,.4)}
-.coin-wrap{flex:1;display:flex;align-items:center;justify-content:center}
-#coinBtn{width:280px;height:280px;border:none;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
-#coinBtn:active{transform:scale(0.92)}
-#coinBtn img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 0 30px rgba(255,204,0,.6))}
-.energy-box{text-align:center;padding-bottom:100px;font-weight:bold}
-.energy-bar{width:88%;height:12px;background:#1e1a33;border-radius:20px;margin:10px auto;overflow:hidden}
-.energy-fill{height:100%;background:linear-gradient(90deg,#ffb800,#ffcc00);width:100%}
-.nav{position:fixed;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-around;background:#151222;padding:14px;border-radius:22px}
-.nav div{text-align:center;font-size:12px;opacity:.9}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#080516;color:#fff;font-family:-apple-system,system-ui,sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden;user-select:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
+.top span{font-size:13px;color:#8a91a5}
+.badge{background:#151222;border:1px solid #2a2545;padding:6px 14px;border-radius:20px;font-size:13px;color:#fff}
+.score{font-size:72px;font-weight:900;text-align:center;line-height:1;text-shadow:0 0 25px rgba(255,204,0,.5);margin-top:10px}
+.coin-wrap{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
+#coinBtn{width:300px;height:300px;border:none;outline:none;background:transparent !important;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#coinBtn:active{transform:scale(0.93)}
+#coinBtn img{width:100%;height:100%;object-fit:contain;display:block;background:transparent !important;border:none;filter:drop-shadow(0 0 35px rgba(255,204,0,.7))}
+.energy-box{padding:0 16px 100px 16px}
+.energy-head{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;margin-bottom:8px}
+.energy-bar{width:100%;height:14px;background:#1e1a33;border-radius:20px;overflow:hidden}
+.energy-fill{height:100%;background:linear-gradient(90deg,#ffb800,#ffcc00);width:100%;border-radius:20px;transition:width .2s linear}
+.nav{position:fixed;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-around;background:#151222;border-radius:22px;padding:12px 0}
+.nav div{text-align:center;font-size:12px;line-height:15px;color:#b8b5c6}
+.plus{position:absolute;left:50%;top:40%;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:float .7s forwards}
+@keyframes float{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-100px);opacity:0}}
 </style>
 </head>
 <body>
-<div class="top"><span id="dSync">Connexion... ⏳</span><span>🏅 Bronze</span></div>
+<div class="top">
+<span id="dSync">Connexion... ⏳</span>
+<span class="badge">🏅 Bronze</span>
+</div>
+
 <div class="score" id="dScore">0</div>
-<div class="coin-wrap"><button id="dBtn"><img src="./coin.png" alt="Harold"></button></div>
-<div class="energy-box">⚡ <span id="dEnergy">1000/1000</span><div class="energy-bar"><div id="dFill" class="energy-fill"></div></div></div>
-<div class="nav"><div>🎁<br>Frens</div><div>🪙<br>Earn</div><div>🚀<br>Boosts</div><div>🏆<br>Tops</div></div>
+
+<div class="coin-wrap">
+<button id="dBtn"><img src="./coin.png?v=10" alt="coin"></button>
+</div>
+
+<div class="energy-box">
+<div class="energy-head">⚡ <span id="dEnergy">1000/1000</span></div>
+<div class="energy-bar"><div id="dFill" class="energy-fill"></div></div>
+</div>
+
+<div class="nav">
+<div>🎁<br>Frens</div>
+<div>🪙<br>Earn</div>
+<div>🚀<br>Boosts</div>
+<div>🏆<br>Tops</div>
+</div>
 
 <script>
+// CONFIG
 const U_SB="https://kgmatxqbdyusxpiuavbw.supabase.co";
 const K_SB="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-const sb=supabase.createClient(U_SB,K_SB);
-const tg=window.Telegram.WebApp; tg.expand(); tg.ready();
-let uid=tg.initDataUnsafe?.user?.id || 123456789;
-let username=tg.initDataUnsafe?.user?.username || "Joueur";
-let score=parseInt(localStorage.getItem('h_sc'))||0;
-let energy=parseInt(localStorage.getItem('h_en'))||1000;
-let online=false;
-const eS=document.getElementById('dScore'), eE=document.getElementById('dEnergy'), eF=document.getElementById('dFill'), eSy=document.getElementById('dSync');
+let sb=null;
+try{ sb=supabase.createClient(U_SB,K_SB); }catch(e){}
 
-function ui(){ eS.innerText=score.toLocaleString(); eE.innerText=energy+"/1000"; eF.style.width=energy/10+"%"; localStorage.setItem('h_sc',score); localStorage.setItem('h_en',energy); }
+const tg=window.Telegram.WebApp;
+tg.expand(); tg.ready();
+
+let uid = tg.initDataUnsafe?.user?.id || 123456789;
+let username = tg.initDataUnsafe?.user?.username || "Joueur";
+let score = parseInt(localStorage.getItem('h_sc'))||0;
+let energy = parseInt(localStorage.getItem('h_en'))||1000;
+let online=false;
+
+const eS=document.getElementById('dScore');
+const eE=document.getElementById('dEnergy');
+const eF=document.getElementById('dFill');
+const eSy=document.getElementById('dSync');
+
+function ui(){
+ eS.innerText=score.toLocaleString();
+ eE.innerText=energy+"/1000";
+ eF.style.width=(energy/10)+"%";
+ localStorage.setItem('h_sc',score);
+ localStorage.setItem('h_en',energy);
+}
 ui();
 
+// Timeout pour ne pas rester bloqué sur Connexion
+let loadTimeout = setTimeout(()=>{ if(!online){ eSy.innerText="Mode Local 🔒"; } }, 2500);
+
 async function load(){
+ if(!sb){ eSy.innerText="Mode Local 🔒"; return; }
  try{
-  let {data}=await sb.from('users').select('*').eq('telegram_id',uid).maybeSingle();
+  let {data,error}=await sb.from('users').select('*').eq('telegram_id',uid).maybeSingle();
+  if(error) throw error;
   if(!data){
    let {data:n}=await sb.from('users').insert([{telegram_id:uid, username:username, score:score, energy:energy}]).select().single();
    data=n;
   }
-  if(data){ score=data.score; energy=data.energy; online=true; eSy.innerText="En ligne 🟢"; ui(); }
- }catch(err){ console.log(err); eSy.innerText="Mode Local 🔒"; }
+  if(data){
+   score=data.score ?? score;
+   energy=data.energy ?? energy;
+   online=true;
+   clearTimeout(loadTimeout);
+   eSy.innerText="En ligne 🟢";
+   ui();
+  }
+ }catch(err){
+  console.log("Supabase error:",err);
+  clearTimeout(loadTimeout);
+  eSy.innerText="Mode Local 🔒";
+ }
 }
 load();
 
-function tap(){ if(energy>0){score++;energy--;ui(); if(tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light');} }
+function tap(){
+ if(energy<=0) return;
+ score++; energy--; ui();
+ if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+ let p=document.createElement('div'); p.className='plus'; p.innerText='+1';
+ document.querySelector('.coin-wrap').appendChild(p);
+ setTimeout(()=>p.remove(),700);
+}
+
 const btn=document.getElementById('dBtn');
-btn.addEventListener('touchstart',e=>{e.preventDefault();tap();},{passive:false});
+btn.addEventListener('touchstart',(e)=>{ e.preventDefault(); tap(); },{passive:false});
 btn.addEventListener('click',tap);
-setInterval(()=>{ if(energy<1000){energy=Math.min(1000,energy+3);ui();} },1000);
-setInterval(async()=>{ if(online) await sb.from('users').update({score,energy}).eq('telegram_id',uid); },3500);
+
+setInterval(()=>{ if(energy<1000){ energy=Math.min(1000,energy+2); ui(); } },1000);
+setInterval(async()=>{ if(online && sb){ try{ await sb.from('users').update({score,energy,updated_at:new Date()}).eq('telegram_id',uid); }catch(e){} } },4000);
 </script>
 </body>
 </html>
