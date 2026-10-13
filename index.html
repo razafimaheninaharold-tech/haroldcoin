@@ -2,109 +2,66 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <title>Haroldcoin</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
 <style>
-:root{--bg:#080516;--gold:#ffcc00;--card:#151222}
-body{background:var(--bg);margin:0;font-family:system-ui,sans-serif;color:#fff;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.top{padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.badge{border:1px solid #3a335f;padding:6px 14px;border-radius:20px;font-size:14px;background:var(--card)}
-.score{font-size:56px;font-weight:900;text-align:center;margin-top:10px;text-shadow:0 0 20px rgba(255,204,0,.4)}
-.coin-wrap{display:flex;flex:1;align-items:center;justify-content:center}
-#coinBtn{width:280px;height:280px;border-radius:50%;border:none;background:transparent;cursor:pointer;transition:transform .08s}
+*{box-sizing:border-box}
+body{background:#080516;color:#fff;font-family:system-ui,sans-serif;margin:0;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.top{display:flex;justify-content:space-between;padding:14px 16px;font-size:12px;color:#8a91a5}
+.score{font-size:64px;font-weight:900;text-align:center;margin-top:5px;text-shadow:0 0 20px rgba(255,204,0,.4)}
+.coin-wrap{flex:1;display:flex;align-items:center;justify-content:center}
+#coinBtn{width:280px;height:280px;border:none;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
 #coinBtn:active{transform:scale(0.92)}
-#coinBtn img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 25px rgba(255,204,0,.6))}
-.energy-box{padding:0 16px 16px}
-.energy-text{font-weight:bold;margin-bottom:6px}
-.energy-bar{height:12px;background:#1e1a33;border-radius:10px;overflow:hidden}
-.energy-fill{height:100%;background:linear-gradient(90deg,#ffb800,#ffcc00);width:100%;transition:width .3s}
-.nav{display:flex;justify-content:space-around;background:var(--card);margin:12px;padding:10px;border-radius:20px}
-.nav div{text-align:center;font-size:12px;opacity:.8}
+#coinBtn img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 0 30px rgba(255,204,0,.6))}
+.energy-box{text-align:center;padding-bottom:100px;font-weight:bold}
+.energy-bar{width:88%;height:12px;background:#1e1a33;border-radius:20px;margin:10px auto;overflow:hidden}
+.energy-fill{height:100%;background:linear-gradient(90deg,#ffb800,#ffcc00);width:100%}
+.nav{position:fixed;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-around;background:#151222;padding:14px;border-radius:22px}
+.nav div{text-align:center;font-size:12px;opacity:.9}
 </style>
 </head>
 <body>
-<div class="top">
-  <div id="status">Local 🔒</div>
-  <div class="badge">🏅 Bronze</div>
-</div>
-
-<div class="score" id="score">0</div>
-
-<div class="coin-wrap">
-  <button id="coinBtn"><img src="./coin.png" alt="coin"></button>
-</div>
-
-<div class="energy-box">
-  <div class="energy-text">⚡ <span id="enText">1000/1000</span></div>
-  <div class="energy-bar"><div class="energy-fill" id="enFill"></div></div>
-</div>
-
-<div class="nav">
-  <div>🎁<br>Frens</div>
-  <div>🪙<br>Earn</div>
-  <div>🚀<br>Boosts</div>
-  <div>🏆<br>Tops</div>
-</div>
+<div class="top"><span id="dSync">Connexion... ⏳</span><span>🏅 Bronze</span></div>
+<div class="score" id="dScore">0</div>
+<div class="coin-wrap"><button id="dBtn"><img src="./coin.png" alt="Harold"></button></div>
+<div class="energy-box">⚡ <span id="dEnergy">1000/1000</span><div class="energy-bar"><div id="dFill" class="energy-fill"></div></div></div>
+<div class="nav"><div>🎁<br>Frens</div><div>🪙<br>Earn</div><div>🚀<br>Boosts</div><div>🏆<br>Tops</div></div>
 
 <script>
-// === CONFIG SUPABASE ===
-const SUPA_URL = "https://kgmatxqbdyusxpiuavbw.supabase.co";
-const SUPA_KEY = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-const supabaseClient = supabase.createClient(SUPA_URL, SUPA_KEY);
+const U_SB="https://kgmatxqbdyusxpiuavbw.supabase.co";
+const K_SB="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+const sb=supabase.createClient(U_SB,K_SB);
+const tg=window.Telegram.WebApp; tg.expand(); tg.ready();
+let uid=tg.initDataUnsafe?.user?.id || 123456789;
+let username=tg.initDataUnsafe?.user?.username || "Joueur";
+let score=parseInt(localStorage.getItem('h_sc'))||0;
+let energy=parseInt(localStorage.getItem('h_en'))||1000;
+let online=false;
+const eS=document.getElementById('dScore'), eE=document.getElementById('dEnergy'), eF=document.getElementById('dFill'), eSy=document.getElementById('dSync');
 
-const tg = window.Telegram.WebApp; tg.expand(); tg.ready();
-let uid = tg.initDataUnsafe?.user?.id || 123456789;
-let username = tg.initDataUnsafe?.user?.username || "Joueur";
+function ui(){ eS.innerText=score.toLocaleString(); eE.innerText=energy+"/1000"; eF.style.width=energy/10+"%"; localStorage.setItem('h_sc',score); localStorage.setItem('h_en',energy); }
+ui();
 
-let score = parseInt(localStorage.getItem('h_sc'))||0;
-let energy = parseInt(localStorage.getItem('h_en'))||1000;
-let online = false;
-
-const elScore=document.getElementById('score');
-const elEnText=document.getElementById('enText');
-const elEnFill=document.getElementById('enFill');
-const elStatus=document.getElementById('status');
-
-function render(){
-  elScore.innerText=score.toLocaleString();
-  elEnText.innerText=energy+"/1000";
-  elEnFill.style.width=(energy/10)+"%";
-  localStorage.setItem('h_sc',score);
-  localStorage.setItem('h_en',energy);
+async function load(){
+ try{
+  let {data}=await sb.from('users').select('*').eq('telegram_id',uid).maybeSingle();
+  if(!data){
+   let {data:n}=await sb.from('users').insert([{telegram_id:uid, username:username, score:score, energy:energy}]).select().single();
+   data=n;
+  }
+  if(data){ score=data.score; energy=data.energy; online=true; eSy.innerText="En ligne 🟢"; ui(); }
+ }catch(err){ console.log(err); eSy.innerText="Mode Local 🔒"; }
 }
-render();
+load();
 
-async function loadCloud(){
-  try{
-    let {data} = await supabaseClient.from('users').select('*').eq('telegram_id',uid).maybeSingle();
-    if(!data){
-      let {data:newU}= await supabaseClient.from('users').insert([{telegram_id:uid,username:username,score:score,energy:energy}]).select().single();
-      data=newU;
-    }
-    if(data){ score=data.score; energy=data.energy; online=true; elStatus.innerText="En ligne 🟢"; render(); }
-  }catch(e){ elStatus.innerText="Local 🔒"; }
-}
-loadCloud();
-
-function tap(){
-  if(energy<=0) return;
-  score++; energy--; render();
-  if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  // petit +1 animé
-  const f=document.createElement('div');
-  f.innerText="+1"; f.style.position="absolute"; f.style.color="#ffcc00"; f.style.fontWeight="900"; f.style.left="50%"; f.style.top="45%"; f.style.animation="up .6s forwards";
-  document.body.appendChild(f); setTimeout(()=>f.remove(),600);
-}
-document.getElementById('coinBtn').addEventListener('touchstart',e=>{e.preventDefault();tap();});
-document.getElementById('coinBtn').addEventListener('click',tap);
-
-// recharge
-setInterval(()=>{ if(energy<1000){energy=Math.min(1000,energy+2); render();} },1000);
-// save
-setInterval(async()=>{ if(!online) return; await supabaseClient.from('users').update({score,energy}).eq('telegram_id',uid); },3000);
+function tap(){ if(energy>0){score++;energy--;ui(); if(tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light');} }
+const btn=document.getElementById('dBtn');
+btn.addEventListener('touchstart',e=>{e.preventDefault();tap();},{passive:false});
+btn.addEventListener('click',tap);
+setInterval(()=>{ if(energy<1000){energy=Math.min(1000,energy+3);ui();} },1000);
+setInterval(async()=>{ if(online) await sb.from('users').update({score,energy}).eq('telegram_id',uid); },3500);
 </script>
-<style>@keyframes up{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-80px);opacity:0}}</style>
 </body>
 </html>
