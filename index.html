@@ -3,98 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Harold Coins</title>
+<title>Haroldcoin</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
-  background: radial-gradient(circle at top, #1a1840 0%, #080516 60%);
+  background: radial-gradient(circle at top, #1e1c42 0%, #080516 65%);
   color:white;
-  font-family:sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow:hidden;
   height:100vh;
+  user-select:none;
 }
 #app{height:100vh;display:flex;flex-direction:column}
-.header{padding:14px 16px;display:flex;justify-content:space-between}
-.balance-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:10px}
-.balance{font-size:44px;font-weight:800}
-.coin-container{flex:1;display:flex;align-items:center;justify-content:center}
+.header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;font-size:15px;
+}
+.balance-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px}
+.balance{font-size:44px;font-weight:800;letter-spacing:1px}
+.profit{text-align:center;margin:10px auto;font-size:13px;opacity:0.8}
+.coin-container{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
 .coin-wrapper{
-  width:320px;height:320px;
-  border-radius:50%;
-  background: radial-gradient(circle, rgba(245,213,72,0.25) 0%, transparent 70%);
+  width:340px;height:340px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 100px rgba(245,213,72,0.35);
+  background: radial-gradient(circle, rgba(245,213,72,0.18) 0%, transparent 70%);
+  border-radius:50%;
 }
 .coin{
-  width:290px;height:290px;
+  width:300px;height:300px;
   object-fit:contain;
   cursor:pointer;
-  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
+  background:transparent;
+  mix-blend-mode:lighten;
+  filter: drop-shadow(0 0 50px rgba(245,213,72,0.6)) drop-shadow(0 10px 30px rgba(0,0,0,0.8));
+  transition:transform 0.07s;
 }
 .coin:active{transform:scale(0.92)}
-.energy{padding:12px 16px;display:flex;justify-content:space-between}
-.energy-bar{height:8px;background:#1c1a2e;margin:0 16px;border-radius:10px;overflow:hidden}
-.energy-fill{height:100%;background:linear-gradient(90deg,#f5d548,#f59e0b);width:100%}
-.nav{display:flex;justify-content:space-around;background:#151320;padding:10px 0;border-top:1px solid #222}
-.nav-item{opacity:0.5;font-size:11px;text-align:center}
+.energy{
+  padding:10px 16px;display:flex;justify-content:space-between;
+  font-size:14px;
+}
+.energy-bar{height:8px;background:#1e1c3a;margin:6px 16px;border-radius:10px;overflow:hidden}
+.energy-fill{height:100%;background:linear-gradient(90deg,#f5d548,#ffaa00);width:100%;transition:width 0.3s}
+.nav{
+  display:flex;justify-content:space-around;
+  background:#13111f;border-top:1px solid #24224a;
+  padding:10px 0 14px 0;
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;font-size:11px;opacity:0.5;gap:4px}
 .nav-item.active{opacity:1;color:#f5d548}
-.tap-effect{position:absolute;color:#f5d548;font-weight:800;font-size:30px;animation:up 0.8s forwards;pointer-events:none}
-@keyframes up{to{transform:translateY(-120px);opacity:0}}
+.tap-effect{
+  position:absolute;color:#f5d548;font-weight:800;font-size:30px;
+  pointer-events:none;animation:floatUp 0.8s forwards;
+  text-shadow:0 2px 10px black;
+}
+@keyframes floatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-130px);opacity:0}}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="header"><div>Level 1 • Harold Beginner</div><div>⚙️</div></div>
-  <div class="balance-row"><img src="./coin.png?v=300" style="width:30px;height:30px"><div class="balance" id="balance">0</div></div>
-  <div style="text-align:center;margin:10px;opacity:0.7;font-size:13px">💰 Profit per hour +1,000</div>
+  <div class="balance-row">
+    <img src="./coin.png" style="width:32px;height:32px;object-fit:contain;mix-blend-mode:lighten">
+    <div class="balance" id="balance">0</div>
+  </div>
+  <div class="profit">💰 Profit per hour +1,000</div>
+
   <div class="coin-container" id="coinContainer">
     <div class="coin-wrapper">
-      <img src="./coin.png?v=300" class="coin" id="coin">
+      <img src="./coin.png" alt="Harold Coin" class="coin" id="coin">
     </div>
   </div>
+
   <div class="energy"><div>⚡ <span id="energy">1500</span>/1500</div><div>Boost</div></div>
   <div class="energy-bar"><div class="energy-fill" id="fill"></div></div>
+
   <div class="nav">
-    <div class="nav-item active">🪙<br>Exchange</div>
-    <div class="nav-item">⛏️<br>Mine</div>
-    <div class="nav-item">👥<br>Frens</div>
-    <div class="nav-item">💰<br>Earn</div>
-    <div class="nav-item">🏆<br>Tops</div>
+    <div class="nav-item active"><span>🪙</span>Exchange</div>
+    <div class="nav-item"><span>⛏️</span>Mine</div>
+    <div class="nav-item"><span>👥</span>Frens</div>
+    <div class="nav-item"><span>💰</span>Earn</div>
+    <div class="nav-item"><span>🏆</span>Tops</div>
   </div>
 </div>
+
 <script>
 const tg = window.Telegram.WebApp; tg.expand();
-let bal = parseInt(localStorage.getItem('bal')||'2500');
+let bal = parseInt(localStorage.getItem('harold_bal')||'2758');
 let en = 1500;
-const balEl=document.getElementById('balance');
-const enEl=document.getElementById('energy');
-const fill=document.getElementById('fill');
-const container=document.getElementById('coinContainer');
-const coin=document.getElementById('coin');
+
+const balEl = document.getElementById('balance');
+const enEl = document.getElementById('energy');
+const fill = document.getElementById('fill');
+const container = document.getElementById('coinContainer');
+const coin = document.getElementById('coin');
 
 function upd(){
-  balEl.textContent=bal.toLocaleString();
-  enEl.textContent=en;
-  fill.style.width=en/1500*100+'%';
-  localStorage.setItem('bal',bal);
+  balEl.textContent = bal.toLocaleString('fr-FR');
+  enEl.textContent = en;
+  fill.style.width = (en/1500*100)+'%';
+  localStorage.setItem('harold_bal', bal);
 }
-function tap(e){
-  e.preventDefault();
-  if(en<=0) return;
-  bal+=2; en-=1;
-  let x=e.touches?e.touches[0].clientX:e.clientX;
-  let y=e.touches?e.touches[0].clientY:e.clientY;
-  let d=document.createElement('div');
+function showEffect(x,y){
+  const d=document.createElement('div');
   d.className='tap-effect'; d.textContent='+2';
   d.style.left=x+'px'; d.style.top=y+'px';
   container.appendChild(d);
   setTimeout(()=>d.remove(),800);
+}
+function tap(e){
+  e.preventDefault();
+  if(en<=0) return;
+  const touch = e.touches? e.touches[0] : e;
+  bal+=2; en-=1;
+  showEffect(touch.clientX, touch.clientY);
+  if(navigator.vibrate) navigator.vibrate(20);
   upd();
 }
-coin.addEventListener('touchstart',tap,{passive:false});
-coin.addEventListener('mousedown',tap);
-setInterval(()=>{ if(en<1500){en+=3; upd();}},1000);
+coin.addEventListener('touchstart', tap, {passive:false});
+coin.addEventListener('mousedown', tap);
+setInterval(()=>{ if(en<1500){en+=2; if(en>1500) en=1500; upd();}},1000);
 upd();
 </script>
 </body>
