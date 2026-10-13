@@ -15,20 +15,21 @@ body{background:radial-gradient(circle at top,#1e1c42 0%,#080516 70%);color:whit
 .profit{text-align:center;margin:10px;opacity:0.8;font-size:13px}
 .center{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
 .coin-wrapper{
-  width:310px;height:310px;
+  width:300px;height:300px;
   border-radius:50%;
   overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle,rgba(245,213,72,0.25) 0%,transparent 70%);
-  box-shadow:0 0 80px rgba(245,213,72,0.4);
-  border:3px solid #f5d548;
+  background:#080516;
+  box-shadow:0 0 60px rgba(245,213,72,0.5), 0 0 0 2px #f5d548;
 }
 .coin{
-  width:100%;height:100%;
+  width:108%;height:108%;
   object-fit:cover;
   display:block;
+  transform:scale(1.08);
+  transition:transform 0.07s;
 }
-.coin:active{transform:scale(0.93)}
+.coin:active{transform:scale(1.02)}
 .energy{padding:10px 16px;display:flex;justify-content:space-between}
 .energy-bar{height:8px;background:#1e1c3a;margin:6px 16px;border-radius:10px;overflow:hidden}
 .energy-fill{height:100%;background:linear-gradient(90deg,#f5d548,#ffaa00);width:100%}
@@ -42,7 +43,7 @@ body{background:radial-gradient(circle at top,#1e1c42 0%,#080516 70%);color:whit
 <body>
 <div id="app">
 <div class="header"><div>Level 1 • Harold Beginner</div><div>⚙️</div></div>
-<div class="balance-row"><div class="balance" id="balance">0</div></div>
+<div class="balance-row"><div class="balance" id="balance">3286</div></div>
 <div class="profit">💰 Profit per hour +1,000</div>
 <div class="center" id="coinContainer">
 <div class="coin-wrapper">
@@ -61,7 +62,7 @@ body{background:radial-gradient(circle at top,#1e1c42 0%,#080516 70%);color:whit
 </div>
 <script>
 const tg=Telegram.WebApp; tg.expand();
-let bal=parseInt(localStorage.getItem('harold_bal')||'2872');
+let bal=parseInt(localStorage.getItem('harold_bal')||'3286');
 let en=1500;
 const balEl=document.getElementById('balance');
 const enEl=document.getElementById('energy');
