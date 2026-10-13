@@ -2,246 +2,109 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" 
-content="width=device-width,
-initial-scale=1.0,
-user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Haroldcoin</title>
-<script 
-src="https://telegram.org">
-</script>
-<script 
-src="https://jsdelivr.net">
-</script>
+
+<!-- VRAIS LIENS ICI -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root {
- --bg: #050312;
- --gold: #ffd700;
-}
+:root { --bg: #050312; --gold: #ffd700; }
 body {
- background: var(--bg);
- margin: 0;
- padding: 12px;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: 
- space-between;
- height: 100vh;
- box-sizing: border-box;
- overflow: hidden;
- font-family: sans-serif;
- color: #fff;
+ background: var(--bg); margin: 0; padding: 12px;
+ display: flex; flex-direction: column; align-items: center;
+ justify-content: space-between; height: 100vh;
+ box-sizing: border-box; overflow: hidden;
+ font-family: sans-serif; color: #fff;
 }
-.score-box {
- font-size: 46px;
- font-weight: 800;
- text-shadow: 0 0 15px 
- rgba(255,215,0,0.3);
- margin-top: 20px;
-}
+.score-box { font-size: 46px; font-weight: 800; text-shadow: 0 0 15px rgba(255,215,0,0.3); margin-top: 20px; }
 .btn-coin {
- width: 200px;
- height: 200px;
- border-radius: 50%;
- border: none;
- background: var(--gold);
- cursor: pointer;
- box-shadow: 0 10px 30px 
- rgba(0,0,0,0.5);
+ width: 200px; height: 200px; border-radius: 50%; border: none;
+ background: var(--gold); cursor: pointer;
+ box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+ font-size: 80px;
 }
-.btn-coin:active {
- transform: scale(0.95);
-}
-.energy {
- font-size: 16px;
- font-weight: bold;
-}
-.sync {
- font-size: 12px;
- color: #8a91a5;
-}
+.btn-coin:active { transform: scale(0.95); }
+.energy { font-size: 16px; font-weight: bold; }
+.sync { font-size: 12px; color: #8a91a5; }
 </style>
 </head>
 <body>
 
-<div class="sync" 
-id="dSync">
-Connexion... ⏳
-</div>
-
-<div class="score-box" 
-id="dScore">
-0
-</div>
-
-<button class="btn-coin" 
-id="dBtn">
-</button>
-
-<div class="energy" 
-id="dEnergy">
-⚡ 1000/1000
-</div>
+<div class="sync" id="dSync">Connexion... ⏳</div>
+<div class="score-box" id="dScore">0</div>
+<button class="btn-coin" id="dBtn">🪙</button>
+<div class="energy" id="dEnergy">⚡ 1000/1000</div>
 
 <script>
-const U_SB = "https://" +
-"kgmatxqbdyusxpiuavbw" +
-".supabase.co";
+const U_SB = "https://kgmatxqbdyusxpiuavbw.supabase.co";
+const K_SB = "sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
 
-const K_SB = 
-"sb_publishable_" +
-"vn5kPYncLS3TtBS7" +
-"5hSFew_LjeISc47";
+const sb = supabase.createClient(U_SB, K_SB);
 
-let sb = null;
-try {
- if (typeof supabase 
- !== 'undefined') {
-  sb = supabase
-  .createClient(U_SB, K_SB);
- }
-} catch(e){}
-
-const tg = window.Telegram ? 
-window.Telegram.WebApp : null;
+const tg = window.Telegram ? window.Telegram.WebApp : null;
 let uid = 123456789;
 let name = "Joueur";
 
 if (tg) {
  tg.expand();
  tg.ready();
- if (tg.initDataUnsafe && 
- tg.initDataUnsafe.user) {
-  uid = tg.initDataUnsafe
-  .user.id;
-  name = tg.initDataUnsafe
-  .user.username || 
-  tg.initDataUnsafe
-  .user.first_name;
+ if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  uid = tg.initDataUnsafe.user.id;
+  name = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
  }
 }
 
-let score = 
-parseInt(
-localStorage.getItem('h_sc')
-) || 0;
-
-let energy = 
-parseInt(
-localStorage.getItem('h_en')
-) || 1000;
-
+let score = parseInt(localStorage.getItem('h_sc')) || 0;
+let energy = parseInt(localStorage.getItem('h_en')) || 1000;
 let online = false;
 
-const elSc = 
-document.getElementById('dScore');
-const elEn = 
-document.getElementById('dEnergy');
-const elBtn = 
-document.getElementById('dBtn');
-const elSy = 
-document.getElementById('dSync');
+const elSc = document.getElementById('dScore');
+const elEn = document.getElementById('dEnergy');
+const elBtn = document.getElementById('dBtn');
+const elSy = document.getElementById('dSync');
 
 function viaUI() {
- if (elSc) elSc.innerText = 
- score.toLocaleString();
- if (elEn) elEn.innerText = 
- "⚡ " + energy + "/1000";
+ elSc.innerText = score.toLocaleString();
+ elEn.innerText = "⚡ " + energy + "/1000";
+ localStorage.setItem('h_sc', score);
+ localStorage.setItem('h_en', energy);
 }
 viaUI();
 
 async function load() {
- if (!sb) {
-  if (elSy) elSy.innerText = 
-  "Mode Local ⚠️";
-  return;
- }
+ if (!sb) { elSy.innerText = "Mode Local ⚠️"; return; }
  try {
-  let { data, error } = 
-  await sb.from('users')
-  .select('*')
-  .eq('telegram_id', uid)
-  .maybeSingle();
-  
-  if (!data && !error) {
-   let { data: nU } = 
-   await sb.from('users')
-   .insert([{ 
-    telegram_id: uid, 
-    username: name, 
-    score: score, 
-    energy: energy 
-   }])
-   .select().maybeSingle();
+  let { data } = await sb.from('users').select('*').eq('telegram_id', uid).maybeSingle();
+  if (!data) {
+   let { data: nU } = await sb.from('users').insert([{ telegram_id: uid, username: name, score: score, energy: energy }]).select().single();
    if (nU) data = nU;
   }
   if (data) {
-   score = data.score;
-   energy = data.energy;
-   online = true;
-   if (elSy) elSy.innerText = 
-   "En ligne 🟢";
-   viaUI();
+   score = data.score; energy = data.energy;
+   online = true; elSy.innerText = "En ligne 🟢"; viaUI();
   }
- } catch (err) {
-  if (elSy) elSy.innerText = 
-  "Mode Local ⚠️";
- }
+ } catch (err) { elSy.innerText = "Mode Local ⚠️"; console.log(err); }
 }
 
 function tap() {
  if (energy >= 1) {
-  score += 1;
-  energy -= 1;
-  viaUI();
-  localStorage.setItem('h_sc', 
-  score);
-  localStorage.setItem('h_en', 
-  energy);
-  if (tg && 
-  tg.HapticFeedback) {
-   tg.HapticFeedback
-   .impactOccurred('light');
-  }
+  score += 1; energy -= 1; viaUI();
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
  }
 }
 
-if (elBtn) {
- elBtn.addEventListener(
- 'touchstart', (e) => {
-  e.preventDefault();
-  tap();
- });
- elBtn.addEventListener(
- 'mousedown', () => {
-  tap();
- });
-}
+elBtn.addEventListener('touchstart', (e) => { e.preventDefault(); tap(); });
+elBtn.addEventListener('click', tap);
 
-setInterval(() => {
- if (energy < 1000) {
-  energy = Math.min(1000, 
-  energy + 3);
-  viaUI();
- }
-}, 1000);
-
-async function save() {
- if (!sb || !online) return;
- try {
-  await sb.from('users')
-  .update({ 
-   score: score, 
-   energy: energy, 
-   last_sync: new Date() 
-  })
-  .eq('telegram_id', uid);
- } catch(e){}
-}
-setInterval(save, 3000);
+setInterval(() => { if (energy < 1000) { energy = Math.min(1000, energy + 3); viaUI(); } }, 1000);
+setInterval(async () => {
+ if (!online) return;
+ try { await sb.from('users').update({ score, energy }).eq('telegram_id', uid); } catch(e){}
+}, 3000);
 
 load();
 </script>
 </body>
-</html>
+ </html>
