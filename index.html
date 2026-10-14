@@ -18,10 +18,10 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 .bar{height:10px;background:#1a1a2e;border-radius:10px;overflow:hidden;border:1px solid #2a2a4a}
 .bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:58%;transition:width.3s}
 .game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%;background:radial-gradient(circle at center, rgba(255,215,0,0.15) 0%, transparent 60%)}
-.coin-wrap{width:332px;height:332px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 60px rgba(255,215,0,0.65);border:none}
-.coin-img{width:340px;height:340px;border-radius:50%;cursor:pointer;transition:transform.08s;touch-action:manipulation;object-fit:contain;object-position:center center;transform:scale(1.02);background:transparent;border:none}
-.coin-img:active{transform:scale(0.96)}
-.tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
+.coin-wrap{width:330px;height:330px;border-radius:50%;background:#0c0a1a;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 60px rgba(255,215,0,0.70);border:none;clip-path:circle(50% at 50% 50%)}
+.coin-img{width:355px;height:355px;border-radius:50%;cursor:pointer;display:block;transition:transform.08s;touch-action:manipulation;object-fit:cover;object-position:center center;transform:scale(1.10);background:transparent;border:none}
+.coin-img:active{transform:scale(1.02)}
+  .tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
 .footer{width:100%;max-width:420px;padding:10px 16px 12px;display:flex;justify-content:space-between;align-items:center;background:#12121f;border-top:1px solid #222}
 .nav{width:100%;max-width:420px;background:#12121f;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0 12px}
@@ -33,11 +33,11 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 </head>
 <body>
 <div class="top">
-<div class="balance-pill">💰 <span id="bal">7174</span></div>
+<div class="balance-pill">💰 <span id="bal">8362</span></div>
 <div style="text-align:right"><div style="font-size:11px" id="lvl">Level 1 • Harold Beginner</div><div class="profit">💰 Profit +<span id="profit">1,000</span>/h</div><div id="status">Connecté ✅</div></div>
 </div>
 <div class="stats">
-<div class="stat"><small>ENERGY</small><b id="energyT">874 / 1500</b></div>
+<div class="stat"><small>ENERGY</small><b id="energyT">377 / 1500</b></div>
 <div class="stat"><small>LEVEL</small><b id="levelT">1</b></div>
 <div class="stat"><small>TAP</small><b>+1</b></div>
 </div>
@@ -48,7 +48,7 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 </div>
 </div>
 <div class="footer">
-<div style="color:#ffcc00;font-weight:700">⚡ <span id="energyF" style="color:#fff">874</span> / 1500</div>
+<div style="color:#ffcc00;font-weight:700">⚡ <span id="energyF" style="color:#fff">377</span> / 1500</div>
 <button class="btn-sync" onclick="saveNow()">SYNC</button>
 </div>
 <div class="nav">
@@ -67,10 +67,10 @@ let telegramId=tg?.initDataUnsafe?.user?.id?.toString();
 let userId=telegramId||localStorage.getItem('harold_uid')||'12345';
 localStorage.setItem('harold_uid',userId);
 let username=tg?.initDataUnsafe?.user?.username||'harold_owner';
-let balance=7174,energy=874,level=1; const MAX=1500;
+let balance=8362,energy=377,level=1; const MAX=1500;
 const balEl=document.getElementById('bal'),eT=document.getElementById('energyT'),eF=document.getElementById('energyF'),lT=document.getElementById('levelT'),bar=document.getElementById('barFill'),status=document.getElementById('status'),coin=document.getElementById('coin'),lvl=document.getElementById('lvl');
 function render(){balEl.textContent=Math.floor(balance).toLocaleString('fr-FR').replace(/,/g,' ');eT.textContent=energy+' / '+MAX;eF.textContent=energy;lT.textContent=level;lvl.textContent='Level '+level+' • Harold Beginner';bar.style.width=(energy/MAX*100)+'%';}
-async function loadUser(){try{status.textContent='Chargement...';let {data,error}=await supabaseClient.from('harold_users').select('*').eq('id',parseInt(userId)).single();if(error&&error.code==='PGRST116'){let {data:maxD}=await supabaseClient.from('harold_users').select('*').order('balance',{ascending:false}).limit(1).single();if(maxD){data=maxD;userId=maxD.id.toString();localStorage.setItem('harold_uid',userId);}else{let {data:nd}=await supabaseClient.from('harold_users').insert([{id:parseInt(userId),username,balance,energy,level}]).select().single();data=nd;}}if(data){balance=data.balance??7174;energy=data.energy??874;level=data.level??1;status.textContent='Connecté ✅';render();}}catch(e){status.textContent='Local ✅';render();}}
+async function loadUser(){try{status.textContent='Chargement...';let {data,error}=await supabaseClient.from('harold_users').select('*').eq('id',parseInt(userId)).single();if(error&&error.code==='PGRST116'){let {data:maxD}=await supabaseClient.from('harold_users').select('*').order('balance',{ascending:false}).limit(1).single();if(maxD){data=maxD;userId=maxD.id.toString();localStorage.setItem('harold_uid',userId);}else{let {data:nd}=await supabaseClient.from('harold_users').insert([{id:parseInt(userId),username,balance,energy,level}]).select().single();data=nd;}}if(data){balance=data.balance??8362;energy=data.energy??377;level=data.level??1;status.textContent='Connecté ✅';render();}}catch(e){status.textContent='Local ✅';render();}}
 async function saveNow(){status.textContent='Sync...';try{await supabaseClient.from('harold_users').upsert({id:parseInt(userId),username,balance:Math.floor(balance),energy,level,last_profit_claim:new Date().toISOString()},{onConflict:'id'});status.textContent='Sauvegardé ✅ '+new Date().toLocaleTimeString();setTimeout(()=>status.textContent='Connecté ✅',1500);}catch(e){status.textContent='Erreur local OK';}}
 function tap(ev){if(energy<=0)return;energy=Math.max(0,energy-1);balance+=level;const x=ev.touches?ev.touches[0].clientX:ev.clientX;const y=ev.touches?ev.touches[0].clientY:ev.clientY;const p=document.createElement('div');p.className='tap-plus';p.textContent='+'+level;p.style.left=x+'px';p.style.top=(y-20)+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),700);render();}
 coin.addEventListener('click',tap);coin.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
