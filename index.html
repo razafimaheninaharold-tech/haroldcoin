@@ -19,17 +19,17 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 .bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:58%;transition:width.3s}
 .game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%;background:radial-gradient(circle at center, rgba(255,215,0,0.15) 0%, transparent 60%)}
 
-/* FIX CONTOUR BLANC - DIMINUE UN PEU SEULEMENT */
+/* FIX CONTOUR BLANC + FIX HAUT COUPÉ */
 .coin-wrap{
-  width:315px;
-  height:315px;
+  width:325px;
+  height:325px;
   border-radius:50%;
   background:transparent;
   display:flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  box-shadow:0 0 50px rgba(255,215,0,0.6);
+  box-shadow:0 0 55px rgba(255,215,0,0.6);
   border:none;
 }
 .coin-img{
@@ -40,13 +40,13 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
   transition:transform.08s;
   touch-action:manipulation;
   object-fit:cover;
-  object-position:center;
-  transform:scale(1.18);
+  object-position:center 48%;
+  transform:scale(1.12);
   background:transparent;
   border:none;
   filter:brightness(1.05);
 }
-.coin-img:active{transform:scale(1.10)}
+.coin-img:active{transform:scale(1.06)}
 
 .tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
