@@ -17,37 +17,36 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 .progress-wrap{width:100%;max-width:420px;padding:12px 16px}
 .bar{height:10px;background:#1a1a2e;border-radius:10px;overflow:hidden;border:1px solid #2a2a4a}
 .bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:58%;transition:width.3s}
-.game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%;background:radial-gradient(circle at center, rgba(255,215,0,0.18) 0%, transparent 65%)}
+.game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%;background:radial-gradient(circle at center, rgba(255,215,0,0.15) 0%, transparent 60%)}
 
-/* --- FIX TACHE BLANCHE SANS CHANGER D'IMAGE --- */
+/* FIX CONTOUR BLANC - DIMINUE UN PEU SEULEMENT */
 .coin-wrap{
-  width:340px;
-  height:340px;
+  width:315px;
+  height:315px;
   border-radius:50%;
-  background:#0c0a1a;
+  background:transparent;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 0 0 10px #0c0a1a, 0 0 60px rgba(255,215,0,0.55);
   overflow:hidden;
-  border:2px solid rgba(201,151,0,0.6);
+  box-shadow:0 0 50px rgba(255,215,0,0.6);
+  border:none;
 }
 .coin-img{
-  width:360px;
-  height:360px;
+  width:380px;
+  height:380px;
   border-radius:50%;
   cursor:pointer;
   transition:transform.08s;
   touch-action:manipulation;
   object-fit:cover;
   object-position:center;
-  /* Agrandit légèrement l'image pour couper le bord blanc */
-  transform:scale(1.08);
-  background:#0c0a1a;
+  transform:scale(1.18);
+  background:transparent;
   border:none;
-  filter:brightness(1.08) contrast(1.08) drop-shadow(0 0 15px rgba(255,215,0,0.4));
+  filter:brightness(1.05);
 }
-.coin-img:active{transform:scale(1.02)}
+.coin-img:active{transform:scale(1.10)}
 
 .tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
