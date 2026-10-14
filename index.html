@@ -17,9 +17,38 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 .progress-wrap{width:100%;max-width:420px;padding:12px 16px}
 .bar{height:10px;background:#1a1a2e;border-radius:10px;overflow:hidden;border:1px solid #2a2a4a}
 .bar-fill{height:100%;background:linear-gradient(90deg,#ffcc00,#ff9900);width:58%;transition:width.3s}
-.game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}
-.coin-img{width:320px;height:320px;border-radius:50%;box-shadow:0 0 80px rgba(255,215,0,.5);cursor:pointer;transition:transform.08s;touch-action:manipulation;object-fit:cover}
-.coin-img:active{transform:scale(.93)}
+.game{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%;background:radial-gradient(circle at center, rgba(255,215,0,0.18) 0%, transparent 65%)}
+
+/* --- FIX TACHE BLANCHE SANS CHANGER D'IMAGE --- */
+.coin-wrap{
+  width:340px;
+  height:340px;
+  border-radius:50%;
+  background:#0c0a1a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 0 10px #0c0a1a, 0 0 60px rgba(255,215,0,0.55);
+  overflow:hidden;
+  border:2px solid rgba(201,151,0,0.6);
+}
+.coin-img{
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  cursor:pointer;
+  transition:transform.08s;
+  touch-action:manipulation;
+  object-fit:cover;
+  object-position:center;
+  /* Agrandit légèrement l'image pour couper le bord blanc */
+  transform:scale(1.08);
+  background:#0c0a1a;
+  border:none;
+  filter:brightness(1.08) contrast(1.08) drop-shadow(0 0 15px rgba(255,215,0,0.4));
+}
+.coin-img:active{transform:scale(1.02)}
+
 .tap-plus{position:absolute;color:#ffcc00;font-weight:900;font-size:32px;pointer-events:none;animation:floatUp.7s ease-out forwards;z-index:10}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
 .footer{width:100%;max-width:420px;padding:10px 16px 12px;display:flex;justify-content:space-between;align-items:center;background:#12121f;border-top:1px solid #222}
@@ -42,7 +71,9 @@ body{background:#0c0a1a;color:#fff;height:100vh;overflow:hidden;display:flex;fle
 </div>
 <div class="progress-wrap"><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
 <div class="game">
-  <img class="coin-img" id="coin" src="coin.png" alt="Harold Coin"/>
+  <div class="coin-wrap">
+    <img class="coin-img" id="coin" src="coin.png" alt="Harold Coin"/>
+  </div>
 </div>
 <div class="footer">
   <div style="color:#ffcc00;font-weight:700">⚡ <span id="energyF" style="color:#fff">874</span> / 1500</div>
