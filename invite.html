@@ -5,52 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>👑 Harold Coins - 2500 H OFFERTS</title>
 
-<!-- FACEBOOK / MESSENGER -->
 <meta property="og:title" content="👑 Harold Coins - 2500 H OFFERTS">
-<meta property="og:description" content="⛏️ Mine H gratuit → Retire en TON réel! Bonus 2500 H avec ce lien!">
-<meta property="og:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-og-1200.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:description" content="⛏️ Mine H gratuit → Retire en TON reel! 2500 H bonus!">
+<meta property="og:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-logo-512.jpg">
 <meta property="og:url" content="https://razafimaheninaharold-tech.github.io/haroldcoin/invite.html">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Harold Coins">
 
-<!-- TWITTER / X -->
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="👑 Harold Coins - 2500 H OFFERTS">
-<meta name="twitter:description" content="⛏️ Mine H gratuit → Retire en TON réel!">
-<meta name="twitter:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-og-1200.jpg">
+<meta name="twitter:description" content="⛏️ Mine H gratuit → Retire en TON reel!">
+<meta name="twitter:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-logo-512.jpg">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:30px 20px}
-.logo{width:180px;height:180px;border-radius:50%;border:4px solid #ffd700;box-shadow:0 0 40px rgba(255,215,0,0.6);margin:20px auto;display:block}
+.logo{width:200px;height:200px;border-radius:50%;border:4px solid #ffd700;box-shadow:0 0 40px rgba(255,215,0,0.6);margin:20px auto;display:block}
 h1{color:#ffd700;font-size:32px;margin:15px 0}
-h2{color:#fff;font-size:22px;margin:10px 0}
-p{color:#ccc;margin:10px 0;font-size:16px}
-.btn{display:inline-block;background:linear-gradient(45deg,#ffd700,#ffb700);color:#000;padding:18px 45px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:20px;margin-top:25px;box-shadow:0 5px 20px rgba(255,215,0,0.4)}
-.info{margin-top:30px;font-size:13px;color:#888}
+.btn{display:block;margin:15px auto;max-width:320px;padding:16px 30px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:18px}
+.btn-telegram{background:linear-gradient(45deg,#ffd700,#ffb700);color:#000}
+.btn-twitter{background:#1DA1F2;color:#fff}
 </style>
 </head>
 <body>
 
-<img class="logo" src="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-logo-512.jpg" alt="Harold Coins">
+<img class="logo" src="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-logo-512.jpg">
 
 <h1>👑 Harold Coins</h1>
 <h2>🎁 2500 H OFFERTS</h2>
-<p>⛏️ Mine du H gratuit chaque heure</p>
-<p>💰 Retire en TON réel</p>
 
-<a id="goBtn" class="btn" href="https://t.me/Haroldcoinsbot?start=2120736139">🚀 OUVRIR DANS TELEGRAM</a>
+<!-- LIEN TELEGRAM -->
+<a id="goBtn" class="btn btn-telegram" href="https://t.me/Haroldcoinsbot?start=2120736139">🚀 OUVRIR TELEGRAM</a>
 
-<p class="info">Clique pour lancer le bot et recevoir ton bonus</p>
+<!-- LIEN TWITTER -->
+<a id="twitterBtn" class="btn btn-twitter" href="#" target="_blank">🐦 PARTAGER SUR TWITTER</a>
 
 <script>
-// Récupère le ref du lien
-const params = new URLSearchParams(window.location.search);
-const ref = params.get('start') || '2120736139';
-document.getElementById('goBtn').href = "https://t.me/Haroldcoinsbot?start=" + ref;
-// PAS DE REDIRECTION AUTO - l'utilisateur doit cliquer
+const p = new URLSearchParams(window.location.search);
+const r = p.get('start') || '2120736139';
+
+// Telegram
+document.getElementById('goBtn').href = "https://t.me/Haroldcoinsbot?start=" + r;
+
+// Twitter Share
+const pageLink = "https://razafimaheninaharold-tech.github.io/haroldcoin/invite.html?start=" + r + "&v=20";
+const tweetText = "👑 2500 H OFFERTS! Mine H gratuit → Retire en TON reel! Rejoins avec mon lien bonus 👇";
+document.getElementById('twitterBtn').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText) + "&url=" + encodeURIComponent(pageLink);
 </script>
 
 </body>
