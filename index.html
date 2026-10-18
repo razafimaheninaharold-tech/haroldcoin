@@ -1,32 +1,22 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ADMIN Harold Coins</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{background:#0c0a1a;color:#fff;font-family:sans-serif;padding:12px} .card{background:#1a1a2e;border:1px solid #ffd700;border-radius:14px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center} button{padding:8px 12px;border-radius:8px;border:0;font-weight:900;cursor:pointer} .pending{background:#facc15;color:#000} .paid{background:#22c55e;color:#000} .reject{background:#ff4444;color:#fff}</style></head><body>
-<h2>💸 ADMIN RETRAITS - Harold Coins V8.9.3</h2>
-<div id="list">Vérification...</div>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Harold Coins</title><script src="https://telegram.org/js/telegram-web-app.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{background:#0c0a1a;color:#fff;text-align:center;font-family:sans-serif;margin:0;padding:10px} #coin{width:200px;height:200px;background:radial-gradient(circle,#ffd700,#b8860b);border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:80px;font-weight:900;color:#000;box-shadow:0 0 30px #ffd700;cursor:pointer;user-select:none} #coin:active{transform:scale(0.95)} .bar{height:14px;background:#333;border-radius:10px;overflow:hidden;margin:10px} .fill{height:100%;background:#ffd700;width:100%} button{background:#ffd700;color:#000;border:0;padding:10px 18px;border-radius:12px;font-weight:900;margin:5px;cursor:pointer}</style></head><body>
+<h2>💰 HAROLD COINS V8.9.3</h2>
+<div style="font-size:22px"><span id="coins">0</span> H</div>
+<div id="coin" onclick="tap()">H</div>
+<div class="bar"><div class="fill" id="energyBar"></div></div>
+<div><span id="energy">1500</span>/1500 Energy</div>
+<div style="margin-top:14px"><button onclick="claimDaily()">🎁 Daily</button><button onclick="showRef()">👥 Referral</button><button onclick="withdraw()">💸 Retrait</button></div>
+<div id="msg" style="margin-top:12px;color:#22c55e"></div>
 <script>
-const U="https://kgmatxqbdyusxpiuavbw.supabase.co",K="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47",S=supabase.createClient(U,K);
-const ADMIN_ID="2120736139";
-let uid="";
-try{ uid=window.Telegram?.WebApp?.initDataUnsafe?.user?.id+""||""; }catch{}
-if(!uid || uid=="undefined"){
-  uid=prompt("🔑 Entre ton ID admin 2120736139:")||"";
-  if(uid) localStorage.setItem('admin_uid',uid);
-  else uid=localStorage.getItem('admin_uid')||"";
-}
-if(uid!=ADMIN_ID){
-  document.body.innerHTML=`<h2 style="color:#ff4444">⛔ Accès refusé</h2><p>ID détecté: ${uid}<br>Uniquement admin ${ADMIN_ID}</p><button onclick="localStorage.removeItem('admin_uid');localStorage.removeItem('uid');location.reload()" style="background:#ffd700;color:#000;padding:10px;border-radius:10px;font-weight:900">🔄 Réessayer + entrer ID</button><br><br><small style="color:#aaa">Astuce: ouvre ce lien DANS Telegram ou tape 2120736139</small>`;
-  throw "no admin";
-}
-async function load(){
- let {data}=await S.from('withdrawals').select('*').order('created_at',{ascending:false}).limit(50);
- let el=document.getElementById('list');
- if(!data||data.length==0){el.innerHTML="Aucun retrait pour l'instant";return}
- let h=`<p style="color:#22c55e">✅ Connecté admin ${uid} - ${data.length} retraits</p>`;
- data.forEach(w=>{
-  let date=new Date(w.created_at).toLocaleString('fr-FR');
-  h+=`<div class="card"><div><b>${w.user_id}</b> - ${w.amount_coins} 🪙 → ${parseFloat(w.amount_ton_net||0).toFixed(6)} TON<br><small style="color:#aaa">${date} | ${w.wallet_friendly||w.wallet?.slice(0,10)}...<br>Status: <b style="color:${w.status=='pending'?'#facc15':'#22c55e'}">${w.status}</b></small></div><div style="display:flex;gap:4px;flex-direction:column"><button class="paid" onclick="setStatus(${w.id},'paid')">PAYER ✅</button><button class="reject" onclick="setStatus(${w.id},'rejected')">REJETER</button><button onclick="copyWallet('${w.wallet}')" style="background:#333;color:#fff">COPIER</button></div></div>`;
- });
- el.innerHTML=h;
-}
-async function setStatus(id,status){ if(!confirm("Passer en "+status+" ?")) return; await S.from('withdrawals').update({status}).eq('id',id); load(); }
-function copyWallet(w){navigator.clipboard.writeText(w);alert("Wallet copié!");}
-load(); setInterval(load,10000);
+const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co",SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
+const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
+let uid=window.Telegram?.WebApp?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||"12345";
+localStorage.setItem('uid',uid);
+let coins=parseInt(localStorage.getItem('coins')||"0"),energy=parseInt(localStorage.getItem('energy')||"1500");
+function render(){document.getElementById('coins').innerText=coins.toLocaleString();document.getElementById('energy').innerText=energy;document.getElementById('energyBar').style.width=(energy/15)+"%";}
+async function load(){let {data}=await sb.from('users').select('*').eq('telegram_id',uid).maybeSingle(); if(data){coins=data.coins||coins; energy=data.energy||energy;} render();}
+function tap(){ if(energy<=0){document.getElementById('msg').innerText="Plus d'energy!";return;} coins+=1; energy-=1; localStorage.setItem('coins',coins); localStorage.setItem('energy',energy); render(); sb.from('users').upsert({telegram_id:uid,coins,energy,username:window.Telegram?.WebApp?.initDataUnsafe?.user?.username||"player"}).then(()=>{}); if(window.Telegram?.WebApp?.HapticFeedback)Telegram.WebApp.HapticFeedback.impactOccurred('light');}
+function claimDaily(){let last=localStorage.getItem('daily')||0; if(Date.now()-last<86400000){alert("Reviens demain!");return;} coins+=5000; localStorage.setItem('daily',Date.now()); localStorage.setItem('coins',coins); render(); document.getElementById('msg').innerText="🎁 +5000 H Daily!";}
+function showRef(){let link=`https://t.me/Haroldcoinsbot?start=${uid}`; prompt("Ton lien referral (20% bonus):",link);}
+async function withdraw(){let amt=prompt("Combien de H-COINS retirer? Min 50000:"); if(!amt)return; amt=parseInt(amt); if(amt<50000||amt>coins){alert("Min 50000 ou solde insuffisant");return;} let wallet=prompt("Ton wallet TON (UQ...):"); if(!wallet||wallet.length<10)return; let ton_brut=amt*0.0000001, ton_net=ton_brut*0.9; let {error}=await sb.from('withdrawals').insert({user_id:uid,amount_coins:amt,amount_ton_brut:ton_brut,amount_ton_net:ton_net,wallet:wallet,wallet_friendly:wallet,status:'pending'}); if(error){alert("Erreur: "+error.message);return;} coins-=amt; localStorage.setItem('coins',coins); render(); alert(`Demande envoyée! ${amt}H → ${ton_net.toFixed(6)} TON`);}
+load(); setInterval(()=>{if(energy<1500){energy=Math.min(1500,energy+1); localStorage.setItem('energy',energy); render();}},1000);
 </script></body></html>
