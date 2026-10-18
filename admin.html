@@ -1,93 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>👑 ADMIN V8.9.5</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>👑 ADMIN RETRAITS - V8.9.6 FINAL</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tonweb@0.0.66/dist/tonweb.min.js"></script>
 <style>
-body{background:#0e0e15;color:#fff;font-family:system-ui;padding:10px}
-.b{padding:8px 14px;border-radius:10px;border:0;font-weight:900;margin:3px;cursor:pointer}
-.card{background:#1c1c2a;border:2px solid #333;border-radius:12px;padding:12px;margin:10px 0;word-break:break-all}
-.addr{background:#111;padding:10px;border-radius:10px;font-size:11px;margin:6px 0;border:1.5px dashed #ffd700;cursor:pointer}
-.copyBtn{padding:8px 14px;border-radius:8px;border:0;font-weight:900;margin:3px}
+*{box-sizing:border-box}body{background:#0e0e15;color:#fff;font-family:-apple-system,system-ui;padding:10px;margin:0}
+.b{padding:10px 14px;border-radius:12px;border:0;font-weight:900;margin:3px;cursor:pointer;font-size:12px}
+.card{background:#1c1c2a;border:2px solid #333;border-radius:16px;padding:14px;margin:12px 0;word-break:break-all;box-shadow:0 4px 15px rgba(0,0,0,.5)}
+.addr{background:#0f2a1a;padding:12px;border-radius:12px;font-size:12px;margin:8px 0;border:2px dashed #22c55e;cursor:pointer;color:#4ade80;font-weight:800}
+.addr-raw{background:#111;padding:8px;border-radius:8px;font-size:10px;margin:4px 0;border:1px dashed #444;color:#888;cursor:pointer}
+.copyBtn{padding:10px 16px;border-radius:10px;border:0;font-weight:900;margin:4px 3px;cursor:pointer;font-size:11px}
 </style>
 </head>
 <body>
-<h2>👑 ADMIN RETRAITS - V8.9.5</h2>
-<div style="font-size:11px;opacity:.8">RAW → UQ auto | Supabase | Fix Brut</div>
+<h2>👑 ADMIN RETRAITS - V8.9.6 FINAL</h2>
+<div style="font-size:11px;opacity:.7;margin-bottom:10px">✅ Supabase Bridge | ✅ RAW→UQ | ✅ Brut FIX 50k=0.005 | ✅ Copy 1-clic</div>
+<div style="display:flex;flex-wrap:wrap">
 <button class="b" style="background:#ffcc00;color:#000" onclick="setF('pending')">PENDING</button>
-<button class="b" style="background:#22c55e" onclick="setF('approved')">APPROVED</button>
-<button class="b" style="background:#3b82f6" onclick="setF('paid')">PAID</button>
+<button class="b" style="background:#22c55e;color:#fff" onclick="setF('approved')">APPROVED</button>
+<button class="b" style="background:#3b82f6;color:#fff" onclick="setF('paid')">PAID</button>
 <button class="b" style="background:#444;color:#fff" onclick="setF('all')">TOUS</button>
 <button class="b" style="background:#fff;color:#000" onclick="loadWd()">🔄 REFRESH</button>
-<div id="stats" style="margin:8px 0;font-size:12px"></div>
-<div id="list">Chargement...</div>
+</div>
+<div id="stats" style="margin:12px 0;font-size:12px;background:#1a1a2a;padding:8px;border-radius:8px"></div>
+<div id="list">Chargement Supabase...</div>
+
 <script>
 const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
 const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
 const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
-let filter='paid', all=[];
+let filter='paid';
+let all=[];
 
 function rawToUQ(raw){
  try{
   if(!raw) return 'N/A';
-  raw=raw.trim();
-  if(raw.startsWith('UQ')||raw.startsWith('EQ')) return raw; // deja friendly
+  raw=String(raw).trim();
+  if(raw.startsWith('UQ') || raw.startsWith('EQ')) return raw;
   if(raw.startsWith('0:')){
-   const TonWeb = window.TonWeb;
-   if(TonWeb){
-     const addr = new TonWeb.utils.Address(raw);
-     return addr.toString(true,true,true,false); // bounceable, friendly
+   try{
+    const addr=new TonWeb.utils.Address(raw);
+    // true,true,true,false = bounceable, testnet=false, friendly
+    let friendly=addr.toString(true,true,true,false);
+    return friendly;
+   }catch(e){
+    return raw;
    }
   }
   return raw;
- }catch(e){ 
-  // fallback manuel pour TON wallet principal
-  if(raw.includes('0d606bb005736e57686617bb1a26b8751855c')) return 'UQANf2kJ6K4aO1dXyYxY...lxkc (ton wallet)';
-  return raw; 
- }
+ }catch(e){return raw;}
 }
 
 function setF(f){filter=f;render();}
+
 async function loadWd(){
+ document.getElementById('stats').innerText='🔄 Chargement Supabase...';
  try{
-  let {data}=await supa.from('withdrawals').select('*').order('created_at',{ascending:false}).limit(100);
-  all=data||[]; render();
- }catch(e){ document.getElementById('stats').innerText='Erreur '+e.message; }
+  let {data,error}=await supa.from('withdrawals').select('*').order('created_at',{ascending:false}).limit(150);
+  if(error) throw error;
+  all=data||[];
+  render();
+ }catch(e){
+  document.getElementById('stats').innerText='❌ Erreur: '+e.message;
+ }
 }
+
 function render(){
- let f=all; if(filter!=='all') f=all.filter(x=>x.status===filter);
- let total=f.reduce((s,x)=>s+parseFloat(x.amount_ton_net||x.amount_ton||0),0);
- document.getElementById('stats').innerText=`${f.length} retraits | Total: ${total.toFixed(6)} TON | Filtre: ${filter} | Supabase`;
+ let f=all;
+ if(filter!=='all') f=all.filter(x=>x.status===filter);
+ let total=f.reduce((s,x)=>{
+   let c=x.amount_coins||0;
+   let net=c/1000000*0.1*0.9;
+   return s+net;
+ },0);
+ document.getElementById('stats').innerHTML=`<b>${f.length}</b> retraits | Total NET: <b style="color:#22c55e">${total.toFixed(6)} TON</b> | Filtre: <b>${filter.toUpperCase()}</b> | Supabase: ${SUPA_URL.split('//')[1].split('.')[0]}...`;
+
+ if(f.length==0){
+  document.getElementById('list').innerHTML=`<div style="padding:20px;text-align:center;color:#888">Aucun retrait <b>${filter}</b><br><small>Les retraits Telegram apparaîtront ici auto</small></div>`;
+  return;
+ }
  let h='';
  f.forEach(w=>{
-  let coins=w.amount_coins||0;
-  let brut=parseFloat(w.amount_ton_brut||0); if(brut==0) brut=parseFloat(w.amount_ton_net||0)/0.9;
-  let fee=brut*0.1; let net=parseFloat(w.amount_ton_net||w.amount_ton||0);
+  let coins=parseInt(w.amount_coins||0);
+  // FIX BRUT CALCUL DIRECT DEPUIS COINS - JAMAIS 0
+  let brut=coins/1000000*0.1; // 50k = 0.005
+  let fee=brut*0.1;
+  let net=brut*0.9; // 0.0045
+  // Si DB a deja des valeurs, on les garde si >0 sinon on utilise calcul
+  let dbBrut=parseFloat(w.amount_ton_brut||0);
+  let dbNet=parseFloat(w.amount_ton_net||w.amount_ton||0);
+  if(dbBrut>0) brut=dbBrut;
+  if(dbNet>0) net=dbNet;
+  if(dbBrut>0 && dbNet==0) net=dbBrut*0.9;
+  if(brut==0) brut=coins/1000000*0.1;
+  if(net==0) net=brut*0.9;
+  fee=brut-net;
+
   let raw=w.wallet||'N/A';
   let friendly=rawToUQ(raw);
-  let user=w.user_id||'N/A'; let status=w.status; let date=new Date(w.created_at).toLocaleString();
-  h+=`<div class="card" style="border-color:#3b82f6">
-  <b>${coins.toLocaleString()} → ${net.toFixed(6)} TON NET</b><br>
-  Brut: ${brut.toFixed(6)} | Fee: ${fee.toFixed(6)}<br>
-  User: ${user} | ${status.toUpperCase()} | ${date}<br>
-  <div style="margin-top:6px"><b style="color:#22c55e">💰 Wallet UQ (à payer):</b>
-  <div class="addr" onclick="copyT('${friendly}')" style="background:#0f2a1a;border-color:#22c55e;color:#22ff88;font-weight:900;font-size:13px">✅ ${friendly}<br><small style="color:#ffd700">CLIQUE POUR COPIER UQ</small></div>
-  <details><summary style="font-size:10px;color:#888">Voir RAW (0:...)</summary><div class="addr" onclick="copyT('${raw}')" style="font-size:10px;color:#888">${raw}</div></details>
+  // Pour affichage UQAN...lxkc si c'est ton wallet principal
+  let shortFriendly=friendly.length>30 ? friendly.slice(0,6)+'...'+friendly.slice(-4) : friendly;
+  let user=w.user_id||w.userId||'N/A';
+  let status=w.status||'pending';
+  let date=w.created_at?new Date(w.created_at).toLocaleString('fr-FR') : '';
+  let color=status=='paid'?'#3b82f6':status=='approved'?'#22c55e':'#ffcc00';
+  
+  h+=`<div class="card" style="border-color:${color}">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b style="font-size:15px">${coins.toLocaleString('fr-FR')} 🪙 → <span style="color:#22c55e">${net.toFixed(6)} TON NET</span></b>
+    <span style="background:${color};color:#000;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:900">${status.toUpperCase()}</span>
   </div>
-  <div>
-  <button class="copyBtn" style="background:#22c55e" onclick="copyT('${friendly}')">💸 COPY UQ POUR PAYER</button>
-  <button class="copyBtn" style="background:#555;color:#fff" onclick="copyT('${raw}')">COPY RAW</button>
-  <button class="copyBtn" style="background:#ffcc00;color:#000" onclick="copyT('${net}')">COPY ${net.toFixed(6)}</button>
-  <button class="copyBtn" style="background:#3b82f6;color:#fff" onclick="updateStatus(${w.id},'paid')">PAID</button>
-  </div></div>`;
+  <div style="font-size:12px;margin:6px 0;line-height:1.4">
+    Brut: <b style="color:#ffd700">${brut.toFixed(6)} TON</b> | Fee 10%: <span style="color:#ff6b6b">${fee.toFixed(6)}</span><br>
+    User: <b>${user}</b> | ${date}
+  </div>
+  
+  <div style="margin-top:8px">
+    <b style="color:#22c55e;font-size:12px">💰 Wallet à PAYER (UQ/EQ - même adresse):</b>
+    <div class="addr" onclick="copyT('${friendly}')">✅ ${friendly}<br><small style="color:#ffd700">CLIQUE POUR COPIER → COLLER DANS TONKEEPER</small></div>
+    <details style="margin-top:4px"><summary style="font-size:10px;color:#666;cursor:pointer">Voir RAW 0:... (même wallet)</summary>
+    <div class="addr-raw" onclick="copyT('${raw}')">${raw}<br><small>CLIQUE POUR COPIER RAW</small></div></details>
+  </div>
+
+  <div style="margin-top:10px;display:flex;flex-wrap:wrap">
+    <button class="copyBtn" style="background:#22c55e;color:#000" onclick="copyT('${friendly}')">💸 COPY UQ POUR PAYER</button>
+    <button class="copyBtn" style="background:#ffcc00;color:#000" onclick="copyT('${net.toFixed(6)}')">COPY ${net.toFixed(6)} TON</button>
+    <button class="copyBtn" style="background:#444;color:#fff" onclick="copyT('${raw}')">COPY RAW</button>
+    ${status!=='paid'?`<button class="copyBtn" style="background:${color};color:#fff" onclick="updateStatus('${w.id}','paid')">✅ PASSER PAID</button>`:''}
+    ${status=='pending'?`<button class="copyBtn" style="background:#22c55e;color:#fff" onclick="updateStatus('${w.id}','approved')">APPROVED</button>`:''}
+  </div>
+  </div>`;
  });
- document.getElementById('list').innerHTML=h||'Aucun retrait';
+ document.getElementById('list').innerHTML=h;
 }
-function copyT(t){navigator.clipboard.writeText(t).then(()=>alert('Copié ✅: '+t.slice(0,30)+'...'));}
-async function updateStatus(id,s){await supa.from('withdrawals').update({status:s}).eq('id',id);loadWd();}
-loadWd(); setInterval(loadWd,15000);
+
+function copyT(t){
+ navigator.clipboard.writeText(t).then(()=>{
+  // petit toast
+  let el=document.createElement('div');
+  el.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:10px 20px;border-radius:20px;font-weight:900;z-index:9999';
+  el.textContent='Copié ✅: '+String(t).slice(0,35);
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2000);
+ });
+}
+
+async function updateStatus(id,newStatus){
+ if(!confirm('Passer ce retrait en '+newStatus.toUpperCase()+' ?')) return;
+ try{
+  let {error}=await supa.from('withdrawals').update({status:newStatus}).eq('id',id);
+  if(error) throw error;
+  all=all.map(x=>{if(String(x.id)==String(id)) x.status=newStatus; return x;});
+  render();
+ }catch(e){alert('Erreur: '+e.message);}
+}
+
+loadWd();
+setInterval(loadWd,15000);
 </script>
 </body>
 </html>
