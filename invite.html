@@ -12,6 +12,7 @@
 <meta property="og:url" content="https://razafimaheninaharold-tech.github.io/haroldcoin/invite.html">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-og-1200.jpg">
 <style>
 body{background:#000;color:#ffd700;text-align:center;font-family:Arial;padding:40px 20px}
 .btn{background:linear-gradient(45deg,#ffd700,#ffb700);color:#000;padding:18px 40px;border-radius:30px;text-decoration:none;font-weight:bold;font-size:20px;display:inline-block;margin-top:20px}
@@ -25,11 +26,8 @@ img{width:200px;border-radius:50%;box-shadow:0 0 30px gold;margin:20px}
 <p>⛏️ Mine H → Retire en TON réel!</p>
 <a id="goBtn" class="btn" href="#">🚀 OUVRIR DANS TELEGRAM</a>
 <script>
-const params = new URLSearchParams(window.location.search);
-const ref = params.get('start') || '2120736139';
-const botLink = "https://t.me/Haroldcoinsbot?start=" + ref;
-document.getElementById('goBtn').href = botLink;
-setTimeout(()=>{ window.location.href = botLink; }, 1500);
+const ref = new URLSearchParams(window.location.search).get('start') || '2120736139';
+document.getElementById('goBtn').href = "https://t.me/Haroldcoinsbot?start=" + ref;
 </script>
 </body>
 </html>
