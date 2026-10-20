@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>👑 ADMIN V8.9.9 BOT NOTIF</title>
+<title>👑 ADMIN V10.3 ILLIMITE</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tonweb@0.0.66/dist/tonweb.min.js"></script>
 <style>
@@ -16,12 +16,13 @@
 .txLink{background:#0a2a4a;padding:8px;border-radius:8px;margin:6px 0;border:1px solid #3b82f6}
 #notifBar{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:12px 20px;border-radius:25px;font-weight:900;z-index:99999;box-shadow:0 5px 20px rgba(0,0,0,.7);display:none;text-align:center;max-width:92%;font-size:13px;animation:pop .4s}
 @keyframes pop{0%{transform:translateX(-50%) scale(0)}100%{transform:translateX(-50%) scale(1)}}
+.multiCard{background:#1a0f0f;border:1px solid #ef4444;border-radius:10px;padding:8px;margin-bottom:8px}
 </style>
 </head>
 <body>
 <div id="notifBar"></div>
-<h2>👑 ADMIN V8.9.9 BOT NOTIF</h2>
-<div style="font-size:11px;opacity:.7;margin-bottom:10px">✅ Supabase | ✅ RAW→UQ | ✅ Brut FIX | ✅ Preuve TonScan | ✅ Bot Telegram</div>
+<h2>👑 ADMIN V10.3 ILLIMITE</h2>
+<div style="font-size:11px;opacity:.7;margin-bottom:10px">✅ Supabase | ✅ RAW→UQ | ✅ Brut FIX | ✅ Preuve TonScan | ✅ Bot Telegram | ✅ SCAN ILLIMITÉ</div>
 <div style="display:flex;flex-wrap:wrap">
 <button class="b" style="background:#ffcc00;color:#000" onclick="setF('pending')">PENDING</button>
 <button class="b" style="background:#22c55e;color:#fff" onclick="setF('approved')">APPROVED</button>
@@ -29,15 +30,23 @@
 <button class="b" style="background:#444;color:#fff" onclick="setF('all')">TOUS</button>
 <button class="b" style="background:#fff;color:#000" onclick="loadWd()">🔄 REFRESH</button>
 <button class="b" style="background:#222;color:#ffd700;border:1px solid #ffd700" onclick="askNotif()">🔔 Notif Chrome</button>
+<button class="b" style="background:#ef4444;color:#fff" onclick="openMulti()">🔍 MULTI ILLIMITÉ</button>
 </div>
 <div id="stats" style="margin:12px 0;font-size:12px;background:#1a1a2a;padding:8px;border-radius:8px"></div>
 <div id="list">Chargement Supabase...</div>
 
+<div id="multiModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:99999;padding:14px;overflow-y:auto">
+<div style="background:#1a1a2e;border:2px solid #ef4444;border-radius:20px;padding:16px;max-width:400px;margin:0 auto">
+<div style="display:flex;justify-content:space-between;margin-bottom:10px"><h3>🚨 MULTICOMPTES ILLIMITÉ</h3><button onclick="closeMulti()" style="background:#ff4444;color:#fff;border:0;width:28px;height:28px;border-radius:50%">X</button></div>
+<div id="multiList">...</div>
+<button onclick="scanMulti()" style="margin-top:10px;width:100%;background:#ef4444;color:#fff;border:0;padding:10px;border-radius:10px;font-weight:900">🔄 RE-SCANNER ILLIMITÉ</button>
+</div>
+</div>
+
 <script>
 const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
 const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-const BOT_TOKEN="METS_TON_TOKEN_ICI"; // <-- METS TON TOKEN ICI ENTRE GUILLEMETS
-const BOT_USERNAME="Haroldcoinsbot";
+const BOT_TOKEN="METS_TON_TOKEN_ICI";
 const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let filter='pending';
 let all=[];
@@ -68,7 +77,7 @@ function showBar(msg, bg='#ffcc00'){
 async function loadWd(){
  document.getElementById('stats').innerText='🔄 Chargement Supabase...';
  try{
-  let {data,error}=await supa.from('withdrawals').select('*').order('created_at',{ascending:false}).limit(150);
+  let {data,error}=await supa.from('withdrawals').select('*').order('created_at',{ascending:false}).limit(200);
   if(error) throw error;
   let pendingNow=(data||[]).filter(x=>x.status==='pending').length;
   if(!firstLoad && pendingNow>lastPendingCount){
@@ -83,14 +92,14 @@ async function loadWd(){
   firstLoad=false;
   all=data||[];
   render();
- }catch(e){ document.getElementById('stats').innerText='❌ Erreur: '+e.message; }
+ }catch(e){ document.getElementById('stats').innerText='❌ Erreur: '+e.message+' → Fais: ALTER TABLE withdrawals DISABLE ROW LEVEL SECURITY;'; }
 }
 function render(){
  let f=all;
  if(filter!=='all') f=all.filter(x=>x.status===filter);
  let total=f.reduce((s,x)=>{ let c=x.amount_coins||0; let net=c/1000000*0.1*0.9; if(x.amount_ton_net>0) net=x.amount_ton_net; return s+parseFloat(net||0); },0);
  document.getElementById('stats').innerHTML=`<b>${f.length}</b> retraits | Total NET: <b style="color:#22c55e">${total.toFixed(6)} TON</b> | Filtre: <b>${filter.toUpperCase()}</b> | PENDING: <b style="color:#ffcc00">${all.filter(x=>x.status==='pending').length}</b>`;
- if(f.length==0){ document.getElementById('list').innerHTML=`<div style="padding:20px;text-align:center;color:#888">Aucun retrait <b>${filter}</b></div>`; return; }
+ if(f.length==0){ document.getElementById('list').innerHTML=`<div style="padding:20px;text-align:center;color:#888">Aucun retrait <b>${filter}</b><br><small>Si tu as fait un retrait et vois 0, exécute en SQL: ALTER TABLE withdrawals DISABLE ROW LEVEL SECURITY;</small></div>`; return; }
  let h='';
  f.forEach(w=>{
   let coins=parseInt(w.amount_coins||0);
@@ -154,51 +163,52 @@ async function saveTx(id){
  let hashEl=document.getElementById('tx-'+id);
  let hash=hashEl.value.trim();
  if(!hash){alert('Colle le HASH TX de Tonkeeper!');return;}
- if(hash.length<10){alert('Hash trop court!');return;}
- if(BOT_TOKEN==="METS_TON_TOKEN_ICI"){ alert('⚠️ Mets ton BOT_TOKEN en haut du fichier ligne 15!'); }
  try{
   let wd=all.find(x=>String(x.id)==String(id));
-  if(!wd){alert('Retrait introuvable');return;}
   let {error}=await supa.from('withdrawals').update({status:'paid',tx_hash:hash}).eq('id',id);
-  if(error){
-    if(error.message.includes('tx_hash')){alert('❌ Ajoute colonne tx_hash text dans Supabase: ALTER TABLE withdrawals ADD COLUMN tx_hash text;');}
-    else throw error;
-    return;
-  }
+  if(error) throw error;
   all=all.map(x=>{if(String(x.id)==String(id)){x.status='paid'; x.tx_hash=hash;} return x;});
   render();
   showBar('✅ Preuve sauvée! Envoi bot...', '#22c55e');
-  
-  // BOT NOTIF
-  let coins=wd.amount_coins||0;
   let tonNet=wd.amount_ton_net||wd.amount_ton||0;
-  let msg=`💸 *Retrait Payé!* ✅\n\n💰 ${coins.toLocaleString('fr-FR')} 🪙 → ${parseFloat(tonNet).toFixed(6)} TON\n🔗 Preuve:\nhttps://tonscan.org/tx/${hash}\n\n👛 Vérifie ton Tonkeeper!\nMerci Harold Coins 👑`;
-  
+  let msg=`💸 *Retrait Payé!* ✅\n\n💰 ${wd.amount_coins} 🪙 → ${parseFloat(tonNet).toFixed(6)} TON\n🔗 Preuve:\nhttps://tonscan.org/tx/${hash}\n\n👛 Vérifie ton Tonkeeper!`;
   if(BOT_TOKEN!=="METS_TON_TOKEN_ICI"){
-    try{
-      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          chat_id:wd.user_id,
-          text:msg,
-          parse_mode:'Markdown',
-          reply_markup:{inline_keyboard:[[{text:'🔍 Voir sur TonScan', url:`https://tonscan.org/tx/${hash}`}]]}
-        })
-      });
-      showBar(`✅ Bot notifié user ${wd.user_id}!`, '#22c55e');
-    }catch(botErr){
-      showBar('✅ PAID mais bot échoué - vérifie token', '#facc15');
-      console.log(botErr);
-    }
-  } else {
-    showBar('✅ PAID + Preuve OK (bot token manquant)', '#facc15');
+    try{ await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:wd.user_id,text:msg,parse_mode:'Markdown'})}); showBar(`✅ Bot notifié user ${wd.user_id}!`, '#22c55e'); }catch(e){}
   }
  }catch(e){alert('Erreur: '+e.message);}
 }
+function openMulti(){document.getElementById('multiModal').style.display='block';scanMulti()}
+function closeMulti(){document.getElementById('multiModal').style.display='none'}
+async function scanMulti(){
+ let listEl=document.getElementById('multiList');
+ listEl.innerHTML='<small style="color:#aaa">⏳ Scan illimité...</small>';
+ try{
+  let allData=[]; let from=0; let pageSize=200; let hasMore=true;
+  while(hasMore){
+   let {data,error}=await supa.from('harold_users').select('id,first_name,username,balance,device_id,wallet').range(from, from+pageSize-1);
+   if(error) throw error;
+   if(!data||data.length==0){hasMore=false;break;}
+   allData=allData.concat(data);
+   listEl.innerHTML=`<small style="color:#facc15">⏳ ${allData.length} joueurs chargés...</small>`;
+   if(data.length<pageSize) hasMore=false; else from+=pageSize;
+   if(allData.length>5000) break;
+  }
+  let byDevice={},byWallet={};
+  allData.forEach(u=>{
+   if(u.device_id){ if(!byDevice[u.device_id]) byDevice[u.device_id]=[]; byDevice[u.device_id].push(u); }
+   if(u.wallet&&u.wallet.length>5){ if(!byWallet[u.wallet]) byWallet[u.wallet]=[]; byWallet[u.wallet].push(u); }
+  });
+  let html='',count=0;
+  for(let d in byDevice){ if(byDevice[d].length>1){count++; html+=`<div class="multiCard"><b style="color:#ef4444">📱 DEVICE: ${d.slice(0,10)}... (${byDevice[d].length})</b><br>`; byDevice[d].forEach(u=>{html+=`<div style="font-size:10px;display:flex;justify-content:space-between;background:#12121f;padding:3px;border-radius:6px;margin-top:2px"><span>${u.first_name||u.id} - ${Math.floor(u.balance||0)}H</span><button onclick="banU(${u.id})" style="background:#ef4444;color:#fff;border:0;padding:2px 6px;border-radius:6px">BAN</button></div>`}); html+=`</div>`; } }
+  for(let w in byWallet){ if(byWallet[w].length>1){count++; html+=`<div class="multiCard" style="border-color:#facc15"><b style="color:#facc15">👛 WALLET: ${w.slice(0,8)}... (${byWallet[w].length})</b><br>`; byWallet[w].forEach(u=>{html+=`<div style="font-size:10px;background:#12121f;padding:3px;border-radius:6px;margin-top:2px">${u.first_name||u.id}</div>`}); html+=`</div>`; } }
+  if(count==0) html=`<div style="text-align:center;padding:20px"><b style="color:#22c55e">✅ Aucun multicompte!</b><br><small>${allData.length} joueurs analysés</small></div>`;
+  else html=`<div style="background:#ef4444;color:#fff;padding:6px;border-radius:8px;text-align:center;margin-bottom:8px;font-weight:900">${count} GROUPES - ${allData.length} JOUEURS SCANNÉS!</div>`+html;
+  listEl.innerHTML=html;
+ }catch(e){listEl.innerHTML='<small style="color:#ef4444">Erreur: '+e.message+'</small>';}
+}
+async function banU(id){if(!confirm('Bannir '+id+'?'))return;await supa.from('harold_users').update({banned:true}).eq('id',id);showBar('🚫 Banni '+id,'#ef4444');scanMulti()}
 loadWd();
 setInterval(loadWd, 8000);
-if('Notification' in window && Notification.permission==='default'){ setTimeout(()=>{ Notification.requestPermission(); },2000); }
 </script>
 </body>
 </html>
