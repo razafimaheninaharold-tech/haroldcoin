@@ -14,6 +14,15 @@
 <div class="modal" id="leaderModal" onclick="if(event.target==this)closeLeaderboard()"><div class="box"><h3>🏆 TOP 15</h3><div id="leaderList">Chargement...</div><button onclick="closeLeaderboard()" style="margin-top:10px;width:100%;background:#222;color:#fff;border:1px solid #444;padding:8px;border-radius:10px">Fermer</button></div></div>
 <div class="modal" id="comboModal"><div class="box" style="text-align:center"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><h3>🃏 Combo</h3><button onclick="closeCombo()" style="background:#ff4444;color:#fff;border:0;width:28px;height:28px;border-radius:50%">X</button></div><div id="comboGrid" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0"></div><div style="background:#12121f;padding:8px;border-radius:10px;margin-bottom:10px"><small>Sel: <span id="comboSel">0/3</span></small><br><small id="comboHint">Choisis 3!</small></div><button id="comboBtn" onclick="checkCombo()" style="width:100%;background:#7c3aed;color:#fff;border:0;padding:10px;border-radius:12px;font-weight:900">VALIDER</button><small id="comboInfo" style="font-size:10px;color:#aaa;margin-top:6px;display:block"></small></div></div>
 <div class="modal" id="multiModal" onclick="if(event.target==this)closeMultiModal()"><div class="box" style="border-color:#ef4444"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><h3>🚨 MULTICOMPTES</h3><button onclick="closeMultiModal()" style="background:#ff4444;color:#fff;border:0;width:28px;height:28px;border-radius:50%">X</button></div><div id="multiList" style="max-height:400px;overflow-y:auto"><small style="color:#aaa">Chargement...</small></div><button onclick="scanMulti()" style="margin-top:10px;width:100%;background:#ef4444;color:#fff;border:0;padding:8px;border-radius:10px;font-weight:900">🔄 RE-SCANNER</button></div></div>
+
+<!-- FOOTER CERTIFIE TELEGRAM -->
+<div style="text-align:center;padding:20px 10px 90px 10px;font-size:11px;opacity:0.6;line-height:1.8">
+<a href="./privacy.html" style="color:#f8d33a;margin:0 10px;text-decoration:none">Privacy Policy</a>
+<a href="./terms.html" style="color:#f8d33a;margin:0 10px;text-decoration:none">Terms of Service</a>
+<a href="https://t.me/HaroldcoinsOfficial" style="color:#f8d33a;margin:0 10px;text-decoration:none">Official Channel</a>
+<br><small style="color:#666">© 2026 Harold Coins - All rights reserved</small>
+</div>
+
 <script>
 const U="https://kgmatxqbdyusxpiuavbw.supabase.co",K="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";const S=supabase.createClient(U,K);
 let T=window.Telegram?.WebApp,uid=T?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';localStorage.setItem('uid',uid);
