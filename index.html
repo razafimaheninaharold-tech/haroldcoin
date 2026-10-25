@@ -4,40 +4,56 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Haroldcoin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center;overscroll-behavior:none}
 .app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 14px 80px}
-.top{display:flex;justify-content:space-between;align-items:flex-start}
-.name{font-family:'Cinzel';font-size:30px;font-weight:900;color:#fff;text-shadow:0 0 12px #d4af37}
-.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:900;display:inline-block;margin-top:3px}
-.wallet{background:rgba(0,0,0,0.75);border:1.5px solid #d4af37;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px}
-.assets-wrap{margin-top:2px;display:flex;flex-direction:column;align-items:center}
-.assets-label{font-family:'Cinzel';font-size:11px;color:#d4af37;letter-spacing:3px;display:flex;align-items:center;gap:6px}
-.assets-label:before,.assets-label:after{content:'👑';font-size:8px}
-.assets-pill{margin-top:5px;background:linear-gradient(180deg,#1a1a1a,#000);border:2px solid #d4af37;border-radius:24px;padding:8px 24px;min-width:240px;text-align:center;box-shadow:0 0 16px rgba(212,175,55,0.4)}
-.assets-value{font-family:'Cinzel';font-size:26px;font-weight:900;color:#fff9c4;text-shadow:0 0 10px #d4af37}
-.assets-value span{color:#d4af37;font-size:16px}
-.mining-plus{margin-top:8px;background:linear-gradient(180deg,#0a2a1a,#000);border:1.5px solid #00ff88;border-radius:20px;padding:7px 20px;min-width:190px;text-align:center;box-shadow:0 0 14px rgba(0,255,136,0.3);display:flex;align-items:center;justify-content:center;gap:6px}
-.mining-plus b{font-family:'Inter';font-size:24px;font-weight:900;color:#00ff88;text-shadow:0 0 8px #00ff88}
-.mining-plus span{color:#00ff88;font-size:11px;font-weight:800}
-.center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:6px}
+.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 14px 90px}
+
+/* TOP COMME IMAGE 0,0880 */
+.top{display:flex;justify-content:space-between;align-items:center;background:rgba(5,15,25,0.75);border:1px solid rgba(0,229,255,0.15);border-radius:12px;padding:10px 12px;backdrop-filter:blur(8px);clip-path:polygon(0 0,100% 0,100% 75%,95% 100%,0 100%)}
+.name{font-family:'Orbitron';font-size:26px;font-weight:900;color:#fff;letter-spacing:2px}
+.lvl{background:rgba(0,0,0,0.6);border:1px solid #00e5ff;color:#00e5ff;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:900;display:inline-block;margin-left:8px;box-shadow:0 0 8px rgba(0,229,255,0.3)}
+.wallet{background:rgba(0,0,0,0.6);border:1.5px solid transparent;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;padding:7px 14px;border-radius:20px;font-size:11px;font-family:'Inter';font-weight:600}
+
+.assets-wrap{margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:20px;padding:8px 14px;min-width:155px;display:flex;align-items:center;gap:8px;box-shadow:0 0 16px rgba(212,175,55,0.5);border:1.5px solid #ffd700}
+.assets-pill:before{content:'🪙';font-size:20px;background:radial-gradient(#ffd700,#b8941f);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.assets-value{font-family:'Inter';font-size:15px;font-weight:900;color:#000;line-height:1.1}
+.assets-value small{font-size:9px;display:block;font-weight:700}
+.mining-plus{background:rgba(0,0,0,0.65);border:1.5px solid #00ff88;border-radius:20px;padding:8px 14px;min-width:130px;text-align:left;box-shadow:0 0 14px rgba(0,255,136,0.25)}
+.mining-plus .m-label{font-size:9px;color:#fff;display:flex;align-items:center;gap:4px}
+.mining-plus .m-label:before{content:'';width:8px;height:8px;background:#00ff88;border-radius:50%;box-shadow:0 0 6px #00ff88;display:inline-block}
+.mining-plus b{font-family:'Inter';font-size:15px;font-weight:900;color:#00ff88;text-shadow:0 0 8px #00ff88;display:block}
+
+.center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:14px}
+
+/* MILIEU - ON NE TOUCHE RIEN - EXACTEMENT TON CODE */
 .coin-wrap{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
 .mining-circle{position:absolute;width:120px;height:120px;transform:rotate(-90deg);z-index:10}
 .mining-circle circle{fill:none;stroke-linecap:round}
 .track{stroke:rgba(255,215,0,0.15);stroke-width:5px}
 .progress{stroke:#FFD700;stroke-width:5px;stroke-dasharray:220;stroke-dashoffset:220;filter:drop-shadow(0 0 6px #FFD700);transition:stroke-dashoffset 0.5s ease}
 .coin{width:92px;height:92px;z-index:5;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 16px #d4af37)}
-.power-bar{margin-top:10px;width:200px;height:16px;background:rgba(0,0,0,0.7);border:1.5px solid #d4af37;border-radius:20px;position:relative;display:flex;align-items:center;padding:2px 2px 2px 28px}
-.power-fill{height:9px;background:linear-gradient(90deg,#fff9c4,#ffd700,#d4af37);border-radius:10px;width:0%;transition:width 0.5s ease}
-.power-icon{position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:30px;height:30px;background:radial-gradient(#ffd700,#b8941f);border-radius:50%;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:2}
-.claim{margin-top:12px;width:86%;height:50px;border:none;border-radius:22px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:20px;box-shadow:0 5px 18px rgba(212,175,55,0.6);cursor:pointer;z-index:20;display:block}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:72px;background:rgba(0,0,0,0.96);border-top:1.5px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:999}
-.nav{color:#666;text-align:center;font-size:11px;font-family:'Inter';cursor:pointer;padding:8px 12px;border-radius:12px;min-width:58px}
-.nav.active{color:#d4af37;background:rgba(212,175,55,0.18);box-shadow:0 0 12px rgba(212,175,55,0.3)}
-.nav b{font-size:20px;display:block}
+
+/* BARRE DESIGN 3 - PETITS TRAITS CYAN->ORANGE */
+.power-bar{margin-top:18px;width:96%;height:38px;background:rgba(0,0,0,0.88);border:1.5px solid rgba(0,229,255,0.4);border-radius:20px;position:relative;display:flex;align-items:center;padding:3px 6px 3px 48px;box-shadow:0 0 14px rgba(0,229,255,0.25)}
+.power-fill{height:14px;background:linear-gradient(90deg,#00e5ff 0%,#33d4ff 20%,#66e0ff 40%,#ffaa55 70%,#ff8c00 100%);border-radius:12px;width:0%;transition:width 0.5s ease;box-shadow:0 0 10px #00e5ff;position:relative;overflow:hidden}
+.power-fill:after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(90deg,transparent 0 4px,rgba(0,0,0,0.35) 4px 5px)}
+.power-icon{position:absolute;left:-2px;top:50%;transform:translateY(-50%);width:44px;height:38px;background:linear-gradient(135deg,#00e5ff,#ff8c00);border-radius:12px;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:2;box-shadow:0 0 12px #00e5ff, inset 0 1px 0 rgba(255,255,255,0.4);clip-path:polygon(15% 0,85% 0,100% 50%,85% 100%,15% 100%,0% 50%)}
+
+/* CLAIM MODELE 3 CYAN->ORANGE */
+.claim{margin-top:18px;width:92%;height:56px;border:2px solid transparent;border-radius:28px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#66e0ff,#ffbb66,#ff8c00) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:20px;letter-spacing:2px;box-shadow:0 0 22px rgba(0,229,255,0.45), 0 0 22px rgba(255,140,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);cursor:pointer;z-index:20;display:block;text-shadow:0 0 12px #00e5ff}
+.claim:active{transform:scale(0.97)}
+
+/* BAS EXACTEMENT COMME TON IMAGE 4 CARRES 3D */
+.bottom{position:absolute;bottom:0;left:0;right:0;height:92px;background:rgba(5,10,20,0.98);border-top:1.5px solid rgba(212,175,55,0.25);display:flex;justify-content:space-between;align-items:center;z-index:999;padding:10px 10px;gap:8px;border-radius:22px 22px 0 0}
+.nav{flex:1;height:68px;background:linear-gradient(145deg,#1e2535,#151a28);border:1px solid rgba(255,255,255,0.08);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#6b7280;text-align:center;font-size:11px;font-family:'Inter';font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);transition:all 0.2s}
+.nav b{font-size:24px;display:block;line-height:1}
+.nav.active{background:linear-gradient(145deg,#2a2215,#1f1a0f);border:1.5px solid #ffd700;color:#ffd700;box-shadow:0 0 18px rgba(255,215,0,0.5), 0 4px 16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);text-shadow:0 0 8px #ffd700}
+.nav.active b{filter:drop-shadow(0 0 8px #ffd700)}
+
 .page{display:none;flex:1;overflow-y:auto}.page.active{display:flex;flex-direction:column}
 #page-mine.active{justify-content:flex-start;overflow-y:auto}
 .miners-head{margin-bottom:10px}
@@ -60,12 +76,11 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 <body>
 <div class="app">
 <div class="content">
-<div class="top"><div><div class="name">HAROLD</div><div class="lvl">👑 Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
+<div class="top"><div style="display:flex;align-items:center"><div class="name">HAROLD</div><div class="lvl">Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
 <div class="page active" id="page-mine">
 <div class="assets-wrap">
-<div class="assets-label">ASSETS</div>
-<div class="assets-pill"><div class="assets-value" id="assetsValue">0,0780 | <span>HRD</span></div></div>
-<div class="mining-plus">📈 <b id="miningPlus">+0.0000</b> <span>HRD</span></div>
+<div class="assets-pill"><div class="assets-value" id="assetsValue">0,0780 | HRD</div></div>
+<div class="mining-plus"><div class="m-label">Mining</div><b id="miningPlus">+0.0000 HRD</b></div>
 </div>
 <div class="center">
 <div class="coin-wrap">
@@ -82,8 +97,8 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 </div>
 <div class="bottom">
 <div class="nav active" data-page="mine"><b>⛏️</b>Mine</div>
-<div class="nav" data-page="tasks"><b>📦</b>Tasks</div>
-<div class="nav" data-page="miners"><b>⚡</b>Miners</div>
+<div class="nav" data-page="tasks"><b>☰</b>Tasks</div>
+<div class="nav" data-page="miners"><b>🤖</b>Miners</div>
 <div class="nav" data-page="friends"><b>👥</b>Friends</div>
 </div>
 </div>
@@ -108,16 +123,16 @@ const powerFill=document.getElementById('powerFill');
 const btn=document.getElementById('claimBtn');
 const circ=2*Math.PI*35;circle.style.strokeDasharray=circ;circle.style.strokeDashoffset=circ;
 function updateUI(){
-  assetsValue.innerHTML=`${balance.toFixed(4).replace('.',',')} | <span>HRD</span>`;
-  miningPlus.textContent=`+${mining.toFixed(4)}`;
+  assetsValue.innerHTML=`${balance.toFixed(4).replace('.',',')} | HRD`;
+  miningPlus.textContent=`+${mining.toFixed(4)} HRD`;
   powerFill.style.width=progress+'%';
   circle.style.strokeDashoffset=circ-(circ*progress/100);
-  if(progress>=100){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 25px #ffd700';}
+  if(progress>=100){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 30px #00e5ff, 0 0 30px #ff8c00';}
 }
 let iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
 btn.addEventListener('click',()=>{
   if(progress>=100){
-    balance+=mining;mining=0;progress=0;btn.textContent='CLAIM';btn.style.boxShadow='0 5px 18px rgba(212,175,55,0.6)';
+    balance+=mining;mining=0;progress=0;btn.textContent='CLAIM';btn.style.boxShadow='0 0 22px rgba(0,229,255,0.45), 0 0 22px rgba(255,140,0,0.3)';
     updateUI();
     iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
     if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.notificationOccurred('success');
