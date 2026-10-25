@@ -2,35 +2,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Haroldcoin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;display:flex;justify-content:center}
-.app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
-.app::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.6) 75%);z-index:0}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:14px 14px 80px}
-.top{display:flex;justify-content:space-between;align-items:flex-start}
-.name{font-family:'Cinzel';font-size:34px;font-weight:900;color:#fff;text-shadow:0 0 30px #d4af37,0 0 60px rgba(212,175,55,0.6);letter-spacing:2px}
-.lvl{margin-top:8px;background:linear-gradient(180deg,#fff9c4,#f9e79f,#d4af37);color:#000;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:900;display:inline-flex;gap:6px;box-shadow:0 4px 15px rgba(212,175,55,0.6), inset 0 1px 0 #fff}
-.wallet{background:rgba(0,0,0,0.65);backdrop-filter:blur(12px);border:1.8px solid #d4af37;color:#fff;padding:12px 18px;border-radius:22px;font-size:13px;font-weight:700;box-shadow:0 0 20px rgba(212,175,55,0.3)}
-.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-.coin-wrap{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center}
-/* HALO MAGNIFIQUE */
-.halo1{position:absolute;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.4) 0%,rgba(212,175,55,0.15) 35%,transparent 70%);filter:blur(8px);animation:pulse 3s ease-in-out infinite}
-.halo2{position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(255,249,196,0.35) 0%,rgba(212,175,55,0.25) 40%,transparent 70%);filter:blur(3px);animation:pulse 2.2s ease-in-out infinite alternate}
-@keyframes pulse{0%,100%{transform:scale(0.9);opacity:0.6}50%{transform:scale(1.15);opacity:1}}
-.ring{position:absolute;width:250px;height:250px;border-radius:50%;border:2px solid transparent;border-top:2px solid #d4af37;border-right:1.5px solid #f9e79f;box-shadow:0 0 25px #d4af37, inset 0 0 20px rgba(212,175,55,0.15);animation:spin 4s linear infinite}
-.ring2{position:absolute;width:275px;height:275px;border-radius:50%;border:1.5px solid transparent;border-bottom:1.5px solid #f9e79f;border-left:1px solid #d4af37;animation:spinR 6s linear infinite;opacity:0.6}
-@keyframes spin{to{transform:rotate(360deg)}}@keyframes spinR{to{transform:rotate(-360deg)}}
-.coin{width:230px;height:230px;border-radius:50%;position:relative;z-index:5;filter:drop-shadow(0 0 40px rgba(212,175,55,0.9)) drop-shadow(0 0 90px rgba(212,175,55,0.4));animation:float 3.2s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.02)}}
-.bal{font-family:'Cinzel';font-size:46px;font-weight:900;color:#fff9c4;margin-top:22px;text-shadow:0 0 25px #d4af37,0 0 50px rgba(212,175,55,0.5);letter-spacing:1px}
-.claim{margin-top:20px;width:96%;height:70px;border:none;border-radius:24px;background:linear-gradient(180deg,#ffffd0 0%,#fff9c4 18%,#f9e79f 38%,#d4af37 65%,#b8960c 90%);color:#1a1200;font-family:'Cinzel';font-weight:900;font-size:30px;letter-spacing:3px;box-shadow:0 12px 35px rgba(212,175,55,0.65), inset 0 2px 0 #fff, inset 0 -2px 0 rgba(0,0,0,0.2);cursor:pointer;transition:transform 0.1s}
-.claim:active{transform:scale(0.96)}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:76px;background:linear-gradient(180deg,rgba(10,8,4,0.96),#000);backdrop-filter:blur(18px);border-top:1.5px solid rgba(212,175,55,0.35);display:flex;justify-content:space-around;align-items:center;z-index:10}
-.nav{color:#6a5a3a;text-align:center;font-size:11px;font-weight:700;opacity:0.7}.nav.active{color:#d4af37;opacity:1;text-shadow:0 0 12px #d4af37}
+.app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover;position:relative;overflow:hidden}
+.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:12px 14px 0}
+.top{display:flex;justify-content:space-between}
+.name{font-family:'Cinzel';font-size:34px;font-weight:900;color:#fff;text-shadow:0 0 20px #d4af37}
+.lvl{margin-top:6px;background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:900;display:inline-block}
+.wallet{background:rgba(0,0,0,0.7);border:1.5px solid #d4af37;color:#fff;padding:10px 14px;border-radius:20px;font-size:12px;font-weight:700}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:-40px}
+.coin-wrap{position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center}
+/* EFFET MAGNIFIQUE TRÈS VISIBLE */
+.halo{position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle, rgba(255,230,100,0.35) 0%, rgba(212,175,55,0.2) 30%, transparent 70%);box-shadow:0 0 80px rgba(212,175,55,0.5);animation:glow 2s ease-in-out infinite alternate}
+@keyframes glow{0%{transform:scale(0.9);opacity:0.6}100%{transform:scale(1.15);opacity:1}}
+.ring{position:absolute;width:240px;height:240px;border-radius:50%;border:2px solid rgba(212,175,55,0.8);border-top-color:transparent;border-bottom-color:transparent;box-shadow:0 0 20px #d4af37;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.coin{width:210px;height:210px;position:relative;z-index:5;filter:drop-shadow(0 0 30px #d4af37)}
+.bal{font-family:'Cinzel';font-size:52px;font-weight:900;color:#fff9c4;margin-top:15px;text-shadow:0 0 20px #d4af37}
+.claim{margin-top:15px;width:92%;height:62px;border:none;border-radius:20px;background:linear-gradient(#ffffd0,#d4af37);color:#000;font-family:'Cinzel';font-weight:900;font-size:26px}
+.bottom{position:absolute;bottom:0;left:0;right:0;height:70px;background:rgba(0,0,0,0.95);border-top:1px solid #d4af37;display:flex;justify-content:space-around;align-items:center}
+.nav{color:#666;text-align:center;font-size:11px}.nav.active{color:#d4af37}
 </style>
 </head>
 <body>
@@ -38,16 +33,12 @@ body{background:#000;display:flex;justify-content:center}
 <div class="content">
 <div class="top"><div><div class="name">HAROLD</div><div class="lvl">👑 Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
 <div class="center">
-<div class="coin-wrap"><div class="halo1"></div><div class="halo2"></div><div class="ring"></div><div class="ring2"></div><img class="coin" src="coin.png"></div>
-<div class="bal" id="bal">0.0780 HRD</div>
-<button class="claim" onclick="claim()">CLAIM</button>
+<div class="coin-wrap"><div class="halo"></div><div class="ring"></div><img class="coin" src="coin.png"></div>
+<div class="bal">0.0780 HRD</div>
+<button class="claim">CLAIM</button>
 </div>
 </div>
 <div class="bottom"><div class="nav active">⛏️<br>Mine</div><div class="nav">📦<br>Tasks</div><div class="nav">⚡<br>Miners</div><div class="nav">👥<br>Friends</div></div>
 </div>
-<script>
-let b=0.078;
-function claim(){b+=0.001;document.getElementById('bal').textContent=b.toFixed(4)+' HRD';let btn=document.querySelector('.claim');btn.textContent='✨ +0.001 HRD';setTimeout(()=>btn.textContent='CLAIM',1200);}
-</script>
 </body>
 </html>
