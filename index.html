@@ -16,28 +16,42 @@ body{background:#000;display:flex;justify-content:center}
 .wallet{background:rgba(0,0,0,0.75);border:1.5px solid #d4af37;color:#fff;padding:8px 14px;border-radius:20px;font-size:11px}
 .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
 
-/* COIN - ANTI CARRE NOIR DEFINITIF */
-.coin-wrap{position:relative;width:220px;height:220px;display:flex;align-items:center;justify-content:center;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.halo{position:absolute;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle, rgba(255,235,100,0.5) 0%, rgba(212,175,55,0.2) 40%, transparent 70%);filter:blur(4px);animation:pulse 2s infinite alternate}
-@keyframes pulse{0%{transform:scale(0.9)}100%{transform:scale(1.2)}}
-.ring{position:absolute;width:160px;height:160px;border-radius:50%;border:2px solid rgba(212,175,55,0.8);border-top-color:transparent;border-bottom-color:transparent;animation:spin 3s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* CERCLE MINING ENERGY */
+.coin-wrap{position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.halo{position:absolute;width:270px;height:270px;border-radius:50%;background:radial-gradient(circle, rgba(255,235,100,0.35) 0%, rgba(212,175,55,0.15) 40%, transparent 70%);filter:blur(5px);animation:pulse 2s infinite alternate}
+@keyframes pulse{0%{transform:scale(0.9)}100%{transform:scale(1.15)}}
+
+/* SVG CERCLE PROGRESS MINING */
+.mining-circle{position:absolute;width:200px;height:200px;transform:rotate(-90deg);z-index:3}
+.mining-circle circle{fill:none;stroke-width:4;stroke-linecap:round}
+.track{stroke:rgba(212,175,55,0.15)}
+.progress{
+  stroke:url(#goldGradient);
+  stroke-dasharray:565;
+  stroke-dashoffset:565;
+  filter:drop-shadow(0 0 8px #d4af37);
+  transition:stroke-dashoffset 1s ease;
+  animation:glowProgress 2s infinite alternate
+}
+@keyframes glowProgress{0%{filter:drop-shadow(0 0 6px #d4af37)}100%{filter:drop-shadow(0 0 14px #ffd700)}}
 
 .coin{
   width:135px;
   height:135px;
   z-index:5;
-  border-radius:50%; /* DECOUPE LE CARRE EN ROND */
-  clip-path:circle(50% at 50% 50%); /* ENLEVE LES COINS DU CARRE */
-  background:transparent;
-  filter:drop-shadow(0 0 20px #d4af37) brightness(1.15);
+  border-radius:50%;
+  clip-path:circle(50% at 50% 50%);
+  filter:drop-shadow(0 0 20px #d4af37) brightness(1.1);
   animation:shine 2s infinite
 }
-@keyframes shine{0%,100%{filter:drop-shadow(0 0 15px #d4af37) brightness(1.1)}50%{filter:drop-shadow(0 0 30px #ffd700) brightness(1.3)}}
+@keyframes shine{0%,100%{filter:drop-shadow(0 0 15px #d4af37) brightness(1.1)}50%{filter:drop-shadow(0 0 30px #ffd700) brightness(1.25)}}
 
-.bal{font-family:'Cinzel';font-size:38px;font-weight:900;color:#fff;margin-top:16px;text-shadow:0 0 15px #d4af37}
-.claim{margin-top:24px;width:90%;height:60px;border:none;border-radius:24px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:24px;box-shadow:0 8px 28px rgba(212,175,55,0.6)}
+.bal{font-family:'Cinzel';font-size:38px;font-weight:900;color:#fff;margin-top:18px;text-shadow:0 0 15px #d4af37}
+.mining-text{font-family:'Inter';font-size:12px;color:#d4af37;margin-top:6px;letter-spacing:1px;text-shadow:0 0 8px #d4af37}
+.claim{margin-top:22px;width:90%;height:60px;border:none;border-radius:24px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:24px;box-shadow:0 8px 28px rgba(212,175,55,0.6);cursor:pointer}
+.claim:disabled{opacity:0.5}
 .bottom{position:absolute;bottom:0;left:0;right:0;height:72px;background:rgba(0,0,0,0.92);border-top:1px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:10}
 .nav{color:#666;text-align:center;font-size:11px}.nav.active{color:#d4af37;text-shadow:0 0 10px #d4af37}
 </style>
@@ -46,13 +60,76 @@ body{background:#000;display:flex;justify-content:center}
 <div class="app">
 <div class="content">
 <div class="top"><div><div class="name">HAROLD</div><div class="lvl">👑 Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
+
 <div class="center">
-<div class="coin-wrap"><div class="halo"></div><div class="ring"></div><img class="coin" src="coin.png"></div>
+<div class="coin-wrap">
+<div class="halo"></div>
+
+<!-- CERCLE D'ENERGIE MINING -->
+<svg class="mining-circle" viewBox="0 0 200 200">
+<defs>
+<linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#fff9c4"/><stop offset="50%" stop-color="#d4af37"/><stop offset="100%" stop-color="#ffd700"/>
+</linearGradient>
+</defs>
+<circle class="track" cx="100" cy="100" r="90"></circle>
+<circle class="progress" id="progressCircle" cx="100" cy="100" r="90"></circle>
+</svg>
+
+<img class="coin" src="coin.png">
+</div>
+
 <div class="bal">0.0780 HRD</div>
-<button class="claim">CLAIM</button>
+<div class="mining-text" id="miningText">⛏️ MINING... 0%</div>
+<button class="claim" id="claimBtn">CLAIM</button>
 </div>
 </div>
+
 <div class="bottom"><div class="nav active">⛏️<br>Mine</div><div class="nav">📦<br>Tasks</div><div class="nav">⚡<br>Miners</div><div class="nav">👥<br>Friends</div></div>
 </div>
+
+<script>
+// CERCLE MINING - SIMULATION
+let progress = 0;
+let miningComplete = false;
+const circle = document.getElementById('progressCircle');
+const text = document.getElementById('miningText');
+const btn = document.getElementById('claimBtn');
+const circumference = 2 * Math.PI * 90; // 565
+
+// Démarre à 0%
+circle.style.strokeDasharray = circumference;
+circle.style.strokeDashoffset = circumference;
+
+function setProgress(p){
+  const offset = circumference - (p/100)*circumference;
+  circle.style.strokeDashoffset = offset;
+  text.textContent = p >= 100 ? '✅ MINING COMPLET - CLAIM!' : `⛏️ MINING... ${Math.floor(p)}%`;
+  if(p >= 100){ miningComplete = true; btn.style.boxShadow='0 0 30px #ffd700'; btn.textContent='CLAIM READY'; }
+}
+
+// Simulation mining 8h = 8 secondes pour demo (change à 28800 pour 8h réel)
+let interval = setInterval(()=>{
+  if(progress < 100){
+    progress += 0.5; // vitesse
+    setProgress(progress);
+  } else {
+    clearInterval(interval);
+  }
+}, 100);
+
+// Quand on clique CLAIM, cercle reset
+btn.addEventListener('click',()=>{
+  if(progress >= 100){
+    progress = 0;
+    setProgress(0);
+    btn.textContent='CLAIM';
+    // Relance mining
+    interval = setInterval(()=>{
+      if(progress < 100){ progress+=0.5; setProgress(progress); } else { clearInterval(interval); }
+    }, 100);
+  }
+});
+</script>
 </body>
 </html>
