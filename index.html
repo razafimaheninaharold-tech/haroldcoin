@@ -2,103 +2,187 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Haroldcoin - Miners 200 Max</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Haroldcoin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;display:flex;justify-content:center}
-.app{width:100%;max-width:420px;min-height:100vh;background:#0a0a0a url('bg.jpg') center/cover no-repeat fixed;position:relative;padding-bottom:80px}
-.content{position:relative;z-index:2;padding:16px}
-.header{position:sticky;top:0;z-index:5;background:rgba(0,0,0,0.92);padding:12px 0;display:flex;align-items:center;gap:12px;margin:-16px -16px 16px -16px;padding-left:16px;border-bottom:1px solid rgba(212,175,55,0.3)}
-.back{width:36px;height:36px;border-radius:50%;background:rgba(212,175,55,0.15);border:1px solid #d4af37;display:flex;align-items:center;justify-content:center;color:#d4af37;font-size:18px}
-.title{font-family:'Cinzel';font-size:22px;font-weight:900;color:#fff}
-.subtitle{font-family:'Inter';font-size:11px;color:#888}
+body{background:#000;display:flex;justify-content:center;font-family:'Inter'}
+.app{width:100%;max-width:420px;min-height:100vh;background:#000;position:relative;overflow:hidden}
+.bg{position:absolute;inset:0;background:radial-gradient(ellipse at center, #1a1500 0%, #000 70%), url('https://i.ibb.co/8gJzK9t/gold-galaxy.jpg');background-size:cover;opacity:0.9}
+.content{position:relative;z-index:2;min-height:100vh;padding-bottom:78px}
+
+/* HEADER */
+.header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.6);border-bottom:1px solid rgba(212,175,55,0.2)}
+.logo{font-family:'Cinzel';font-weight:900;color:#d4af37;font-size:18px;display:flex;align-items:center;gap:8px}
+.balance{color:#00ff88;font-weight:800;font-size:14px;background:rgba(0,255,136,0.1);padding:6px 12px;border-radius:20px;border:1px solid rgba(0,255,136,0.3)}
+
+/* PAGES */
+.page{display:none;padding:16px}.page.active{display:block}
+
+/* PAGE MINE - CERCLE 3MM */
+.mine-center{display:flex;flex-direction:column;align-items:center;margin-top:20px}
+.mining-wrap{position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center}
+.progress-ring{position:absolute;inset:0;transform:rotate(-90deg)}
+.progress-ring circle{fill:none;stroke-width:6;stroke-linecap:round}
+.bg-ring{stroke:rgba(255,255,255,0.08)}
+.fg-ring{stroke:#ffdd00;stroke-dasharray: 816;stroke-dashoffset:816;transition:stroke-dashoffset 0.3s;filter:drop-shadow(0 0 8px #ffdd00)}
+.coin{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff9c4, #d4af37 20%, #b8941f 60%, #8a6d00);border:3px solid #ffd700;box-shadow:0 0 40px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.coin-inner{width:180px;height:180px;border-radius:50%;background:repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0px, transparent 2px), radial-gradient(#ffd700, #b8941f);display:flex;align-items:center;justify-content:center;font-family:'Cinzel';font-weight:900;font-size:62px;color:#5a4500;text-shadow:0 2px 0 #fff8a0, 0 0 15px #ffd700}
+.mine-stats{margin-top:18px;text-align:center}
+.mine-rate{color:#888;font-size:12px;letter-spacing:1px}
+.mine-amount{color:#fff;font-size:42px;font-weight:900;margin:6px 0;text-shadow:0 0 15px #d4af37}
+.mine-speed{color:#d4af37;font-weight:700;font-size:13px}
+.claim-btn{margin-top:20px;width:100%;height:56px;border-radius:16px;border:none;background:linear-gradient(180deg,#fff9c4,#d4af37);font-family:'Cinzel';font-weight:900;font-size:16px;color:#000;box-shadow:0 6px 20px rgba(212,175,55,0.5);cursor:pointer}
+.claim-btn:disabled{background:#222;color:#555;box-shadow:none}
+
+/* MINERS */
+.miners-header{margin-bottom:14px}
+.miners-title{font-family:'Cinzel';font-size:20px;font-weight:900;color:#fff}
+.miners-sub{font-size:11px;color:#888;margin-top:4px}
+.progress-bar{height:4px;background:rgba(212,175,55,0.15);border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#ffd700);width:0.5%}
 .miner-card{background:linear-gradient(135deg, rgba(20,20,20,0.96), rgba(0,0,0,0.99));border:1.2px solid rgba(212,175,55,0.25);border-radius:16px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
 .miner-card.active{border-color:#d4af37;box-shadow:0 0 18px rgba(212,175,55,0.25)}
-.miner-card.max200{border:2px solid #ffd700;background:linear-gradient(135deg, rgba(40,35,0,0.98), rgba(0,0,0,0.99));box-shadow:0 0 30px rgba(255,215,0,0.4)}
-.miner-icon{width:48px;height:48px;border-radius:12px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.miner-info{flex:1;min-width:0}
-.miner-lvl{font-family:'Inter';font-size:11px;font-weight:800;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.miner-price{font-family:'Inter';font-size:18px;font-weight:800;color:#00ff88}
-.miner-hold{font-family:'Inter';font-size:10px;color:#666;margin-top:1px}
-.miner-speed{font-family:'Inter';font-size:11px;font-weight:700;color:#d4af37;margin-top:2px}
-.miner-btn{padding:8px 14px;border-radius:10px;border:none;font-family:'Inter';font-weight:900;font-size:10px;cursor:pointer;min-width:82px}
+.miner-card.max200{border:2px solid #ffd700;box-shadow:0 0 25px rgba(255,215,0,0.4)}
+.miner-icon{width:48px;height:48px;border-radius:12px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:22px}
+.miner-info{flex:1}
+.miner-lvl{font-size:11px;font-weight:800;color:#888}
+.miner-price{font-size:18px;font-weight:800;color:#00ff88}
+.miner-hold{font-size:10px;color:#666}
+.miner-speed{font-size:11px;font-weight:700;color:#d4af37;margin-top:2px}
+.miner-btn{padding:8px 12px;border-radius:10px;border:none;font-weight:900;font-size:10px;cursor:pointer;min-width:80px}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}
 .btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}
 .btn-locked{background:#222;color:#666;border:1px solid #333}
-.btn-max200{background:linear-gradient(#ffd700,#ff8c00);color:#000;box-shadow:0 0 15px #ffd700;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.progress-bar{height:4px;background:rgba(212,175,55,0.15);border-radius:2px;margin-top:16px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#ffd700);width:0.5%;transition:width 0.3s}
-.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;height:68px;background:rgba(0,0,0,0.97);border-top:1px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:10}
-.nav{color:#555;text-align:center;font-size:10px;font-family:'Inter'}.nav.active{color:#d4af37}
+.btn-max200{background:linear-gradient(#ffd700,#ff8c00);color:#000}
+
+/* TASKS & FRIENDS simple */
+.task-card{background:rgba(20,20,20,0.9);border:1px solid rgba(212,175,55,0.2);border-radius:14px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.task-left{display:flex;gap:12px;align-items:center}
+.task-icon{width:40px;height:40px;border-radius:10px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center}
+.task-title{font-size:13px;font-weight:700;color:#fff}
+.task-reward{font-size:11px;color:#00ff88}
+
+/* BOTTOM NAV */
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;height:72px;background:rgba(0,0,0,0.97);border-top:1px solid rgba(212,175,55,0.4);display:flex;justify-content:space-around;align-items:center;z-index:20}
+.nav{color:#555;text-align:center;font-size:11px;cursor:pointer;padding:6px 12px;border-radius:12px;transition:all 0.2s}
+.nav.active{color:#d4af37;text-shadow:0 0 10px #d4af37;background:rgba(212,175,55,0.1)}
+.nav span{font-size:20px;display:block}
 </style>
 </head>
 <body>
 <div class="app">
+<div class="bg"></div>
 <div class="content">
-<div class="header">
-<div class="back">←</div>
-<div><div class="title">MINERS • 200 MAX 👑</div><div class="subtitle" id="progressText">LVL 1/200 • 0.5% complété</div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
+<div class="header"><div class="logo">👑 HAROLDCOIN</div><div class="balance" id="balanceTop">0.00 HRD</div></div>
+
+<!-- PAGE MINE -->
+<div class="page active" id="page-mine">
+<div class="mine-center">
+<div class="mining-wrap">
+<svg class="progress-ring" width="260" height="260"><circle class="bg-ring" cx="130" cy="130" r="122"></circle><circle class="fg-ring" id="fgRing" cx="130" cy="130" r="122"></circle></svg>
+<div class="coin"><div class="coin-inner">HRD</div></div>
+</div>
+<div class="mine-stats">
+<div class="mine-rate">MINING RATE</div>
+<div class="mine-amount" id="mineAmount">0.000000</div>
+<div class="mine-speed" id="mineSpeed">⚡ 0.20 TH/s • LVL 1</div>
+</div>
+<button class="claim-btn" id="claimBtn" disabled>⛏️ MINING...</button>
+</div>
+</div>
+
+<!-- PAGE MINERS -->
+<div class="page" id="page-miners">
+<div class="miners-header">
+<div class="miners-title">MINERS • 200 MAX 👑</div>
+<div class="miners-sub" id="progressText">LVL 1/200 • 0.5% complété</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 </div>
 <div id="minersList"></div>
 </div>
-<div class="bottom"><div class="nav">⛏️<br>Mine</div><div class="nav">📦<br>Tasks</div><div class="nav active">⚡<br>Miners</div><div class="nav">👥<br>Friends</div></div>
+
+<!-- PAGE TASKS -->
+<div class="page" id="page-tasks">
+<div class="miners-title" style="margin-bottom:14px">TASKS 📦</div>
+<div class="task-card"><div class="task-left"><div class="task-icon">📢</div><div><div class="task-title">Follow Telegram</div><div class="task-reward">+100 HRD</div></div></div><button class="miner-btn btn-active">CLAIM</button></div>
+<div class="task-card"><div class="task-left"><div class="task-icon">👥</div><div><div class="task-title">Invite 3 Friends</div><div class="task-reward">+500 HRD</div></div></div><button class="miner-btn btn-locked">🔒 LOCKED</button></div>
+<div class="task-card"><div class="task-left"><div class="task-icon">🔁</div><div><div class="task-title">Daily Check-in</div><div class="task-reward">+50 HRD</div></div></div><button class="miner-btn btn-active">CHECK</button></div>
+</div>
+
+<!-- PAGE FRIENDS -->
+<div class="page" id="page-friends">
+<div class="miners-title" style="margin-bottom:14px">FRIENDS 👥</div>
+<div class="task-card" style="flex-direction:column;align-items:stretch;gap:12px">
+<div style="color:#fff;font-size:13px">Invite tes amis et gagne 10% de leur mining!</div>
+<div style="background:#111;padding:10px;border-radius:8px;color:#d4af37;font-size:12px;word-break:break-all">https://t.me/Haroldcoin_bot?start=12345</div>
+<button class="claim-btn" style="margin-top:0;height:44px;font-size:14px">📋 COPIER LIEN</button>
+</div>
+<div class="task-card"><div class="task-left"><div class="task-icon">👤</div><div><div class="task-title">Aucun filleul pour l'instant</div><div class="task-reward">Invite pour gagner</div></div></div></div>
+</div>
+
+</div>
+<div class="bottom">
+<div class="nav active" data-page="mine"><span>⛏️</span>Mine</div>
+<div class="nav" data-page="tasks"><span>📦</span>Tasks</div>
+<div class="nav" data-page="miners"><span>⚡</span>Miners</div>
+<div class="nav" data-page="friends"><span>👥</span>Friends</div>
+</div>
 </div>
 
 <script>
-const minersList = document.getElementById('minersList');
-const icons = ['⛏️','⚙️','🔧','💎','🏆','👑','🚀','🌟','🔥','⚡','💰','🎯','🛠️','🔱','💸'];
-let html = '';
-
-// Prix de base selon ta table
-const basePrices = [0, 0, 0.317, 0.323, 0.333, 0.375, 0.39, 0.405, 0.42];
-
-for(let lvl=1; lvl<=200; lvl++){
-  let price, hrdCost, hold, status, btnClass, btnText, cardClass='';
-  
-  if(lvl===1){
-    price=0; hrdCost=0; hold=0; status='ACTIVE'; btnClass='btn-active'; btnText='ACTIVE'; cardClass='active';
-  }else if(lvl<=8){
-    price=basePrices[lvl]; 
-    hrdCost = [0,317,3230,3330,3750,3900,4050,4200][lvl-1] || Math.floor(4200 + (lvl-8)*50);
-    hold = [0,1000,3000,4000,5000,6000,7000,8000][lvl-1] || 8000 + (lvl-8)*500;
-    if(lvl===2){btnClass='btn-need'; btnText='NEED 1000 HRD';}
-    else {btnClass='btn-locked'; btnText='🔒 LOCKED';}
-  }else{
-    // Formule pour lvl 9-199
-    price = (0.42 + (lvl-8)*0.015).toFixed(3);
-    hrdCost = 4200 + (lvl-8)*120;
-    hold = 8000 + (lvl-8)*800;
-    btnClass='btn-locked'; btnText='🔒 LOCKED';
-  }
-  
-  // LVL 200 MAX ULTIME
-  if(lvl===200){
-    price = '2.500'; hrdCost=25000; hold=100000; 
-    btnClass='btn-max200'; btnText='MAX 200 👑'; 
-    cardClass='max200';
-  }
-
-  const icon = lvl===200 ? '👑' : icons[lvl % icons.length];
-  const speed = (0.20 + (lvl-1)*0.015).toFixed(2); // Speed augmente légèrement
-  
-  html += `
-  <div class="miner-card ${cardClass}">
-    <div class="miner-icon">${icon}</div>
-    <div class="miner-info">
-      <div class="miner-lvl">LVL ${lvl} ${lvl===200?'- MAX ULTIME 200 👑':lvl===1?'- BASIC':''}</div>
-      <div class="miner-price" style="${lvl===200?'color:#ffd700':''}">${price}$</div>
-      <div class="miner-hold">${hrdCost} HRD • HOLD ${hold.toLocaleString()} HRD</div>
-      <div class="miner-speed">⚡ ${speed} TH/s ${lvl===200?'• ULTIME':''}</div>
-    </div>
-    <button class="miner-btn ${btnClass}">${btnText}</button>
-  </div>`;
+// NAVIGATION - FIX BOUTON MINING
+const pages = {mine:'page-mine',tasks:'page-tasks',miners:'page-miners',friends:'page-friends'};
+function showPage(name){
+  Object.values(pages).forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById(pages[name]).classList.add('active');
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+  document.querySelector(`.nav[data-page="${name}"]`).classList.add('active');
 }
+document.querySelectorAll('.nav').forEach(n=>n.addEventListener('click',()=>showPage(n.dataset.page)));
 
-minersList.innerHTML = html;
-document.getElementById('progressFill').style.width = '0.5%';
+// MINING LOGIC
+let mined=0, balance=0, th=0.20;
+const mineAmountEl=document.getElementById('mineAmount');
+const claimBtn=document.getElementById('claimBtn');
+const balanceTop=document.getElementById('balanceTop');
+const fgRing=document.getElementById('fgRing');
+const circumference=2*Math.PI*122;
+fgRing.style.strokeDasharray=circumference;
+let progress=0;
+setInterval(()=>{
+  mined+= th/3600/1000; // par ms
+  progress+=0.15;
+  if(progress>=100){progress=0; claimBtn.disabled=false; claimBtn.textContent='💰 CLAIM '+mined.toFixed(6)+' HRD'; claimBtn.style.background='linear-gradient(180deg,#00ff88,#00cc66)';}
+  mineAmountEl.textContent=mined.toFixed(6);
+  fgRing.style.strokeDashoffset=circumference - (circumference*progress/100);
+  if(progress<100) claimBtn.textContent='⛏️ MINING... '+Math.floor(progress)+'%';
+},50);
+
+claimBtn.addEventListener('click',()=>{
+  if(progress>=100){balance+=mined; mined=0; progress=0; balanceTop.textContent=balance.toFixed(2)+' HRD'; claimBtn.disabled=true; mineAmountEl.textContent='0.000000';}
+});
+
+// GENERATE 200 LEVELS
+const list=document.getElementById('minersList'); const icons=['⚙️','🔧','💎','🏆','👑','🚀','🌟','🔥','⚡','💰'];
+let html='';
+for(let lvl=1;lvl<=200;lvl++){
+  let price,hrd,hold,btnClass,btnText,cardExtra='';
+  if(lvl===1){price='0$';hrd=0;hold=0;btnClass='btn-active';btnText='ACTIVE';}
+  else if(lvl===2){price='0.317$';hrd=317;hold=1000;btnClass='btn-need';btnText='NEED 1000 HRD';}
+  else if(lvl===3){price='0.323$';hrd=3230;hold=3000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===4){price='0.333$';hrd=3330;hold=4000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===5){price='0.375$';hrd=3750;hold=5000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===6){price='0.390$';hrd=3900;hold=6000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===7){price='0.405$';hrd=4050;hold=7000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===200){price='2.500$';hrd=25000;hold=100000;btnClass='btn-max200';btnText='MAX 200 👑';cardExtra='max200';}
+  else {price=(0.42+(lvl-8)*0.015).toFixed(3)+'$';hrd=4200+(lvl-8)*120;hold=8000+(lvl-8)*800;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  const speed=(0.20+(lvl-1)*0.015).toFixed(2);
+  const icon= lvl===200?'👑':icons[lvl%icons.length];
+  html+=`<div class="miner-card ${cardExtra} ${lvl===1?'active':''}"><div class="miner-icon">${icon}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}${lvl===200?' - MAX ULTIME 200 👑':lvl===1?' - BASIC':''}</div><div class="miner-price" style="${lvl===200?'color:#ffd700':''}">${price}</div><div class="miner-hold">${hrd} HRD • HOLD ${hold.toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}">${btnText}</button></div>`;
+}
+list.innerHTML=html;
 </script>
 </body>
 </html>
