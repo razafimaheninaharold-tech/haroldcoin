@@ -1,214 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>👑 ADMIN V10.3 ILLIMITE</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/tonweb@0.0.66/dist/tonweb.min.js"></script>
-<style>
-*{box-sizing:border-box}body{background:#0e0e15;color:#fff;font-family:-apple-system,system-ui;padding:10px;margin:0}
-.b{padding:10px 14px;border-radius:12px;border:0;font-weight:900;margin:3px;cursor:pointer;font-size:12px}
-.card{background:#1c1c2a;border:2px solid #333;border-radius:16px;padding:14px;margin:12px 0;word-break:break-all;box-shadow:0 4px 15px rgba(0,0,0,.5)}
-.addr{background:#0f2a1a;padding:12px;border-radius:12px;font-size:12px;margin:8px 0;border:2px dashed #22c55e;cursor:pointer;color:#4ade80;font-weight:800}
-.addr-raw{background:#111;padding:8px;border-radius:8px;font-size:10px;margin:4px 0;border:1px dashed #444;color:#888;cursor:pointer}
-.copyBtn{padding:10px 16px;border-radius:10px;border:0;font-weight:900;margin:4px 3px;cursor:pointer;font-size:11px}
-.txInput{width:100%;padding:10px;background:#111;border:1.5px solid #ffd700;border-radius:10px;color:#fff;margin:8px 0;font-size:11px}
-.txLink{background:#0a2a4a;padding:8px;border-radius:8px;margin:6px 0;border:1px solid #3b82f6}
-#notifBar{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:12px 20px;border-radius:25px;font-weight:900;z-index:99999;box-shadow:0 5px 20px rgba(0,0,0,.7);display:none;text-align:center;max-width:92%;font-size:13px;animation:pop .4s}
-@keyframes pop{0%{transform:translateX(-50%) scale(0)}100%{transform:translateX(-50%) scale(1)}}
-.multiCard{background:#1a0f0f;border:1px solid #ef4444;border-radius:10px;padding:8px;margin-bottom:8px}
-</style>
-</head>
-<body>
-<div id="notifBar"></div>
-<h2>👑 ADMIN V10.3 ILLIMITE</h2>
-<div style="font-size:11px;opacity:.7;margin-bottom:10px">✅ Supabase | ✅ RAW→UQ | ✅ Brut FIX | ✅ Preuve TonScan | ✅ Bot Telegram | ✅ SCAN ILLIMITÉ</div>
-<div style="display:flex;flex-wrap:wrap">
-<button class="b" style="background:#ffcc00;color:#000" onclick="setF('pending')">PENDING</button>
-<button class="b" style="background:#22c55e;color:#fff" onclick="setF('approved')">APPROVED</button>
-<button class="b" style="background:#3b82f6;color:#fff" onclick="setF('paid')">PAID</button>
-<button class="b" style="background:#444;color:#fff" onclick="setF('all')">TOUS</button>
-<button class="b" style="background:#fff;color:#000" onclick="loadWd()">🔄 REFRESH</button>
-<button class="b" style="background:#222;color:#ffd700;border:1px solid #ffd700" onclick="askNotif()">🔔 Notif Chrome</button>
-<button class="b" style="background:#ef4444;color:#fff" onclick="openMulti()">🔍 MULTI ILLIMITÉ</button>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Haroldcoin V24 - Clean + Tech H</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://telegram.org/js/telegram-web-app.js"></script><script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"><style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#000;color:#e8d8a0;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden}
+.app{width:100%;max-width:420px;min-height:100vh;background:radial-gradient(ellipse at top, #1a1608 0%, #000 60%);position:relative;padding:0 12px 120px 12px}
+.top{padding:12px 8px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(25,20,8,0.95),rgba(12,10,5,0.95));border:1px solid rgba(212,175,55,0.25);border-radius:16px;margin:10px 0}
+.top-left{display:flex;align-items:center;gap:10px}
+.h-logo-small{width:46px;height:46px;border-radius:50%;border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,0.6);overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+.h-logo-small img{width:90%;height:90%;object-fit:contain;border-radius:50%}
+.tap-title{font-size:13px;letter-spacing:4px;color:#c9a84c;font-weight:800;opacity:0.9;text-align:center;margin:12px 0 6px}
+.coin-wrap{display:flex;flex-direction:column;align-items:center;position:relative;margin:14px 0 8px}
+.coin-glow{width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.42) 0%,rgba(212,175,55,0.18) 35%,rgba(212,175,55,0.06) 60%,transparent 75%);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:breathe 3s ease-in-out infinite alternate}
+@keyframes breathe{0%{transform:translate(-50%,-50%) scale(0.88);opacity:0.7}100%{transform:translate(-50%,-50%) scale(1.08);opacity:1}}
+.coin{width:260px;height:260px;border-radius:50%;position:relative;z-index:3;object-fit:contain;filter:drop-shadow(0 0 28px rgba(212,175,55,0.85)) drop-shadow(0 0 60px rgba(212,175,55,0.3));animation:float 3.2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.bal{font-family:'JetBrains Mono',monospace;font-size:42px;font-weight:800;color:#f5e6a8;text-align:center;margin-top:14px;letter-spacing:1px;text-shadow:0 0 20px rgba(212,175,55,0.5)}
+.usd{font-size:14px;color:#8a7a4a;text-align:center;margin-top:4px}
+.mining-live{font-size:13px;color:#22c55e;text-align:center;margin-top:8px;font-weight:800;letter-spacing:2px}
+.claim-big{margin:18px 0 0;width:100%;height:60px;border:none;border-radius:18px;background:linear-gradient(180deg,#f9e79f 0%,#d4af37 50%,#b8960c 100%);color:#1a1200;font-weight:900;font-size:20px;box-shadow:0 8px 28px rgba(212,175,55,0.45),inset 0 1px 0 rgba(255,255,255,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.section{display:none}.section.active{display:block}
+.bottom-nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);width:calc(100% - 16px);max-width:400px;background:linear-gradient(180deg,rgba(22,20,12,0.98),rgba(10,10,6,0.98));border:1.5px solid rgba(212,175,55,0.35);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:10px 6px 8px;box-shadow:0 12px 36px rgba(0,0,0,0.85);z-index:100}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-width:58px;padding:7px 10px;border-radius:14px}
+.nav-item.active{background:linear-gradient(180deg,rgba(212,175,55,0.25),rgba(212,175,55,0.12));border:1px solid rgba(212,175,55,0.5);box-shadow:0 0 12px rgba(212,175,55,0.25)}
+.nav-icon{font-size:24px}.nav-label{font-size:11px;font-weight:700;color:#8a7a5a}.nav-item.active .nav-label{color:#d4af37}
+.wallet-btn{background:#fff;color:#111;border:none;padding:8px 14px;border-radius:20px;font-weight:800;font-size:13px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.title{font-size:26px;font-weight:900;text-align:center;color:#fff;margin:10px 0 2px}.subtitle{font-size:11px;text-align:center;color:#8a7a5a;margin-bottom:10px;letter-spacing:1px}
+.pnl-card{background:linear-gradient(180deg,rgba(10,30,20,0.9),rgba(5,15,10,0.9));border:1px solid rgba(34,197,94,0.25);border-radius:20px;padding:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-bottom:20px}
+.miner-card{position:relative;background:linear-gradient(180deg,rgba(22,22,10,0.95),rgba(10,10,5,0.95));border:1px solid rgba(212,175,55,0.25);border-radius:18px;padding:10px}
+.levelup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(90deg,#f9e79f,#d4af37);color:#000;padding:14px 22px;border-radius:16px;font-weight:900;z-index:500;box-shadow:0 0 40px #d4af37;text-align:center}
+</style></head><body>
+<div class="app">
+<div class="top"><div class="top-left"><div class="h-logo-small"><img src="coin.png"></div><div><div style="font-size:17px;font-weight:800;color:#f5e6a8">Harold</div><div style="font-size:12px"><span style="color:#d4af37">Lvl <span id="lvlDisplay">6</span></span> <span style="color:#8a7a5a">•</span> <span style="color:#a855f7">MAX 200</span></div><div style="font-size:12px">👑</div></div></div><button class="wallet-btn" id="ton-connect-btn">UQAN...lxkc</button><div id="ton-connect" style="display:none"></div></div>
+<div class="section active" id="mineSection">
+<div class="tap-title">HRD COIN • AUTO MINING</div>
+<div class="coin-wrap"><div class="coin-glow"></div><img class="coin" id="mainCoin" src="coin.png"></div>
+<div class="bal" id="balDisplay">909.84 HRD</div><div class="usd" id="usdDisplay">~$61.41 USD</div>
+<div class="mining-live">• MINING LIVE • <span id="speedDisplay">0.20</span> TH/s</div>
+<button class="claim-big" onclick="claimMining()">✨ CLAIM <span id="claimAmt">0.001</span> HRD</button>
 </div>
-<div id="stats" style="margin:12px 0;font-size:12px;background:#1a1a2a;padding:8px;border-radius:8px"></div>
-<div id="list">Chargement Supabase...</div>
-
-<div id="multiModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:99999;padding:14px;overflow-y:auto">
-<div style="background:#1a1a2e;border:2px solid #ef4444;border-radius:20px;padding:16px;max-width:400px;margin:0 auto">
-<div style="display:flex;justify-content:space-between;margin-bottom:10px"><h3>🚨 MULTICOMPTES ILLIMITÉ</h3><button onclick="closeMulti()" style="background:#ff4444;color:#fff;border:0;width:28px;height:28px;border-radius:50%">X</button></div>
-<div id="multiList">...</div>
-<button onclick="scanMulti()" style="margin-top:10px;width:100%;background:#ef4444;color:#fff;border:0;padding:10px;border-radius:10px;font-weight:900">🔄 RE-SCANNER ILLIMITÉ</button>
-</div>
-</div>
-
-<script>
-const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
-const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
-const BOT_TOKEN="METS_TON_TOKEN_ICI";
-const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
-let filter='pending';
-let all=[];
-let lastPendingCount=0;
-let firstLoad=true;
-
-function rawToUQ(raw){
- try{
-  if(!raw) return 'N/A';
-  raw=String(raw).trim();
-  if(raw.startsWith('UQ') || raw.startsWith('EQ')) return raw;
-  if(raw.startsWith('0:')){
-   try{ const addr=new TonWeb.utils.Address(raw); return addr.toString(true,true,true,false); }catch(e){return raw;}
-  }
-  return raw;
- }catch(e){return raw;}
-}
-function setF(f){filter=f;render();}
-function askNotif(){ if('Notification' in window){ Notification.requestPermission().then(p=>{ if(p==='granted') showBar('🔔 Notifications Chrome activées!'); }); } }
-function showBar(msg, bg='#ffcc00'){
- let bar=document.getElementById('notifBar');
- bar.style.background=bg;
- bar.innerHTML=msg;
- bar.style.display='block';
- if(navigator.vibrate) navigator.vibrate([200,100,200]);
- setTimeout(()=>{bar.style.display='none';},5000);
-}
-async function loadWd(){
- document.getElementById('stats').innerText='🔄 Chargement Supabase...';
- try{
-  let {data,error}=await supa.from('withdrawals').select('*').order('created_at',{ascending:false}).limit(200);
-  if(error) throw error;
-  let pendingNow=(data||[]).filter(x=>x.status==='pending').length;
-  if(!firstLoad && pendingNow>lastPendingCount){
-    let diff=pendingNow-lastPendingCount;
-    showBar(`💰 NOUVEAU RETRAIT! +${diff} PENDING! (${pendingNow} total)`, '#ffcc00');
-    if('Notification' in window && Notification.permission==='granted'){
-      new Notification('💰 Harold Coins - Nouveau retrait!',{body:`${diff} nouveau retrait. Total: ${pendingNow} PENDING`});
-    }
-    try{ let a=new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); a.play(); }catch{}
-  }
-  lastPendingCount=pendingNow;
-  firstLoad=false;
-  all=data||[];
-  render();
- }catch(e){ document.getElementById('stats').innerText='❌ Erreur: '+e.message+' → Fais: ALTER TABLE withdrawals DISABLE ROW LEVEL SECURITY;'; }
-}
-function render(){
- let f=all;
- if(filter!=='all') f=all.filter(x=>x.status===filter);
- let total=f.reduce((s,x)=>{ let c=x.amount_coins||0; let net=c/1000000*0.1*0.9; if(x.amount_ton_net>0) net=x.amount_ton_net; return s+parseFloat(net||0); },0);
- document.getElementById('stats').innerHTML=`<b>${f.length}</b> retraits | Total NET: <b style="color:#22c55e">${total.toFixed(6)} TON</b> | Filtre: <b>${filter.toUpperCase()}</b> | PENDING: <b style="color:#ffcc00">${all.filter(x=>x.status==='pending').length}</b>`;
- if(f.length==0){ document.getElementById('list').innerHTML=`<div style="padding:20px;text-align:center;color:#888">Aucun retrait <b>${filter}</b><br><small>Si tu as fait un retrait et vois 0, exécute en SQL: ALTER TABLE withdrawals DISABLE ROW LEVEL SECURITY;</small></div>`; return; }
- let h='';
- f.forEach(w=>{
-  let coins=parseInt(w.amount_coins||0);
-  let brut=coins/1000000*0.1;
-  let fee=brut*0.1;
-  let net=brut*0.9;
-  let dbBrut=parseFloat(w.amount_ton_brut||0);
-  let dbNet=parseFloat(w.amount_ton_net||w.amount_ton||0);
-  if(dbBrut>0) brut=dbBrut;
-  if(dbNet>0) net=dbNet;
-  if(dbBrut>0 && dbNet==0) net=dbBrut*0.9;
-  if(brut==0) brut=coins/1000000*0.1;
-  if(net==0) net=brut*0.9;
-  fee=brut-net;
-  let raw=w.wallet||'N/A';
-  let friendly=rawToUQ(raw);
-  let status=w.status||'pending';
-  let date=w.created_at?new Date(w.created_at).toLocaleString('fr-FR') : '';
-  let color=status=='paid'?'#3b82f6':status=='approved'?'#22c55e':'#ffcc00';
-  let tx=w.tx_hash||'';
-  h+=`<div class="card" style="border-color:${color}">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <b style="font-size:15px">${coins.toLocaleString('fr-FR')} 🪙 → <span style="color:#22c55e">${net.toFixed(6)} TON NET</span></b>
-    <span style="background:${color};color:#000;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:900">${status.toUpperCase()}</span>
-  </div>
-  <div style="font-size:12px;margin:6px 0;line-height:1.4">
-    Brut: <b style="color:#ffd700">${brut.toFixed(6)} TON</b> | Fee 10%: <span style="color:#ff6b6b">${fee.toFixed(6)}</span><br>
-    User: <b>${w.user_id}</b> | ${date}
-  </div>
-  <div style="margin-top:8px">
-    <b style="color:#22c55e;font-size:12px">💰 Wallet à PAYER:</b>
-    <div class="addr" onclick="copyT('${friendly}')">✅ ${friendly}<br><small style="color:#ffd700">CLIQUE POUR COPIER → TONKEEPER</small></div>
-    <details style="margin-top:4px"><summary style="font-size:10px;color:#666;cursor:pointer">Voir RAW 0:... </summary>
-    <div class="addr-raw" onclick="copyT('${raw}')">${raw}</div></details>
-  </div>
-  ${tx?`<div class="txLink"><b style="font-size:11px;color:#60a5fa">🔗 Preuve:</b><br><a href="https://tonscan.org/tx/${tx}" target="_blank" style="color:#60a5fa;word-break:break-all;font-size:11px">${tx}</a></div>`:''}
-  <div style="margin-top:8px">
-    <b style="font-size:11px;color:#ffd700">📝 HASH TX Tonkeeper:</b>
-    <input id="tx-${w.id}" class="txInput" placeholder="Colle hash TX ici" value="${tx}">
-  </div>
-  <div style="margin-top:10px;display:flex;flex-wrap:wrap">
-    <button class="copyBtn" style="background:#22c55e;color:#000" onclick="copyT('${friendly}')">💸 COPY UQ</button>
-    <button class="copyBtn" style="background:#ffcc00;color:#000" onclick="copyT('${net.toFixed(6)}')">COPY ${net.toFixed(6)} TON</button>
-    <button class="copyBtn" style="background:#444;color:#fff" onclick="copyT('${raw}')">COPY RAW</button>
-    <button class="copyBtn" style="background:#3b82f6;color:#fff" onclick="saveTx('${w.id}')">💾 SAVE + PAID + BOT</button>
-  </div>
-  </div>`;
- });
- document.getElementById('list').innerHTML=h;
-}
-function copyT(t){
- navigator.clipboard.writeText(t).then(()=>{
-  let el=document.createElement('div');
-  el.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:10px 20px;border-radius:20px;font-weight:900;z-index:9999';
-  el.textContent='Copié ✅';
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),2000);
- });
-}
-async function saveTx(id){
- let hashEl=document.getElementById('tx-'+id);
- let hash=hashEl.value.trim();
- if(!hash){alert('Colle le HASH TX de Tonkeeper!');return;}
- try{
-  let wd=all.find(x=>String(x.id)==String(id));
-  let {error}=await supa.from('withdrawals').update({status:'paid',tx_hash:hash}).eq('id',id);
-  if(error) throw error;
-  all=all.map(x=>{if(String(x.id)==String(id)){x.status='paid'; x.tx_hash=hash;} return x;});
-  render();
-  showBar('✅ Preuve sauvée! Envoi bot...', '#22c55e');
-  let tonNet=wd.amount_ton_net||wd.amount_ton||0;
-  let msg=`💸 *Retrait Payé!* ✅\n\n💰 ${wd.amount_coins} 🪙 → ${parseFloat(tonNet).toFixed(6)} TON\n🔗 Preuve:\nhttps://tonscan.org/tx/${hash}\n\n👛 Vérifie ton Tonkeeper!`;
-  if(BOT_TOKEN!=="METS_TON_TOKEN_ICI"){
-    try{ await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:wd.user_id,text:msg,parse_mode:'Markdown'})}); showBar(`✅ Bot notifié user ${wd.user_id}!`, '#22c55e'); }catch(e){}
-  }
- }catch(e){alert('Erreur: '+e.message);}
-}
-function openMulti(){document.getElementById('multiModal').style.display='block';scanMulti()}
-function closeMulti(){document.getElementById('multiModal').style.display='none'}
-async function scanMulti(){
- let listEl=document.getElementById('multiList');
- listEl.innerHTML='<small style="color:#aaa">⏳ Scan illimité...</small>';
- try{
-  let allData=[]; let from=0; let pageSize=200; let hasMore=true;
-  while(hasMore){
-   let {data,error}=await supa.from('harold_users').select('id,first_name,username,balance,device_id,wallet').range(from, from+pageSize-1);
-   if(error) throw error;
-   if(!data||data.length==0){hasMore=false;break;}
-   allData=allData.concat(data);
-   listEl.innerHTML=`<small style="color:#facc15">⏳ ${allData.length} joueurs chargés...</small>`;
-   if(data.length<pageSize) hasMore=false; else from+=pageSize;
-   if(allData.length>5000) break;
-  }
-  let byDevice={},byWallet={};
-  allData.forEach(u=>{
-   if(u.device_id){ if(!byDevice[u.device_id]) byDevice[u.device_id]=[]; byDevice[u.device_id].push(u); }
-   if(u.wallet&&u.wallet.length>5){ if(!byWallet[u.wallet]) byWallet[u.wallet]=[]; byWallet[u.wallet].push(u); }
-  });
-  let html='',count=0;
-  for(let d in byDevice){ if(byDevice[d].length>1){count++; html+=`<div class="multiCard"><b style="color:#ef4444">📱 DEVICE: ${d.slice(0,10)}... (${byDevice[d].length})</b><br>`; byDevice[d].forEach(u=>{html+=`<div style="font-size:10px;display:flex;justify-content:space-between;background:#12121f;padding:3px;border-radius:6px;margin-top:2px"><span>${u.first_name||u.id} - ${Math.floor(u.balance||0)}H</span><button onclick="banU(${u.id})" style="background:#ef4444;color:#fff;border:0;padding:2px 6px;border-radius:6px">BAN</button></div>`}); html+=`</div>`; } }
-  for(let w in byWallet){ if(byWallet[w].length>1){count++; html+=`<div class="multiCard" style="border-color:#facc15"><b style="color:#facc15">👛 WALLET: ${w.slice(0,8)}... (${byWallet[w].length})</b><br>`; byWallet[w].forEach(u=>{html+=`<div style="font-size:10px;background:#12121f;padding:3px;border-radius:6px;margin-top:2px">${u.first_name||u.id}</div>`}); html+=`</div>`; } }
-  if(count==0) html=`<div style="text-align:center;padding:20px"><b style="color:#22c55e">✅ Aucun multicompte!</b><br><small>${allData.length} joueurs analysés</small></div>`;
-  else html=`<div style="background:#ef4444;color:#fff;padding:6px;border-radius:8px;text-align:center;margin-bottom:8px;font-weight:900">${count} GROUPES - ${allData.length} JOUEURS SCANNÉS!</div>`+html;
-  listEl.innerHTML=html;
- }catch(e){listEl.innerHTML='<small style="color:#ef4444">Erreur: '+e.message+'</small>';}
-}
-async function banU(id){if(!confirm('Bannir '+id+'?'))return;await supa.from('harold_users').update({banned:true}).eq('id',id);showBar('🚫 Banni '+id,'#ef4444');scanMulti()}
-loadWd();
-setInterval(loadWd, 8000);
-</script>
-</body>
-</html>
