@@ -7,46 +7,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:#000;display:flex;justify-content:center;overflow:hidden}
+body{background:#000;display:flex;justify-content:center;overscroll-behavior:none}
 .app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 14px 88px}
 .top{display:flex;justify-content:space-between;align-items:flex-start}
-.name{font-family:'Cinzel';font-size:32px;font-weight:900;color:#fff;text-shadow:0 0 15px #d4af37}
-.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:900;display:inline-block;margin-top:4px}
-.wallet{background:rgba(0,0,0,0.7);border:1.8px solid #d4af37;color:#fff;padding:8px 14px;border-radius:20px;font-size:11px}
-.assets-wrap{margin-top:8px;display:flex;flex-direction:column;align-items:center}
-.assets-label{font-family:'Cinzel';font-size:11px;color:#d4af37;letter-spacing:3px;display:flex;align-items:center;gap:8px}
-.assets-label:before,.assets-label:after{content:'👑';font-size:9px}
-.assets-pill{margin-top:6px;background:linear-gradient(180deg,#0f0f0f,#000);border:2px solid #d4af37;border-radius:26px;padding:10px 32px;min-width:270px;text-align:center;box-shadow:0 0 20px rgba(212,175,55,0.45)}
-.assets-value{font-family:'Cinzel';font-size:30px;font-weight:900;color:#fff9c4;text-shadow:0 0 12px #d4af37}
-.assets-value span{color:#d4af37;font-size:18px}
-.mining-plus{margin-top:12px;background:linear-gradient(180deg,#0a1a22,#000);border:2px solid #00e5ff;border-radius:22px;padding:9px 26px;min-width:210px;text-align:center;box-shadow:0 0 16px rgba(0,229,255,0.4);display:flex;align-items:center;justify-content:center;gap:8px}
+.name{font-family:'Cinzel';font-size:30px;font-weight:900;color:#fff;text-shadow:0 0 12px #d4af37}
+.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:900;display:inline-block;margin-top:3px}
+.wallet{background:rgba(0,0,0,0.75);border:1.5px solid #d4af37;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px}
+.assets-wrap{margin-top:2px;display:flex;flex-direction:column;align-items:center}
+.assets-label{font-family:'Cinzel';font-size:11px;color:#d4af37;letter-spacing:3px;display:flex;align-items:center;gap:6px}
+.assets-label:before,.assets-label:after{content:'👑';font-size:8px}
+.assets-pill{margin-top:5px;background:linear-gradient(180deg,#1a1a1a,#000);border:2px solid #d4af37;border-radius:24px;padding:8px 24px;min-width:240px;text-align:center;box-shadow:0 0 16px rgba(212,175,55,0.4)}
+.assets-value{font-family:'Cinzel';font-size:26px;font-weight:900;color:#fff9c4;text-shadow:0 0 10px #d4af37}
+.assets-value span{color:#d4af37;font-size:16px}
+
+/* MINING - CYAN COMME TA CAPTURE */
+.mining-plus{margin-top:10px;background:linear-gradient(180deg,#000,#000);border:2px solid #00e5ff;border-radius:22px;padding:10px 22px;min-width:240px;text-align:center;box-shadow:0 0 18px rgba(0,229,255,0.35);display:flex;align-items:center;justify-content:center;gap:8px}
 .mining-plus b{font-family:'Inter';font-size:26px;font-weight:900;color:#00ff88;text-shadow:0 0 10px #00ff88}
-.mining-plus span{color:#5ee8ff;font-size:13px;font-weight:800}
-.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;margin-top:26px}
-.coin-wrap{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center}
-.mining-circle{position:absolute;width:110px;height:110px;transform:rotate(-90deg);z-index:10}
+.mining-plus span{color:#00e5ff;font-size:12px;font-weight:800}
+
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;margin-top:18px}
+.coin-wrap{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
+.mining-circle{position:absolute;width:120px;height:120px;transform:rotate(-90deg);z-index:10}
 .mining-circle circle{fill:none;stroke-linecap:round}
-.track{stroke:rgba(255,215,0,0.15);stroke-width:6px}
-.progress{stroke:#FFD700;stroke-width:6px;stroke-dasharray:201;stroke-dashoffset:201;filter:drop-shadow(0 0 10px #FFD700);transition:stroke-dashoffset 0.3s ease}
-.coin{width:76px;height:76px;z-index:5;border-radius:50%;filter:brightness(1.25) drop-shadow(0 0 18px #d4af37);border:2px solid #d4af37;object-fit:cover}
-.power-bar{margin-top:32px;width:94%;height:32px;background:linear-gradient(90deg,#000,#111);border:2px solid #00e5ff;border-radius:16px;position:relative;display:flex;align-items:center;padding:4px 6px 4px 52px;box-shadow:0 0 18px rgba(0,229,255,0.35)}
-.power-fill{height:16px;background:linear-gradient(90deg,#00e5ff,#00ffcc,#ffaa00,#ff8c00);border-radius:10px;width:38%;box-shadow:0 0 10px #00e5ff;transition:width 0.3s}
-.power-icon{position:absolute;left:-4px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:linear-gradient(135deg,#111,#000);border:2.5px solid #ff8c00;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:3;box-shadow:0 0 12px #ff8c00}
-.claim{margin-top:18px;width:96%;height:60px;border:none;border-radius:30px;background:linear-gradient(90deg,#00e5ff 0%,#2af0ff 15%,#7ee8d0 35%,#ffbb4d 65%,#ff8c00 100%);color:#000;font-family:'Cinzel';font-weight:900;font-size:24px;letter-spacing:1px;box-shadow:0 5px 0 #b85c00, 0 8px 22px rgba(0,229,255,0.45), 0 0 22px rgba(255,140,0,0.4), inset 0 2px 0 rgba(255,255,255,0.7);cursor:pointer;z-index:20;display:block;transition:all 0.1s}
+.track{stroke:rgba(255,215,0,0.12);stroke-width:8px}
+.progress{stroke:#FFD700;stroke-width:8px;stroke-dasharray:220;stroke-dashoffset:110;filter:drop-shadow(0 0 8px #FFD700);transition:stroke-dashoffset 0.5s ease}
+.coin{width:58px;height:58px;z-index:5;border-radius:50%;border:2px solid #FFD700;box-shadow:0 0 18px #FFD700;object-fit:cover}
+
+/* POWER BAR - CYAN + GRADIENT CYAN->ORANGE COMME CAPTURE */
+.power-bar{margin-top:28px;width:94%;height:36px;background:rgba(0,0,0,0.8);border:2px solid #00e5ff;border-radius:20px;position:relative;display:flex;align-items:center;padding:4px 8px 4px 58px;box-shadow:0 0 18px rgba(0,229,255,0.35)}
+.power-fill{height:16px;background:linear-gradient(90deg,#00e5ff,#00ffcc,#ffaa00,#ff8c00);border-radius:10px;width:0%;transition:width 0.5s ease;box-shadow:0 0 8px #00e5ff}
+.power-icon{position:absolute;left:-6px;top:50%;transform:translateY(-50%);width:46px;height:40px;background:linear-gradient(135deg,#111,#000);border:2.5px solid #ff8c00;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:2;box-shadow:0 0 12px #ff8c00}
+
+/* CLAIM - CYAN->ORANGE 3D COMME CAPTURE */
+.claim{margin-top:18px;width:96%;height:58px;border:none;border-radius:30px;background:linear-gradient(90deg,#00e5ff 0%,#4df0ff 20%,#ffbb4d 65%,#ff8c00 100%);color:#000;font-family:'Cinzel';font-weight:900;font-size:22px;box-shadow:0 5px 0 #b85c00, 0 8px 22px rgba(0,229,255,0.4), 0 0 20px rgba(255,140,0,0.4), inset 0 2px 0 rgba(255,255,255,0.7);cursor:pointer;z-index:20;display:block;transition:all 0.1s}
 .claim:active{transform:translateY(4px);box-shadow:0 2px 0 #b85c00}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:84px;background:linear-gradient(180deg,#0f0f0f,#000);border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center;z-index:999;padding:8px 10px;border-radius:22px 22px 0 0;box-shadow:0 -5px 20px rgba(0,0,0,0.9)}
-.nav{flex:1;max-width:82px;height:64px;background:linear-gradient(180deg,#1a1a1a,#111);border:1.5px solid #2a2a2a;border-radius:18px;color:#666;text-align:center;font-size:11px;font-family:'Inter';font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:inset 0 1px 1px rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.6);transition:all 0.2s;margin:0 4px}
+
+/* BOTTOM MENU 3D CARRE COMME TA CAPTURE */
+.bottom{position:absolute;bottom:0;left:0;right:0;height:84px;background:linear-gradient(180deg,#0f0f0f,#000);border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center;z-index:999;padding:8px 8px;border-radius:22px 22px 0 0;box-shadow:0 -5px 20px rgba(0,0,0,0.9)}
+.nav{flex:1;max-width:82px;height:64px;background:linear-gradient(180deg,#1a1a1a,#111);border:1.5px solid #2a2a2a;border-radius:18px;color:#666;text-align:center;font-size:11px;font-family:'Inter';font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:inset 0 1px 1px rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.6);margin:0 4px;transition:all 0.2s}
 .nav b{font-size:22px;display:block}
 .nav.active{background:linear-gradient(180deg,#1e1e1e,#111);border:2px solid #d4af37;color:#ffdb6b;box-shadow:0 0 16px rgba(212,175,55,0.45);transform:translateY(-3px)}
+
 .page{display:none;flex:1;overflow-y:auto}.page.active{display:flex;flex-direction:column}
-#page-mine.active{justify-content:flex-start}
-.miners-title{font-family:'Cinzel';font-size:18px;color:#fff;font-weight:900}
+#page-mine.active{justify-content:flex-start;overflow-y:auto}
+.miners-head{margin-bottom:10px}
+.miners-title{font-family:'Cinzel';font-size:18px;color:#fff;font-weight:900;text-shadow:0 0 10px #d4af37}
+.miners-sub{font-family:'Inter';font-size:11px;color:#aaa;margin-top:3px}
 .miner-card{background:linear-gradient(135deg, rgba(22,22,22,0.98), rgba(0,0,0,0.99));border:1.2px solid rgba(212,175,55,0.28);border-radius:13px;padding:10px 11px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
 .miner-icon{width:42px;height:42px;border-radius:10px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:20px}
-.miner-info{flex:1}.miner-lvl{font-size:10px;color:#888;font-weight:800}.miner-price{font-size:16px;color:#00ff88;font-weight:900}.miner-hold{font-size:9px;color:#666}.miner-speed{font-size:10px;color:#d4af37;font-weight:700}
-.miner-btn{padding:7px 10px;border-radius:8px;border:none;font-weight:900;font-size:10px;min-width:70px}
-.btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}.btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}.btn-locked{background:#222;color:#666;border:1px solid #333}.btn-max200{background:linear-gradient(#ffd700,#ff8c00);color:#000}
+.miner-info{flex:1;min-width:0}
+.miner-lvl{font-size:10px;font-weight:800;color:#888}
+.miner-price{font-size:16px;font-weight:900;color:#00ff88}
+.miner-hold{font-size:9px;color:#666}
+.miner-speed{font-size:10px;font-weight:700;color:#d4af37}
+.miner-btn{padding:7px 10px;border-radius:8px;border:none;font-weight:900;font-size:10px;min-width:70px;cursor:pointer}
+.btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}
+.btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}
+.btn-locked{background:#222;color:#666;border:1px solid #333}
+.btn-max200{background:linear-gradient(#ffd700,#ff8c00);color:#000}
 </style>
 </head>
 <body>
@@ -56,21 +75,21 @@ body{background:#000;display:flex;justify-content:center;overflow:hidden}
 <div class="page active" id="page-mine">
 <div class="assets-wrap">
 <div class="assets-label">ASSETS</div>
-<div class="assets-pill"><div class="assets-value" id="assetsValue">0,0880 | <span>HRD</span></div></div>
-<div class="mining-plus">📈 <b id="miningPlus">+0.0038</b> <span>HRD</span></div>
+<div class="assets-pill"><div class="assets-value" id="assetsValue">0,0780 | <span>HRD</span></div></div>
+<div class="mining-plus"><b id="miningPlus">+0.0000</b> <span>HRD</span></div>
 </div>
 <div class="center">
 <div class="coin-wrap">
-<svg class="mining-circle" viewBox="0 0 110 110"><circle class="track" cx="55" cy="55" r="32"></circle><circle class="progress" id="progressCircle" cx="55" cy="55" r="32"></circle></svg>
-<img class="coin" src="coin.png" onerror="this.style.background='radial-gradient(#ffd700,#b8941f)'; this.style.display='flex'; this.alt='HRD'">
+<svg class="mining-circle" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="35"></circle><circle class="progress" id="progressCircle" cx="60" cy="60" r="35"></circle></svg>
+<img class="coin" src="coin.png">
 </div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
 <button class="claim" id="claimBtn">CLAIM</button>
 </div>
 </div>
-<div class="page" id="page-miners"><div class="miners-title">MINERS • 200 MAX 👑</div><div style="font-size:11px;color:#aaa">LVL 1/200 • Scroll pour voir les 200 levels</div><div id="minersList" style="margin-top:10px"></div></div>
-<div class="page" id="page-tasks"><div class="miners-title">TASKS 📦</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt disponible...</div></div>
-<div class="page" id="page-friends"><div class="miners-title">FRIENDS 👥</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt disponible...</div></div>
+<div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS • 200 MAX 👑</div><div class="miners-sub">LVL 1/200 • Scroll pour voir les 200 levels</div></div><div id="minersList"></div></div>
+<div class="page" id="page-tasks"><div class="miners-title">TASKS 📦</div><div style="color:#666;font-size:13px;text-align:center;margin-top:50px">Bientôt disponible...</div></div>
+<div class="page" id="page-friends"><div class="miners-title">FRIENDS 👥</div><div style="color:#666;font-size:13px;text-align:center;margin-top:50px">Bientôt disponible...</div></div>
 </div>
 <div class="bottom">
 <div class="nav active" data-page="mine"><b>⛏️</b>Mine</div>
@@ -89,40 +108,43 @@ function showPage(name){
 }
 document.querySelectorAll('.nav').forEach(nav=>{
   const h=(e)=>{e.preventDefault();e.stopPropagation();showPage(nav.dataset.page);};
-  nav.addEventListener('click',h); nav.addEventListener('touchend',h,{passive:false});
+  nav.addEventListener('click',h);
+  nav.addEventListener('touchend',h,{passive:false});
 });
-let balance=0.0880, mining=0.0038, progress=38;
-const circle=document.getElementById('progressCircle'), assetsValue=document.getElementById('assetsValue'), miningPlus=document.getElementById('miningPlus'), powerFill=document.getElementById('powerFill'), btn=document.getElementById('claimBtn');
-const circ=2*Math.PI*32; circle.style.strokeDasharray=circ;
+let balance=0.0780;let mining=0.0000;let progress=0;
+const circle=document.getElementById('progressCircle');
+const assetsValue=document.getElementById('assetsValue');
+const miningPlus=document.getElementById('miningPlus');
+const powerFill=document.getElementById('powerFill');
+const btn=document.getElementById('claimBtn');
+const circ=2*Math.PI*35;circle.style.strokeDasharray=circ;circle.style.strokeDashoffset=circ;
 function updateUI(){
   assetsValue.innerHTML=`${balance.toFixed(4).replace('.',',')} | <span>HRD</span>`;
-  miningPlus.innerHTML=`📈 <b>+${mining.toFixed(4)}</b> <span>HRD</span>`;
+  miningPlus.textContent=`+${mining.toFixed(4)}`;
   powerFill.style.width=progress+'%';
   circle.style.strokeDashoffset=circ-(circ*progress/100);
-  btn.textContent=progress>=100?'CLAIM READY':'CLAIM';
+  if(progress>=100){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 25px #00e5ff, 0 0 25px #ff8c00';}
 }
-let iv=setInterval(()=>{if(progress<100){progress+=0.5;mining+=0.00002;updateUI();}else{clearInterval(iv);}},120);
+let iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
 btn.addEventListener('click',()=>{
-  if(progress>=20){
-    if(progress>=100){balance+=mining;mining=0.0038;progress=0;}
-    else{progress=Math.min(100,progress+15); mining+=0.0003;}
+  if(progress>=100){
+    balance+=mining;mining=0;progress=0;btn.textContent='CLAIM';btn.style.boxShadow='0 5px 18px rgba(212,175,55,0.6)';
     updateUI();
-    clearInterval(iv);
-    iv=setInterval(()=>{if(progress<100){progress+=0.5;mining+=0.00002;updateUI();}else{clearInterval(iv);}},120);
+    iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
     if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.notificationOccurred('success');
   }
 });
 updateUI();
 const list=document.getElementById('minersList');let html='';
 for(let lvl=1;lvl<=200;lvl++){
-  let price,hrd,hold,btnClass,btnText;
+  let price,hrd,hold,btnClass,btnText,extra='';
   if(lvl===1){price='0$';hrd=0;hold=0;btnClass='btn-active';btnText='ACTIVE';}
   else if(lvl===2){price='0.317$';hrd=317;hold=1000;btnClass='btn-need';btnText='NEED 1000';}
-  else if(lvl===200){price='2.500$';hrd=25000;hold=100000;btnClass='btn-max200';btnText='MAX 200 👑';}
+  else if(lvl===200){price='2.500$';hrd=25000;hold=100000;btnClass='btn-max200';btnText='MAX 200 👑';extra='max200';}
   else {price=(0.42+(lvl-8)*0.015).toFixed(3)+'$';hrd=4200+(lvl-8)*120;hold=8000+(lvl-8)*800;btnClass='btn-locked';btnText='🔒 LOCKED';}
   const speed=(0.20+(lvl-1)*0.015).toFixed(2);
   const icon=lvl===200?'👑':['🔧','💎','🏆','👑','🚀','🌟'][lvl%6];
-  html+=`<div class="miner-card"><div class="miner-icon">${icon}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${price}</div><div class="miner-hold">${hrd} HRD • HOLD ${hold.toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}">${btnText}</button></div>`;
+  html+=`<div class="miner-card ${extra}"><div class="miner-icon">${icon}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${price}</div><div class="miner-hold">${hrd} HRD • HOLD ${hold.toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}" data-lvl="${lvl}">${btnText}</button></div>`;
 }
 list.innerHTML=html;
 </script>
