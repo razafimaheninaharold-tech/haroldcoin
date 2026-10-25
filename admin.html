@@ -37,3 +37,40 @@ body{background:#000;color:#e8d8a0;display:flex;justify-content:center;min-heigh
 <div class="mining-live">• MINING LIVE • <span id="speedDisplay">0.20</span> TH/s</div>
 <button class="claim-big" onclick="claimMining()">✨ CLAIM <span id="claimAmt">0.001</span> HRD</button>
 </div>
+  <div class="section" id="minersSection">
+<div class="title">Miner Store</div><div class="subtitle">Tech H Fixed • Level 200 MAX</div>
+<div class="pnl-card"><div style="display:flex;justify-content:space-between"><div><div style="font-size:12px;color:#8af0b0;font-weight:800">HRD PNL • 24H</div><div style="font-size:14px;color:#fff">Level <span id="pnlLevel">6</span> • Peak <span id="pnlPeak">6</span></div></div><div style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);color:#22c55e;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;height:fit-content">▲ MAX 200</div></div><div style="height:70px;margin-top:10px"><canvas id="pnlChart"></canvas></div></div>
+<div class="grid" id="minerGrid"></div>
+</div>
+<div class="section" id="tasksSection"><div class="title">Tasks</div><div style="background:#121210;padding:20px;border-radius:14px;margin:20px 0;text-align:center;color:#8a7a5a">🎯 Missions bientôt...</div></div>
+<div class="section" id="friendsSection"><div class="title">Friends</div><div style="background:#121210;padding:12px;border-radius:14px;display:flex;gap:8px;margin:14px 0"><input id="refLink" readonly style="flex:1;background:#1e1e1e;border:0;color:#fff;padding:10px;border-radius:10px;font-size:11px"><button onclick="copyRef()" style="background:#d4af37;color:#000;padding:10px 14px;border-radius:10px;border:0;font-weight:900">COPIER</button></div></div>
+<div class="section" id="profileSection"><div class="title">Profile</div><div style="background:#1a1a1a;padding:14px;border-radius:14px;margin:14px 0"><div>Solde: <b style="color:#d4af37" id="wdBalance">0</b> HRD</div></div><input id="wdAmount" type="number" value="50000" style="width:100%;padding:14px;background:#1e1e1e;border:1px solid #333;border-radius:12px;color:#fff" oninput="calcWd()"><div id="wdTon" style="color:#22c55e;font-weight:800;margin-top:8px">0 TON NET</div><button onclick="requestWithdraw()" style="width:100%;padding:14px;background:#22c55e;border:none;border-radius:12px;color:#000;font-weight:900;margin-top:12px">🚀 RETRAIT</button></div>
+</div>
+<div class="bottom-nav">
+<div class="nav-item active" id="nav-mine" onclick="switchTab('mine')"><div class="nav-icon">⛏️</div><div class="nav-label">Mine</div></div>
+<div class="nav-item" id="nav-tasks" onclick="switchTab('tasks')"><div class="nav-icon">📦</div><div class="nav-label">Tasks</div></div>
+<div class="nav-item" id="nav-miners" onclick="switchTab('miners')"><div class="nav-icon">⚡</div><div class="nav-label">Miners</div></div>
+<div class="nav-item" id="nav-friends" onclick="switchTab('friends')"><div class="nav-icon">👥</div><div class="nav-label">Friends</div></div>
+<div class="nav-item" id="nav-profile" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+</div>
+<script>
+const U="https://kgmatxqbdyusxpiuavbw.supabase.co",K="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";const S=supabase.createClient(U,K);
+let T=window.Telegram?.WebApp,uid=T?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';localStorage.setItem('uid',uid);
+let b=909.84,minerLevel=6;
+function switchTab(tab){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(tab+'Section').classList.add('active');document.getElementById('nav-'+tab).classList.add('active');if(tab=='miners')setTimeout(drawChart,100);window.scrollTo(0,0);}
+function getSpeed(l){if(l<=10)return 0.20;if(l<=72)return 0.20+(l-10)*0.008;return 0.70+(l-72)*0.02;}
+function getPrice(l){if(l==1)return 0;if(l==2)return 317;if(l==3)return 323;if(l==4)return 333;if(l<=20)return Math.floor(300+l*15);if(l<=72)return Math.floor(400+l*20);if(l<=100)return Math.floor(500+l*25);if(l<=150)return Math.floor(800+l*28);return Math.floor(1000+l*30);}
+function showPop(t){let p=document.createElement('div');p.className='levelup';p.textContent=t;document.body.appendChild(p);setTimeout(()=>p.remove(),2000);}
+function claimMining(){b+=0.001;r();showPop('✨ +0.001 HRD!');}
+function renderMiners(){let g=document.getElementById('minerGrid');g.innerHTML='';for(let l=1;l<=200;l++){let s=getSpeed(l),pr=getPrice(l),act=l==minerLevel,next=l==minerLevel+1,cls=act?'miner-card active':next?'miner-card next':'miner-card locked';let btn=act?'<button class="btn" style="width:100%;height:30px;background:linear-gradient(90deg,#22c55e,#4ade80);border:none;border-radius:10px;font-weight:900;font-size:10px">ACTIVE</button>':next?`<button onclick="buyLevel(${l})" style="width:100%;height:30px;background:linear-gradient(90deg,#facc15,#f9e79f);border:none;border-radius:10px;font-weight:900;font-size:10px">UNLOCK ${l}</button>`:'<button style="width:100%;height:30px;background:rgba(255,255,255,0.08);border:none;border-radius:10px;color:#666;font-weight:800;font-size:10px">LOCKED</button>';g.innerHTML+=`<div class="${cls}" style="padding:10px;border-radius:18px;background:linear-gradient(180deg,rgba(22,22,10,0.95),rgba(10,10,5,0.95));border:1px solid rgba(212,175,55,0.25)"><div style="font-size:9px;color:#d4af37">Lvl ${l}</div><div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:6px;text-align:center;margin:6px 0"><div style="color:#22c55e;font-weight:900">${pr==0?'0':(pr/1000).toFixed(3)}$</div></div><div style="font-size:10px;display:flex;justify-content:space-between"><span>Speed</span><b style="color:#d4af37">${s.toFixed(2)} TH/s</b></div>${btn}</div>`;}document.getElementById('lvlDisplay').textContent=minerLevel;document.getElementById('pnlLevel').textContent=minerLevel;document.getElementById('pnlPeak').textContent=minerLevel;document.getElementById('speedDisplay').textContent=getSpeed(minerLevel).toFixed(2);}
+function buyLevel(l){if(l!=minerLevel+1){showPop('Debloque '+(minerLevel+1)+' dabord!');return;}minerLevel=l;r();renderMiners();showPop('🚀 Lvl '+l+'!');}
+function drawChart(){let c=document.getElementById('pnlChart');if(!c)return;let ctx=c.getContext('2d');let w=c.width=c.clientWidth*2;let h=c.height=c.clientHeight*2;ctx.clearRect(0,0,w,h);ctx.beginPath();ctx.strokeStyle='#22c55e';ctx.lineWidth=3;for(let i=0;i<40;i++){let x=(i/39)*w,y=h-(Math.pow(i/39,0.8)*h*0.7+Math.random()*5)-10;if(i==0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
+function r(){document.getElementById('balDisplay').textContent=b.toFixed(2)+' HRD';document.getElementById('usdDisplay').textContent='~$'+(b*0.0676).toFixed(2)+' USD';document.getElementById('claimAmt').textContent='0.001';}
+async function ld(){try{let {data:d}=await S.from('harold_users').select('*').eq('id',parseInt(uid)).single();if(d&&d.mining_level)minerLevel=d.mining_level;}catch{}r();renderMiners();drawChart();}
+function copyRef(){let l=document.getElementById('refLink').value;navigator.clipboard.writeText(l).then(()=>showPop('Copié!'));}
+function calcWd(){let a=parseInt(document.getElementById('wdAmount').value||'0')||0;let br=a/1000000*0.05,fee=br*0.1,net=br-fee;document.getElementById('wdTon').textContent=net.toFixed(6)+' TON NET';return{a,net,fee};}
+async function requestWithdraw(){let {a,net,fee}=calcWd();if(a<50000){alert('Min 50k!');return}let w=localStorage.getItem('tonWallet')||'';if(!w){alert('Connecte Tonkeeper!');return}try{await S.from('withdrawals').insert({user_id:parseInt(uid),amount_coins:a,amount_ton:net,fee_ton:fee,wallet:w,status:'pending'});b-=a/1000000;r();showPop('✅ Retrait!');}catch(e){alert(e.message);}}
+setInterval(r,2000);ld();
+let tonConnectUI;try{tonConnectUI=new TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://razafimaheninaharold-tech.github.io/haroldcoin/tonconnect-manifest.json',buttonRootId:'ton-connect'});}catch{}
+if(T){T.ready();T.expand();}
+</script></body></html>
