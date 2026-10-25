@@ -2,44 +2,197 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Haroldcoin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;display:flex;justify-content:center}
-.app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:14px 14px 85px}
-.top{display:flex;justify-content:space-between}
-.name{font-family:'Cinzel';font-size:32px;font-weight:900;color:#fff;text-shadow:0 0 10px #d4af37}
-.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:900;display:inline-block;margin-top:4px}
-.wallet{background:rgba(0,0,0,0.7);border:1.5px solid #d4af37;color:#fff;padding:8px 12px;border-radius:20px;font-size:11px}
-.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.coin-wrap{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.halo{position:absolute;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle, rgba(255,235,100,0.4) 0%, rgba(212,175,55,0.15) 40%, transparent 70%);filter:blur(2px);animation:pulse 2s infinite alternate}
-@keyframes pulse{0%{transform:scale(0.9);opacity:0.6}100%{transform:scale(1.15);opacity:1}}
-.ring{position:absolute;width:155px;height:155px;border-radius:50%;border:2px solid rgba(212,175,55,0.7);border-top-color:transparent;border-bottom-color:transparent;animation:spin 3s linear infinite;box-shadow:0 0 15px #d4af37}
+body{background:#000;display:flex;justify-content:center;min-height:100vh}
+.app{
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  background:#000 url('bg.jpg') center/cover no-repeat;
+  position:relative;
+  overflow:hidden
+}
+.content{
+  position:relative;
+  z-index:2;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding:14px 14px 85px
+}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+.name{
+  font-family:'Cinzel';
+  font-size:32px;
+  font-weight:900;
+  color:#fff;
+  text-shadow:0 0 12px #d4af37,0 2px 4px #000;
+  letter-spacing:1px
+}
+.lvl{
+  background:linear-gradient(180deg,#fff9c4,#f9e79f,#d4af37);
+  color:#000;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:900;
+  display:inline-block;
+  margin-top:4px;
+  box-shadow:0 2px 8px rgba(212,175,55,0.5)
+}
+.wallet{
+  background:rgba(0,0,0,0.75);
+  border:1.5px solid #d4af37;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:20px;
+  font-size:11px;
+  font-family:'Inter';
+  font-weight:600;
+  backdrop-filter:blur(8px)
+}
+.center{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center
+}
+
+/* --- COIN + ANIMATIONS + ANTI NOIR --- */
+.coin-wrap{
+  position:relative;
+  width:220px;
+  height:220px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:float 3s ease-in-out infinite
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.halo{
+  position:absolute;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,235,100,0.45) 0%, rgba(212,175,55,0.2) 40%, transparent 70%);
+  filter:blur(4px);
+  animation:pulse 2.2s infinite alternate
+}
+@keyframes pulse{0%{transform:scale(0.85);opacity:0.5}100%{transform:scale(1.25);opacity:1}}
+
+.ring{
+  position:absolute;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  border:2px solid rgba(212,175,55,0.8);
+  border-top-color:transparent;
+  border-bottom-color:transparent;
+  animation:spin 3s linear infinite;
+  box-shadow:0 0 20px rgba(212,175,55,0.6)
+}
 @keyframes spin{to{transform:rotate(360deg)}}
-.coin{width:130px;height:130px;z-index:5;filter:drop-shadow(0 0 20px #d4af37);animation:shine 2s infinite}
-@keyframes shine{0%,100%{filter:drop-shadow(0 0 15px #d4af37) brightness(1)}50%{filter:drop-shadow(0 0 25px #ffd700) brightness(1.15)}}
-.bal{font-family:'Cinzel';font-size:36px;font-weight:900;color:#fff;margin-top:12px;text-shadow:0 0 15px #d4af37}
-.claim{margin-top:20px;width:90%;height:56px;border:none;border-radius:22px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:22px;box-shadow:0 8px 25px rgba(212,175,55,0.6)}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:68px;background:rgba(0,0,0,0.9);border-top:1px solid #d4af37;display:flex;justify-content:space-around;align-items:center}
-.nav{color:#666;text-align:center;font-size:11px}.nav.active{color:#d4af37}
+
+.coin{
+  width:135px;
+  height:135px;
+  position:relative;
+  z-index:5;
+  mix-blend-mode:screen; /* ENLEVE LE FOND NOIR */
+  filter:drop-shadow(0 0 20px #d4af37) drop-shadow(0 0 35px rgba(255,215,0,0.4)) brightness(1.1);
+  animation:shine 2.5s infinite
+}
+@keyframes shine{
+  0%,100%{filter:drop-shadow(0 0 15px #d4af37) brightness(1.1)}
+  50%{filter:drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 45px rgba(255,215,0,0.5)) brightness(1.25)}
+}
+
+.bal{
+  font-family:'Cinzel';
+  font-size:38px;
+  font-weight:900;
+  color:#fff;
+  margin-top:16px;
+  text-shadow:0 0 15px #d4af37,0 0 30px rgba(212,175,55,0.5),0 2px 8px #000;
+  letter-spacing:1px
+}
+.claim{
+  margin-top:24px;
+  width:90%;
+  height:60px;
+  border:none;
+  border-radius:24px;
+  background:linear-gradient(180deg,#ffffd0 0%,#fff8a0 15%,#f9e79f 30%,#d4af37 60%,#b8941f 100%);
+  color:#000;
+  font-family:'Cinzel';
+  font-weight:900;
+  font-size:24px;
+  letter-spacing:1px;
+  box-shadow:0 8px 28px rgba(212,175,55,0.6),0 2px 0 #fff inset;
+  cursor:pointer;
+  transition:all 0.2s
+}
+.claim:active{transform:scale(0.96)}
+
+.bottom{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:72px;
+  background:rgba(0,0,0,0.92);
+  border-top:1px solid rgba(212,175,55,0.6);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:10;
+  backdrop-filter:blur(12px)
+}
+.nav{
+  color:#666;
+  text-align:center;
+  font-size:11px;
+  font-family:'Inter';
+  font-weight:600;
+  transition:all 0.2s
+}
+.nav.active{color:#d4af37;text-shadow:0 0 12px #d4af37}
 </style>
 </head>
 <body>
 <div class="app">
-<div class="content">
-<div class="top"><div><div class="name">HAROLD</div><div class="lvl">👑 Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
-<div class="center">
-<div class="coin-wrap"><div class="halo"></div><div class="ring"></div><img class="coin" src="coin.png"></div>
-<div class="bal">0.0780 HRD</div>
-<button class="claim">CLAIM</button>
-</div>
-</div>
-<div class="bottom"><div class="nav active">⛏️<br>Mine</div><div class="nav">📦<br>Tasks</div><div class="nav">⚡<br>Miners</div><div class="nav">👥<br>Friends</div></div>
+  <div class="content">
+    <div class="top">
+      <div>
+        <div class="name">HAROLD</div>
+        <div class="lvl">👑 Lvl 1</div>
+      </div>
+      <div class="wallet">Connect Wallet</div>
+    </div>
+
+    <div class="center">
+      <div class="coin-wrap">
+        <div class="halo"></div>
+        <div class="ring"></div>
+        <img class="coin" src="coin.png" alt="HRD Coin">
+      </div>
+      <div class="bal">0.0780 HRD</div>
+      <button class="claim">CLAIM</button>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="nav active">⛏️<br>Mine</div>
+    <div class="nav">📦<br>Tasks</div>
+    <div class="nav">⚡<br>Miners</div>
+    <div class="nav">👥<br>Friends</div>
+  </div>
 </div>
 </body>
 </html>
