@@ -9,46 +9,36 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center;overscroll-behavior:none}
 .app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:10px 14px 90px}
+.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 14px 80px}
 .top{display:flex;justify-content:space-between;align-items:flex-start}
 .name{font-family:'Cinzel';font-size:30px;font-weight:900;color:#fff;text-shadow:0 0 12px #d4af37}
-.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:900;display:inline-block;margin-top:4px}
-.wallet{background:rgba(0,0,0,0.75);border:1.5px solid #d4af37;color:#fff;padding:8px 14px;border-radius:20px;font-size:11px}
-
-/* BALANCE LUXE */
-.assets-wrap{margin-top:8px;display:flex;flex-direction:column;align-items:center}
-.assets-label{font-family:'Cinzel';font-size:12px;color:#d4af37;letter-spacing:3px;display:flex;align-items:center;gap:8px}
-.assets-label:before,.assets-label:after{content:'👑';font-size:9px}
-.assets-pill{margin-top:6px;background:linear-gradient(180deg,#1a1a1a,#000);border:2px solid #d4af37;border-radius:26px;padding:10px 28px;min-width:260px;text-align:center;box-shadow:0 0 18px rgba(212,175,55,0.4), inset 0 1px 0 rgba(255,255,255,0.1)}
-.assets-value{font-family:'Cinzel';font-size:28px;font-weight:900;color:#fff9c4;text-shadow:0 0 10px #d4af37}
-.assets-value span{color:#d4af37;font-size:18px}
-.mining-plus{margin-top:10px;background:linear-gradient(180deg,#0a2a1a,#000);border:1.5px solid #00ff88;border-radius:22px;padding:8px 22px;min-width:210px;text-align:center;box-shadow:0 0 16px rgba(0,255,136,0.3);display:flex;align-items:center;justify-content:center;gap:8px}
-.mining-plus b{font-family:'Inter';font-size:26px;font-weight:900;color:#00ff88;text-shadow:0 0 8px #00ff88}
-.mining-plus span{color:#00ff88;font-size:12px;font-weight:800}
-
-/* CERCLE FIX - FIN ET PROPRE */
-.center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:14px}
-.coin-wrap{position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center}
-.mining-circle{position:absolute;width:140px;height:140px;transform:rotate(-90deg);z-index:10}
+.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:900;display:inline-block;margin-top:3px}
+.wallet{background:rgba(0,0,0,0.75);border:1.5px solid #d4af37;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px}
+.assets-wrap{margin-top:2px;display:flex;flex-direction:column;align-items:center}
+.assets-label{font-family:'Cinzel';font-size:11px;color:#d4af37;letter-spacing:3px;display:flex;align-items:center;gap:6px}
+.assets-label:before,.assets-label:after{content:'👑';font-size:8px}
+.assets-pill{margin-top:5px;background:linear-gradient(180deg,#1a1a1a,#000);border:2px solid #d4af37;border-radius:24px;padding:8px 24px;min-width:240px;text-align:center;box-shadow:0 0 16px rgba(212,175,55,0.4)}
+.assets-value{font-family:'Cinzel';font-size:26px;font-weight:900;color:#fff9c4;text-shadow:0 0 10px #d4af37}
+.assets-value span{color:#d4af37;font-size:16px}
+.mining-plus{margin-top:8px;background:linear-gradient(180deg,#0a2a1a,#000);border:1.5px solid #00ff88;border-radius:20px;padding:7px 20px;min-width:190px;text-align:center;box-shadow:0 0 14px rgba(0,255,136,0.3);display:flex;align-items:center;justify-content:center;gap:6px}
+.mining-plus b{font-family:'Inter';font-size:24px;font-weight:900;color:#00ff88;text-shadow:0 0 8px #00ff88}
+.mining-plus span{color:#00ff88;font-size:11px;font-weight:800}
+.center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:6px}
+.coin-wrap{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
+.mining-circle{position:absolute;width:120px;height:120px;transform:rotate(-90deg);z-index:10}
 .mining-circle circle{fill:none;stroke-linecap:round}
-.track{stroke:rgba(255,215,0,0.15);stroke-width:6px}
-.progress{stroke:#FFD700;stroke-width:6px;stroke-dasharray:251;stroke-dashoffset:251;filter:drop-shadow(0 0 8px #FFD700);transition:stroke-dashoffset 0.5s ease}
-.coin{width:108px;height:108px;z-index:5;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 18px #d4af37)}
-
-/* POWER BAR FIX */
-.power-bar{margin-top:16px;width:200px;height:18px;background:rgba(0,0,0,0.7);border:1.5px solid #d4af37;border-radius:20px;position:relative;display:flex;align-items:center;padding:2px 2px 2px 30px}
-.power-fill{height:10px;background:linear-gradient(90deg,#fff9c4,#ffd700,#d4af37);border-radius:10px;width:0%;transition:width 0.5s ease;box-shadow:0 0 6px #ffd700}
-.power-icon{position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:32px;height:32px;background:radial-gradient(#ffd700,#b8941f);border-radius:50%;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:15px;z-index:2;box-shadow:0 0 8px #ffd700}
-
-/* CLAIM FIX - BIEN VISIBLE */
-.claim{margin-top:18px;margin-bottom:5px;width:86%;height:54px;border:none;border-radius:24px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:22px;box-shadow:0 6px 22px rgba(212,175,55,0.6), inset 0 1px 0 rgba(255,255,255,0.6);cursor:pointer;z-index:20;position:relative;display:block;letter-spacing:0.5px}
-.claim:active{transform:scale(0.96)}
-
-.bottom{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(0,0,0,0.96);border-top:1.5px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:999}
+.track{stroke:rgba(255,215,0,0.15);stroke-width:5px}
+.progress{stroke:#FFD700;stroke-width:5px;stroke-dasharray:220;stroke-dashoffset:220;filter:drop-shadow(0 0 6px #FFD700);transition:stroke-dashoffset 0.5s ease}
+.coin{width:92px;height:92px;z-index:5;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 16px #d4af37)}
+.power-bar{margin-top:10px;width:200px;height:16px;background:rgba(0,0,0,0.7);border:1.5px solid #d4af37;border-radius:20px;position:relative;display:flex;align-items:center;padding:2px 2px 2px 28px}
+.power-fill{height:9px;background:linear-gradient(90deg,#fff9c4,#ffd700,#d4af37);border-radius:10px;width:0%;transition:width 0.5s ease}
+.power-icon{position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:30px;height:30px;background:radial-gradient(#ffd700,#b8941f);border-radius:50%;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:2}
+.claim{margin-top:12px;width:86%;height:50px;border:none;border-radius:22px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:20px;box-shadow:0 5px 18px rgba(212,175,55,0.6);cursor:pointer;z-index:20;display:block}
+.bottom{position:absolute;bottom:0;left:0;right:0;height:72px;background:rgba(0,0,0,0.96);border-top:1.5px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:999}
 .nav{color:#666;text-align:center;font-size:11px;font-family:'Inter';cursor:pointer;padding:8px 12px;border-radius:12px;min-width:58px}
 .nav.active{color:#d4af37;background:rgba(212,175,55,0.18);box-shadow:0 0 12px rgba(212,175,55,0.3)}
 .nav b{font-size:20px;display:block}
-.page{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:5px}.page.active{display:flex;flex-direction:column}
+.page{display:none;flex:1;overflow-y:auto}.page.active{display:flex;flex-direction:column}
 #page-mine.active{justify-content:flex-start;overflow-y:auto}
 .miners-head{margin-bottom:10px}
 .miners-title{font-family:'Cinzel';font-size:18px;color:#fff;font-weight:900;text-shadow:0 0 10px #d4af37}
@@ -71,40 +61,25 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 <div class="app">
 <div class="content">
 <div class="top"><div><div class="name">HAROLD</div><div class="lvl">👑 Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
-
 <div class="page active" id="page-mine">
 <div class="assets-wrap">
 <div class="assets-label">ASSETS</div>
 <div class="assets-pill"><div class="assets-value" id="assetsValue">0,0780 | <span>HRD</span></div></div>
 <div class="mining-plus">📈 <b id="miningPlus">+0.0000</b> <span>HRD</span></div>
 </div>
-
 <div class="center">
 <div class="coin-wrap">
-<svg class="mining-circle" viewBox="0 0 140 140">
-<circle class="track" cx="70" cy="70" r="40"></circle>
-<circle class="progress" id="progressCircle" cx="70" cy="70" r="40"></circle>
-</svg>
+<svg class="mining-circle" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="35"></circle><circle class="progress" id="progressCircle" cx="60" cy="60" r="35"></circle></svg>
 <img class="coin" src="coin.png">
 </div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
 <button class="claim" id="claimBtn">CLAIM</button>
 </div>
 </div>
-
-<div class="page" id="page-miners">
-<div class="miners-head">
-<div class="miners-title">MINERS • 200 MAX 👑</div>
-<div class="miners-sub">LVL 1/200 • Scroll pour voir les 200 levels</div>
-</div>
-<div id="minersList"></div>
-</div>
-
+<div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS • 200 MAX 👑</div><div class="miners-sub">LVL 1/200 • Scroll pour voir les 200 levels</div></div><div id="minersList"></div></div>
 <div class="page" id="page-tasks"><div class="miners-title">TASKS 📦</div><div style="color:#666;font-size:13px;text-align:center;margin-top:50px">Bientôt disponible...</div></div>
 <div class="page" id="page-friends"><div class="miners-title">FRIENDS 👥</div><div style="color:#666;font-size:13px;text-align:center;margin-top:50px">Bientôt disponible...</div></div>
-
 </div>
-
 <div class="bottom">
 <div class="nav active" data-page="mine"><b>⛏️</b>Mine</div>
 <div class="nav" data-page="tasks"><b>📦</b>Tasks</div>
@@ -112,9 +87,7 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 <div class="nav" data-page="friends"><b>👥</b>Friends</div>
 </div>
 </div>
-
 <script>
-// NAVIGATION
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
@@ -127,45 +100,31 @@ document.querySelectorAll('.nav').forEach(nav=>{
   nav.addEventListener('click',h);
   nav.addEventListener('touchend',h,{passive:false});
 });
-
-// BALANCE LUXE
-let balance=0.0780;
-let mining=0.0000;
-let progress=0;
+let balance=0.0780;let mining=0.0000;let progress=0;
 const circle=document.getElementById('progressCircle');
 const assetsValue=document.getElementById('assetsValue');
 const miningPlus=document.getElementById('miningPlus');
 const powerFill=document.getElementById('powerFill');
 const btn=document.getElementById('claimBtn');
-const circ=2*Math.PI*40;
-circle.style.strokeDasharray=circ;
-circle.style.strokeDashoffset=circ;
-
+const circ=2*Math.PI*35;circle.style.strokeDasharray=circ;circle.style.strokeDashoffset=circ;
 function updateUI(){
   assetsValue.innerHTML=`${balance.toFixed(4).replace('.',',')} | <span>HRD</span>`;
   miningPlus.textContent=`+${mining.toFixed(4)}`;
   powerFill.style.width=progress+'%';
   circle.style.strokeDashoffset=circ-(circ*progress/100);
-  if(progress>=100){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 30px #ffd700';}
+  if(progress>=100){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 25px #ffd700';}
 }
-let iv=setInterval(()=>{
-  if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}
-  else{clearInterval(iv);updateUI();}
-},100);
+let iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
 btn.addEventListener('click',()=>{
   if(progress>=100){
-    balance+=mining;mining=0;progress=0;
-    btn.textContent='CLAIM';btn.style.boxShadow='0 6px 22px rgba(212,175,55,0.6)';
+    balance+=mining;mining=0;progress=0;btn.textContent='CLAIM';btn.style.boxShadow='0 5px 18px rgba(212,175,55,0.6)';
     updateUI();
     iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
     if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.notificationOccurred('success');
   }
 });
 updateUI();
-
-// MINERS
-const list=document.getElementById('minersList');
-let html='';
+const list=document.getElementById('minersList');let html='';
 for(let lvl=1;lvl<=200;lvl++){
   let price,hrd,hold,btnClass,btnText,extra='';
   if(lvl===1){price='0$';hrd=0;hold=0;btnClass='btn-active';btnText='ACTIVE';}
@@ -181,9 +140,9 @@ list.addEventListener('click',(e)=>{
   const b=e.target.closest('.miner-btn');if(!b)return;
   const lvl=parseInt(b.dataset.lvl);const txt=b.textContent.trim();
   if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.impactOccurred('light');
-  if(txt.includes('ACTIVE')) alert('✅ LVL 1 déjà ACTIF!\n⚡ 0.20 TH/s');
-  else if(txt.includes('NEED')) alert(`🔧 LVL 2\n💰 0.317$ • HOLD 1000 HRD\nTu as ${balance.toFixed(4)} HRD`);
-  else if(txt.includes('LOCKED')) alert(`🔒 LVL ${lvl} LOCKED\nDébloque LVL ${lvl-1} d'abord!`);
+  if(txt.includes('ACTIVE')) alert('✅ LVL 1 déjà ACTIF!');
+  else if(txt.includes('NEED')) alert(`🔧 LVL 2 - ${balance.toFixed(4)} HRD`);
+  else if(txt.includes('LOCKED')) alert(`🔒 LVL ${lvl} LOCKED`);
 });
 </script>
 </body>
