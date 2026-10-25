@@ -7,121 +7,90 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:#000;display:flex;justify-content:center}
+body{background:#000;display:flex;justify-content:center;overscroll-behavior:none}
 .app{width:100%;max-width:420px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:10px 14px 85px}
-
-/* TOP USER */
-.top-user{display:flex;justify-content:space-between;align-items:flex-start}
-.user-name{font-family:'Cinzel';font-size:26px;font-weight:900;color:#fff}
-.user-badges{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
-.badge-lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:900;display:flex;align-items:center;gap:4px}
-.badge-online{background:rgba(0,0,0,0.7);border:1.2px solid #00ff88;color:#00ff88;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:5px}
-.dot{width:7px;height:7px;background:#00ff88;border-radius:50%;box-shadow:0 0 8px #00ff88;animation:blink 1.5s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
-.badge-left{background:rgba(0,0,0,0.7);border:1px solid #333;color:#aaa;padding:4px 10px;border-radius:20px;font-size:11px;margin-top:6px;display:inline-flex;align-items:center;gap:6px}
-.badge-left b{color:#00ff88}
-.wallet-pill{background:rgba(15,15,15,0.9);border:1px solid #333;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
-
-/* ASSETS SECTION - COMME TA CAPTURE */
-.assets-wrap{margin-top:18px;display:flex;flex-direction:column;align-items:center}
-.assets-label{font-family:'Cinzel';font-size:14px;color:#d4af37;letter-spacing:3px;display:flex;align-items:center;gap:8px;position:relative}
-.assets-label:before,.assets-label:after{content:'👑';font-size:10px}
-.assets-pill{margin-top:6px;background:linear-gradient(180deg,#1a1a1a,#000);border:2px solid #d4af37;border-radius:30px;padding:10px 28px;min-width:260px;text-align:center;box-shadow:0 0 20px rgba(212,175,55,0.4), inset 0 1px 0 rgba(255,255,255,0.1);position:relative}
-.assets-pill:before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:#d4af37;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
-.assets-pill:after{content:'';position:absolute;right:-10px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:#d4af37;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
-.assets-value{font-family:'Cinzel';font-size:28px;font-weight:900;color:#fff9c4;text-shadow:0 0 10px #d4af37}
-.assets-value span{color:#d4af37;font-size:20px}
-.mining-plus{margin-top:12px;background:linear-gradient(180deg,#0a2a1a,#000);border:1.5px solid #00ff88;border-radius:24px;padding:8px 24px;min-width:220px;text-align:center;box-shadow:0 0 18px rgba(0,255,136,0.3);display:flex;align-items:center;justify-content:center;gap:8px}
-.mining-plus b{font-family:'Inter';font-size:28px;font-weight:900;color:#00ff88;text-shadow:0 0 10px #00ff88}
-.mining-plus span{color:#00ff88;font-size:14px;font-weight:700}
-
-/* COIN */
-.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:10px}
-.coin-wrap{position:relative;width:168px;height:168px;display:flex;align-items:center;justify-content:center}
-.mining-circle{position:absolute;width:168px;height:168px;transform:rotate(-90deg);z-index:10}
+.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:14px 14px 85px}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+.name{font-family:'Cinzel';font-size:32px;font-weight:900;color:#fff;text-shadow:0 0 12px #d4af37}
+.lvl{background:linear-gradient(#fff9c4,#d4af37);color:#000;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:900;display:inline-block;margin-top:4px}
+.wallet{background:rgba(0,0,0,0.75);border:1.5px solid #d4af37;color:#fff;padding:8px 14px;border-radius:20px;font-size:11px}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.coin-wrap{position:relative;width:148px;height:148px;display:flex;align-items:center;justify-content:center;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.mining-circle{position:absolute;width:148px;height:148px;transform:rotate(-90deg);z-index:10}
 .mining-circle circle{fill:none;stroke-linecap:round}
-.track{stroke:rgba(255,215,0,0.12);stroke-width:7px}
-.progress{stroke:#FFD700;stroke-width:7px;stroke-dasharray:400;stroke-dashoffset:400;filter:drop-shadow(0 0 12px #FFD700);transition:stroke-dashoffset 0.5s ease}
-.coin{width:130px;height:130px;z-index:5;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 22px #d4af37)}
+.track{stroke:rgba(255,215,0,0.12);stroke-width:8px}
+.progress{stroke:#FFD700;stroke-width:8px;stroke-dasharray:276;stroke-dashoffset:276;filter:drop-shadow(0 0 12px #FFD700) drop-shadow(0 0 20px #d4af37);transition:stroke-dashoffset 0.6s ease}
+.coin{width:126px;height:126px;z-index:5;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 22px #d4af37);animation:shine 2s infinite}
+@keyframes shine{0%,100%{filter:brightness(1.25) drop-shadow(0 0 15px #d4af37)}50%{filter:brightness(1.45) drop-shadow(0 0 35px #ffd700)}}
+.bal{font-family:'Cinzel';font-size:38px;font-weight:900;color:#fff;margin-top:16px;text-shadow:0 0 15px #d4af37}
+.mining-text{font-family:'Inter';font-size:13px;color:#FFD700;margin-top:10px;font-weight:800;letter-spacing:1px;text-shadow:0 0 12px #FFD700}
+.claim{margin-top:20px;width:90%;height:60px;border:none;border-radius:24px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:24px;box-shadow:0 8px 28px rgba(212,175,55,0.6);cursor:pointer;touch-action:manipulation}
 
-/* POWER BAR */
-.power-bar{margin-top:14px;width:220px;height:22px;background:linear-gradient(#2a1f00,#000);border:2px solid #d4af37;border-radius:20px;position:relative;overflow:hidden;display:flex;align-items:center;padding:2px}
-.power-fill{height:100%;background:linear-gradient(90deg,#fff9c4,#ffd700,#d4af37);border-radius:16px;width:0%;transition:width 0.5s;box-shadow:0 0 10px #ffd700}
-.power-icon{position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:36px;height:36px;background:radial-gradient(#ffd700,#b8941f);border-radius:50%;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:2}
-
-/* CLAIM */
-.claim{margin-top:18px;width:90%;height:62px;border:none;border-radius:28px;background:linear-gradient(180deg,#fff9c4,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:26px;box-shadow:0 8px 30px rgba(212,175,55,0.6), inset 0 2px 0 rgba(255,255,255,0.5);cursor:pointer;letter-spacing:1px}
-
-/* BOTTOM */
-.bottom{position:absolute;bottom:0;left:0;right:0;height:80px;background:rgba(0,0,0,0.96);border-top:1.5px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:999}
-.nav{color:#666;text-align:center;font-size:11px;cursor:pointer;padding:8px 12px;border-radius:12px;min-width:60px}
+/* BOTTOM NAV FIX CLIC */
+.bottom{position:absolute;bottom:0;left:0;right:0;height:78px;background:rgba(0,0,0,0.96);border-top:1.5px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:999;pointer-events:auto}
+.nav{color:#666;text-align:center;font-size:11px;font-family:'Inter';cursor:pointer;padding:10px 14px;border-radius:12px;pointer-events:auto;touch-action:manipulation;user-select:none;min-width:60px}
 .nav.active{color:#d4af37;background:rgba(212,175,55,0.18);box-shadow:0 0 12px rgba(212,175,55,0.3)}
-.nav b{font-size:22px;display:block}
+.nav b{font-size:20px;display:block;line-height:1}
 
-/* PAGES MINERS */
-.page{display:none;flex:1;overflow-y:auto}.page.active{display:flex;flex-direction:column}
-#page-mine.active{justify-content:flex-start}
-.miners-title{font-family:'Cinzel';font-size:19px;color:#fff;font-weight:900;margin-bottom:10px}
+/* PAGES */
+.page{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:10px}.page.active{display:flex;flex-direction:column}
+#page-mine.active{justify-content:center;overflow:hidden}
+.miners-head{margin-bottom:12px;flex-shrink:0}
+.miners-title{font-family:'Cinzel';font-size:19px;color:#fff;font-weight:900;text-shadow:0 0 10px #d4af37}
+.miners-sub{font-family:'Inter';font-size:11px;color:#aaa;margin-top:4px}
 .miner-card{background:linear-gradient(135deg, rgba(22,22,22,0.98), rgba(0,0,0,0.99));border:1.2px solid rgba(212,175,55,0.28);border-radius:14px;padding:11px 12px;margin-bottom:9px;display:flex;align-items:center;gap:11px}
-.miner-icon{width:44px;height:44px;border-radius:11px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:21px}
-.miner-info{flex:1}
+.miner-card.max200{border:2px solid #ffd700;box-shadow:0 0 22px rgba(255,215,0,0.4)}
+.miner-icon{width:44px;height:44px;border-radius:11px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.miner-info{flex:1;min-width:0}
 .miner-lvl{font-size:10px;font-weight:800;color:#888}
 .miner-price{font-size:17px;font-weight:900;color:#00ff88}
-.miner-hold{font-size:9px;color:#666}
-.miner-speed{font-size:11px;font-weight:700;color:#d4af37}
-.miner-btn{padding:8px 11px;border-radius:9px;border:none;font-weight:900;font-size:10px;min-width:74px}
+.miner-hold{font-size:9px;color:#666;margin-top:1px}
+.miner-speed{font-size:11px;font-weight:700;color:#d4af37;margin-top:2px}
+.miner-btn{padding:8px 11px;border-radius:9px;border:none;font-weight:900;font-size:10px;cursor:pointer;min-width:74px;touch-action:manipulation}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}
 .btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}
 .btn-locked{background:#222;color:#666;border:1px solid #333}
-.btn-max200{background:linear-gradient(#ffd700,#ff8c00);color:#000}
+.btn-max200{background:linear-gradient(#ffd700,#ff8c00);color:#000;box-shadow:0 0 12px #ffd700}
 </style>
 </head>
 <body>
 <div class="app">
 <div class="content">
+<div class="top"><div><div class="name">HAROLD</div><div class="lvl">👑 Lvl 1</div></div><div class="wallet">Connect Wallet</div></div>
 
-<!-- PAGE MINE = STYLE HUGO ATF -->
 <div class="page active" id="page-mine">
-<div class="top-user">
-<div>
-<div class="user-name" id="userName">Hugo</div>
-<div class="user-badges">
-<div class="badge-lvl">👑 Lvl 72</div>
-<div class="badge-online"><div class="dot"></div> ONLINE</div>
-</div>
-<div class="badge-left"><b>0.003$</b> left to Lvl UP <span>›</span></div>
-</div>
-<div class="wallet-pill">UQDS...qX3i <span style="color:#888">▼</span></div>
-</div>
-
-<div class="assets-wrap">
-<div class="assets-label">ASSETS</div>
-<div class="assets-pill"><div class="assets-value" id="assetsValue">596,3216 | <span>HRD</span></div></div>
-<div class="mining-plus">📈 <b id="miningPlus">+0.0034</b> <span>HRD</span></div>
-</div>
-
 <div class="center">
 <div class="coin-wrap">
-<svg class="mining-circle" viewBox="0 0 168 168">
-<circle class="track" cx="84" cy="84" r="54"></circle>
-<circle class="progress" id="progressCircle" cx="84" cy="84" r="54"></circle>
+<svg class="mining-circle" viewBox="0 0 148 148">
+<circle class="track" cx="74" cy="74" r="44"></circle>
+<circle class="progress" id="progressCircle" cx="74" cy="74" r="44"></circle>
 </svg>
 <img class="coin" src="coin.png">
 </div>
-<div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
+<div class="bal" id="balText">0.0780 HRD</div>
+<div class="mining-text" id="miningText">⛏️ MINING... 0%</div>
 <button class="claim" id="claimBtn">CLAIM</button>
 </div>
 </div>
 
-<!-- PAGE MINERS -->
 <div class="page" id="page-miners">
+<div class="miners-head">
 <div class="miners-title">MINERS • 200 MAX 👑</div>
+<div class="miners-sub">LVL 1/200 • Scroll pour voir les 200 levels</div>
+</div>
 <div id="minersList"></div>
 </div>
 
-<div class="page" id="page-tasks"><div class="miners-title">TASKS 📦</div></div>
-<div class="page" id="page-friends"><div class="miners-title">FRIENDS 👥</div></div>
+<div class="page" id="page-tasks">
+<div class="miners-title">TASKS 📦</div>
+<div style="color:#666;font-size:13px;text-align:center;margin-top:60px">Bientôt disponible...</div>
+</div>
+
+<div class="page" id="page-friends">
+<div class="miners-title">FRIENDS 👥</div>
+<div style="color:#666;font-size:13px;text-align:center;margin-top:60px">Bientôt disponible...</div>
+</div>
 
 </div>
 
@@ -130,77 +99,73 @@ body{background:#000;display:flex;justify-content:center}
 <div class="nav" data-page="tasks"><b>📦</b>Tasks</div>
 <div class="nav" data-page="miners"><b>⚡</b>Miners</div>
 <div class="nav" data-page="friends"><b>👥</b>Friends</div>
-<div class="nav" data-page="profile"><b>👤</b>Profile</div>
 </div>
 </div>
 
 <script>
+// === FIX NAVIGATION QUI MARCHE SUR TELEGRAM ===
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const el=document.getElementById('page-'+name);
-  if(el) el.classList.add('active');
+  document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
-  const nav=document.querySelector(`.nav[data-page="${name}"]`);
-  if(nav) nav.classList.add('active');
+  document.querySelector(`.nav[data-page="${name}"]`).classList.add('active');
+  // Haptic feedback Telegram
+  if(window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback){
+    Telegram.WebApp.HapticFeedback.impactOccurred('light');
+  }
 }
-document.querySelectorAll('.nav').forEach(n=>{
-  n.addEventListener('click',()=>showPage(n.dataset.page));
-  n.addEventListener('touchend',(e)=>{e.preventDefault();showPage(n.dataset.page)},{passive:false});
+document.querySelectorAll('.nav').forEach(nav=>{
+  const handler = (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    showPage(nav.getAttribute('data-page'));
+  };
+  nav.addEventListener('click', handler);
+  nav.addEventListener('touchend', handler, {passive:false});
 });
 
-// MINING LOGIC AVEC BALANCE COMME ATF
-let balance=596.3216;
-let mining=0.0034;
+// === TON MINING 100% CONSERVÉ ===
 let progress=0;
 const circle=document.getElementById('progressCircle');
-const assetsValue=document.getElementById('assetsValue');
-const miningPlus=document.getElementById('miningPlus');
-const powerFill=document.getElementById('powerFill');
+const text=document.getElementById('miningText');
 const btn=document.getElementById('claimBtn');
-const circ=2*Math.PI*54;
+const circ=2*Math.PI*44;
 circle.style.strokeDasharray=circ;
 circle.style.strokeDashoffset=circ;
-
-function updateUI(){
-  assetsValue.innerHTML=`${balance.toFixed(4).replace('.',',')} | <span>HRD</span>`;
-  miningPlus.textContent=`+${mining.toFixed(4)}`;
-  powerFill.style.width=progress+'%';
-  circle.style.strokeDashoffset=circ-(circ*progress/100);
+function setProgress(p){
+  const offset=circ-(p/100)*circ;
+  circle.style.strokeDashoffset=offset;
+  if(text) text.textContent=p>=100?'✅ COMPLET - CLAIM!':`⛏️ MINING... ${Math.floor(p)}%`;
+  if(p>=100 && btn){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 35px #ffd700, 0 0 60px #d4af37';}
+}
+let iv=setInterval(()=>{if(progress<100){progress+=0.7;setProgress(progress);}else{clearInterval(iv);}},100);
+if(btn){
+  btn.addEventListener('click',()=>{
+    if(progress>=100){
+      progress=0;setProgress(0);btn.textContent='CLAIM';btn.style.boxShadow='0 8px 28px rgba(212,175,55,0.6)';
+      iv=setInterval(()=>{if(progress<100){progress+=0.7;setProgress(progress);}else{clearInterval(iv);}},100);
+    }
+  });
 }
 
-setInterval(()=>{
-  if(progress<100){
-    progress+=0.6;
-    mining+=0.00002;
-    updateUI();
-  }else{
-    btn.textContent='CLAIM READY';
-    btn.style.boxShadow='0 0 40px #ffd700';
-  }
-},100);
-
-btn.addEventListener('click',()=>{
-  if(progress>=100){
-    balance+=mining;
-    mining=0;
-    progress=0;
-    btn.textContent='CLAIM';
-    updateUI();
-  }
-});
-updateUI();
-
-// MINERS 200
+// === GENERATION 200 MAX ===
 const list=document.getElementById('minersList');
 let html='';
 for(let lvl=1;lvl<=200;lvl++){
-  let price,btnClass,btnText;
-  if(lvl===1){price='0$';btnClass='btn-active';btnText='ACTIVE';}
-  else if(lvl===2){price='0.317$';btnClass='btn-need';btnText='NEED 1000';}
-  else if(lvl===200){price='2.500$';btnClass='btn-max200';btnText='MAX 200 👑';}
-  else {price=(0.42+(lvl-8)*0.015).toFixed(3)+'$';btnClass='btn-locked';btnText='🔒 LOCKED';}
+  let price,hrd,hold,btnClass,btnText,extra='';
+  if(lvl===1){price='0$';hrd=0;hold=0;btnClass='btn-active';btnText='ACTIVE';}
+  else if(lvl===2){price='0.317$';hrd=317;hold=1000;btnClass='btn-need';btnText='NEED 1000';}
+  else if(lvl===3){price='0.323$';hrd=3230;hold=3000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===4){price='0.333$';hrd=3330;hold=4000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===5){price='0.375$';hrd=3750;hold=5000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===6){price='0.390$';hrd=3900;hold=6000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===7){price='0.405$';hrd=4050;hold=7000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===8){price='0.420$';hrd=4200;hold=8000;btnClass='btn-locked';btnText='🔒 LOCKED';}
+  else if(lvl===200){price='2.500$';hrd=25000;hold=100000;btnClass='btn-max200';btnText='MAX 200 👑';extra='max200';}
+  else {price=(0.42+(lvl-8)*0.015).toFixed(3)+'$';hrd=4200+(lvl-8)*120;hold=8000+(lvl-8)*800;btnClass='btn-locked';btnText='🔒 LOCKED';}
   const speed=(0.20+(lvl-1)*0.015).toFixed(2);
-  html+=`<div class="miner-card"><div class="miner-icon">👑</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${price}</div><div class="miner-hold">HOLD ${(8000+(lvl-8)*800).toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}">${btnText}</button></div>`;
+  const icon=lvl===200?'👑':['🔧','💎','🏆','👑','🚀','🌟'][lvl%6];
+  html+=`<div class="miner-card ${extra}"><div class="miner-icon">${icon}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}${lvl===200?' - MAX ULTIME':''}</div><div class="miner-price" style="${lvl===200?'color:#ffd700':''}">${price}</div><div class="miner-hold">${hrd} HRD • HOLD ${hold.toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}" onclick="if(${lvl}===2)alert('Besoin 1000 HRD pour LVL 2!')">${btnText}</button></div>`;
 }
 list.innerHTML=html;
 </script>
