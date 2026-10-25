@@ -26,14 +26,10 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 .bal{font-family:'Cinzel';font-size:38px;font-weight:900;color:#fff;margin-top:16px;text-shadow:0 0 15px #d4af37}
 .mining-text{font-family:'Inter';font-size:13px;color:#FFD700;margin-top:10px;font-weight:800;letter-spacing:1px;text-shadow:0 0 12px #FFD700}
 .claim{margin-top:20px;width:90%;height:60px;border:none;border-radius:24px;background:linear-gradient(180deg,#ffffd0,#f9e79f,#d4af37,#b8941f);color:#000;font-family:'Cinzel';font-weight:900;font-size:24px;box-shadow:0 8px 28px rgba(212,175,55,0.6);cursor:pointer;touch-action:manipulation}
-
-/* BOTTOM NAV FIX CLIC */
 .bottom{position:absolute;bottom:0;left:0;right:0;height:78px;background:rgba(0,0,0,0.96);border-top:1.5px solid #d4af37;display:flex;justify-content:space-around;align-items:center;z-index:999;pointer-events:auto}
 .nav{color:#666;text-align:center;font-size:11px;font-family:'Inter';cursor:pointer;padding:10px 14px;border-radius:12px;pointer-events:auto;touch-action:manipulation;user-select:none;min-width:60px}
 .nav.active{color:#d4af37;background:rgba(212,175,55,0.18);box-shadow:0 0 12px rgba(212,175,55,0.3)}
 .nav b{font-size:20px;display:block;line-height:1}
-
-/* PAGES */
 .page{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:10px}.page.active{display:flex;flex-direction:column}
 #page-mine.active{justify-content:center;overflow:hidden}
 .miners-head{margin-bottom:12px;flex-shrink:0}
@@ -47,7 +43,8 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 .miner-price{font-size:17px;font-weight:900;color:#00ff88}
 .miner-hold{font-size:9px;color:#666;margin-top:1px}
 .miner-speed{font-size:11px;font-weight:700;color:#d4af37;margin-top:2px}
-.miner-btn{padding:8px 11px;border-radius:9px;border:none;font-weight:900;font-size:10px;cursor:pointer;min-width:74px;touch-action:manipulation}
+.miner-btn{padding:8px 11px;border-radius:9px;border:none;font-weight:900;font-size:10px;cursor:pointer;min-width:74px;touch-action:manipulation;pointer-events:auto}
+.miner-btn:active{transform:scale(0.92)}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}
 .btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}
 .btn-locked{background:#222;color:#666;border:1px solid #333}
@@ -103,28 +100,21 @@ body{background:#000;display:flex;justify-content:center;overscroll-behavior:non
 </div>
 
 <script>
-// === FIX NAVIGATION QUI MARCHE SUR TELEGRAM ===
+// NAVIGATION
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
   document.querySelector(`.nav[data-page="${name}"]`).classList.add('active');
-  // Haptic feedback Telegram
-  if(window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback){
-    Telegram.WebApp.HapticFeedback.impactOccurred('light');
-  }
+  if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.impactOccurred('light');
 }
 document.querySelectorAll('.nav').forEach(nav=>{
-  const handler = (e)=>{
-    e.preventDefault();
-    e.stopPropagation();
-    showPage(nav.getAttribute('data-page'));
-  };
-  nav.addEventListener('click', handler);
-  nav.addEventListener('touchend', handler, {passive:false});
+  const h=(e)=>{e.preventDefault();e.stopPropagation();showPage(nav.dataset.page);};
+  nav.addEventListener('click',h);
+  nav.addEventListener('touchend',h,{passive:false});
 });
 
-// === TON MINING 100% CONSERVÉ ===
+// MINING
 let progress=0;
 const circle=document.getElementById('progressCircle');
 const text=document.getElementById('miningText');
@@ -139,16 +129,14 @@ function setProgress(p){
   if(p>=100 && btn){btn.textContent='CLAIM READY';btn.style.boxShadow='0 0 35px #ffd700, 0 0 60px #d4af37';}
 }
 let iv=setInterval(()=>{if(progress<100){progress+=0.7;setProgress(progress);}else{clearInterval(iv);}},100);
-if(btn){
-  btn.addEventListener('click',()=>{
-    if(progress>=100){
-      progress=0;setProgress(0);btn.textContent='CLAIM';btn.style.boxShadow='0 8px 28px rgba(212,175,55,0.6)';
-      iv=setInterval(()=>{if(progress<100){progress+=0.7;setProgress(progress);}else{clearInterval(iv);}},100);
-    }
-  });
-}
+btn.addEventListener('click',()=>{
+  if(progress>=100){
+    progress=0;setProgress(0);btn.textContent='CLAIM';btn.style.boxShadow='0 8px 28px rgba(212,175,55,0.6)';
+    iv=setInterval(()=>{if(progress<100){progress+=0.7;setProgress(progress);}else{clearInterval(iv);}},100);
+  }
+});
 
-// === GENERATION 200 MAX ===
+// GENERATION 200 MAX - SANS ONCLICK INLINE
 const list=document.getElementById('minersList');
 let html='';
 for(let lvl=1;lvl<=200;lvl++){
@@ -165,9 +153,34 @@ for(let lvl=1;lvl<=200;lvl++){
   else {price=(0.42+(lvl-8)*0.015).toFixed(3)+'$';hrd=4200+(lvl-8)*120;hold=8000+(lvl-8)*800;btnClass='btn-locked';btnText='🔒 LOCKED';}
   const speed=(0.20+(lvl-1)*0.015).toFixed(2);
   const icon=lvl===200?'👑':['🔧','💎','🏆','👑','🚀','🌟'][lvl%6];
-  html+=`<div class="miner-card ${extra}"><div class="miner-icon">${icon}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}${lvl===200?' - MAX ULTIME':''}</div><div class="miner-price" style="${lvl===200?'color:#ffd700':''}">${price}</div><div class="miner-hold">${hrd} HRD • HOLD ${hold.toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}" onclick="if(${lvl}===2)alert('Besoin 1000 HRD pour LVL 2!')">${btnText}</button></div>`;
+  html+=`<div class="miner-card ${extra}"><div class="miner-icon">${icon}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${price}</div><div class="miner-hold">${hrd} HRD • HOLD ${hold.toLocaleString()} HRD</div><div class="miner-speed">⚡ ${speed} TH/s</div></div><button class="miner-btn ${btnClass}" data-lvl="${lvl}">${btnText}</button></div>`;
 }
 list.innerHTML=html;
+
+// FIX BOUTONS QUI MARCHE VRAIMENT
+list.addEventListener('click', (e)=>{
+  const b = e.target.closest('.miner-btn');
+  if(!b) return;
+  const lvl = parseInt(b.dataset.lvl);
+  const txt = b.textContent.trim();
+  
+  if(window.Telegram?.WebApp?.HapticFeedback){
+    Telegram.WebApp.HapticFeedback.impactOccurred('light');
+  }
+
+  if(txt.includes('ACTIVE')){
+    alert('✅ LVL 1 déjà ACTIF!\n\n⚡ 0.20 TH/s en cours\nTu mines actuellement!\n\nPour passer LVL 2 → il faut HOLD 1000 HRD');
+  }
+  else if(txt.includes('NEED')){
+    alert('🔧 LVL 2 - UPGRADE\n\n💰 Prix: 0.317$ (317 HRD)\n📦 Requis: HOLD 1 000 HRD\n⚡ Nouveau: 0.22 TH/s\n\nTu as 0.0780 HRD pour l\'instant.\nMine plus sur la page Mine pour débloquer!');
+  }
+  else if(txt.includes('LOCKED')){
+    alert(`🔒 LVL ${lvl} LOCKED\n\nDébloque LVL ${lvl-1} d'abord!\nIl faut monter niveau par niveau.`);
+  }
+  else if(txt.includes('MAX')){
+    alert('👑 LVL 200 MAX ULTIME!\n\nLe niveau final! 2.5$ - 25 000 HRD\nTu es presque une légende!');
+  }
+});
 </script>
 </body>
 </html>
