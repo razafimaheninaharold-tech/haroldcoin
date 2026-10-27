@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V10 SUPABASE</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<title>Haroldcoin V11 FINAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
@@ -12,133 +12,86 @@
 body{background:#000;display:flex;justify-content:center}
 .app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-.top{display:flex;justify-content:space-between;align-items:center;background:rgba(5,15,25,0.75);border:1px solid rgba(0,229,255,0.15);border-radius:12px;padding:8px 10px}
+.top{display:flex;justify-content:space-between;align-items:center;background:rgba(5,15,25,0.85);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:8px 10px}
 .name{font-family:'Orbitron';font-size:20px;font-weight:900;color:#fff}
 .lvl{background:rgba(0,0,0,0.6);border:1px solid #00e5ff;color:#00e5ff;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:900}
 .wallet{background:rgba(0,0,0,0.6);border:1.5px solid transparent;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;padding:6px 10px;border-radius:16px;font-size:10px;font-weight:600}
 .assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
 .assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px}
-.assets-pill:before{content:'🪙';font-size:16px}
 .assets-value{font-family:'Inter';font-size:12px;font-weight:900;color:#000;line-height:1.2}
-.mining-plus{background:rgba(0,0,0,0.7);border:1.5px solid #00ff88;border-radius:16px;padding:6px 10px;flex:1}
-.mining-plus .m-label{font-size:8px;color:#fff}
+.mining-plus{background:rgba(0,0,0,0.8);border:1.5px solid #00ff88;border-radius:16px;padding:6px 10px;flex:1}
 .mining-plus b{font-size:12px;color:#00ff88}
 .center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:14px}
-.coin-wrap{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
-.mining-circle{position:absolute;width:120px;height:120px;transform:rotate(-90deg)}
-.mining-circle circle{fill:none;stroke-linecap:round}
-.track{stroke:rgba(255,215,0,0.15);stroke-width:5}
-.progress{stroke:#FFD700;stroke-width:5;stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1s}
-.coin{width:92px;height:92px;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 16px #d4af37)}
-.power-bar{margin-top:18px;width:100%;height:36px;background:rgba(0,0,0,0.88);border:1.5px solid rgba(0,229,255,0.35);border-radius:20px;display:flex;align-items:center;padding:3px 6px 3px 46px;position:relative}
+.coin-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center}
+.mining-circle{position:absolute;width:130px;height:130px;transform:rotate(-90deg)}
+.track{stroke:rgba(255,215,0,0.15);stroke-width:6;fill:none}
+.progress{stroke:#FFD700;stroke-width:6;fill:none;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:251;transition:stroke-dashoffset 1s}
+.coin{width:95px;height:95px;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 18px #d4af37)}
+.power-bar{margin-top:18px;width:100%;height:36px;background:rgba(0,0,0,0.9);border:1.5px solid rgba(0,229,255,0.35);border-radius:20px;display:flex;align-items:center;padding:3px 6px 3px 46px;position:relative}
 .power-fill{height:12px;background:linear-gradient(90deg,#00e5ff,#ffaa55);border-radius:12px;width:0%;transition:width 1s}
 .power-icon{position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:42px;height:36px;background:linear-gradient(135deg,#00e5ff,#ff8c00);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.claim{margin-top:16px;width:100%;height:52px;border:2px solid transparent;border-radius:26px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:19px;letter-spacing:2px;cursor:pointer}
-.claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 20px rgba(0,255,136,0.5);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.claim{margin-top:16px;width:100%;height:54px;border:2px solid transparent;border-radius:26px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:2px;cursor:pointer}
+.claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 25px rgba(0,255,136,0.6);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.timer{color:#ffd700;font-size:12px;font-weight:900;margin-top:6px;font-family:'Orbitron'}
+.badge{background:rgba(0,255,136,0.15);border:1px solid #00ff88;color:#00ff88;padding:4px 10px;border-radius:10px;font-size:10px;font-weight:900;margin-top:6px}
 .bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:rgba(5,10,20,0.98);border-top:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
 .nav{flex:1;height:62px;background:linear-gradient(145deg,#1e2535,#151a28);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer}
 .nav.active{background:linear-gradient(145deg,#2a2215,#1f1a0f);border:1.5px solid #ffd700;color:#ffd700}
 .nav b{font-size:20px}
 .page{display:none;flex:1;overflow-y:auto}.page.active{display:flex;flex-direction:column}
-.miners-head{position:sticky;top:0;background:rgba(0,0,0,0.9);padding:6px;z-index:5;border-radius:10px;margin-bottom:10px}
-.miners-title{font-family:'Cinzel';font-size:18px;color:#fff;font-weight:900}
+.miners-head{position:sticky;top:0;background:rgba(0,0,0,0.95);padding:8px;z-index:5;border-radius:10px;margin-bottom:10px}
+.miners-title{font-family:'Orbitron';font-size:16px;color:#fff;font-weight:900}
 .miners-sub{font-size:11px;color:#aaa;margin-top:3px}
 .miner-card{background:linear-gradient(135deg,rgba(22,22,22,0.98),rgba(0,0,0,0.99));border:1.2px solid rgba(212,175,55,0.28);border-radius:13px;padding:10px 11px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
 .miner-icon{width:42px;height:42px;background:#111;border:1px solid #333;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.miner-info{flex:1}.miner-lvl{font-size:10px;color:#888;font-weight:800}.miner-price{font-size:16px;color:#00ff88;font-weight:900}.miner-hold{font-size:9px;color:#666}.miner-speed{font-size:10px;color:#d4af37;font-weight:700}
+.miner-info{flex:1}.miner-lvl{font-size:10px;color:#888;font-weight:800}.miner-price{font-size:14px;color:#00ff88;font-weight:900}.miner-hold{font-size:9px;color:#666}.miner-speed{font-size:10px;color:#d4af37;font-weight:700}
 .miner-btn{padding:7px 10px;border-radius:8px;border:none;font-weight:900;font-size:10px;min-width:75px;cursor:pointer}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}.btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}.btn-locked{background:#222;color:#666;border:1px solid #333}.btn-max{background:linear-gradient(#ffd700,#ff8c00);color:#000}
-.timer{color:#ffd700;font-size:11px;font-weight:900;margin-top:4px;font-family:'Orbitron'}
-.badge{background:rgba(0,255,136,0.15);border:1px solid #00ff88;color:#00ff88;padding:3px 8px;border-radius:10px;font-size:9px;font-weight:900;margin-top:6px}
 </style>
 </head>
 <body>
 <div class="app">
 <div class="content">
-<div class="top"><div style="display:flex;align-items:center;gap:4px"><div class="name">HAROLD</div><div class="lvl" id="lvlDisplay">Lvl ...</div></div><div class="wallet">Connect Wallet</div></div>
+<div class="top"><div style="display:flex;align-items:center;gap:4px"><div class="name">HAROLD</div><div class="lvl" id="lvlDisplay">Lvl ...</div></div><div class="wallet" id="walletBtn">Connect Wallet</div></div>
 
 <div class="page active" id="page-mine">
 <div class="assets-wrap">
 <div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div>
-<div class="mining-plus"><div class="m-label">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div>
+<div class="mining-plus"><div style="font-size:8px;color:#fff">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div>
 </div>
 <div class="center">
 <div class="coin-wrap">
-<svg class="mining-circle" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="35"></circle><circle class="progress" id="progressCircle" cx="60" cy="60" r="35"></circle></svg>
-<img class="coin" src="coin.png">
+<svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg>
+<img class="coin" src="coin.png" onerror="this.src='https://i.imgur.com/3b9yZqH.png'">
 </div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
 <div class="timer" id="timer">4:00:00 restant</div>
-<div class="badge" id="autoBadge">⛏️ STOCKÉ DANS SUPABASE - 4H</div>
-<button class="claim" id="claimBtn">CLAIM</button>
+<div class="badge" id="autoBadge">⛏️ STOCKÉ SUPABASE - 4H</div>
+<button class="claim" id="claimBtn">MINING...</button>
 </div>
 </div>
 
-<div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS • 1000 MAX</div><div class="miners-sub" id="minersSub">Chargement...</div></div><div id="minersList"></div></div>
+<div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS • 1000 MAX</div><div class="miners-sub" id="minersSub">LVL ...</div></div><div id="minersList"></div></div>
 <div class="page" id="page-tasks"><div class="miners-title">TASKS</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt...</div></div>
-
-<div class="page" id="page-friends">
-  <div class="miners-head">
-    <div class="miners-title">FRIENDS • SUPABASE</div>
-    <div class="miners-sub" id="friendsSub">Chargement...</div>
-    <button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10%</button>
-    <div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px;align-items:center">
-      <input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="...">
-      <button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button>
-    </div>
-    <div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px">
-      <div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN • SUPABASE STOCKAGE</div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">CSV</button>
-        <button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">JSON</button>
-        <button onclick="adminSync()" style="flex:1;background:#00e5ff;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">SYN</button>
-      </div>
-      <div id="adminLog" style="margin-top:8px;color:#00ff88;font-size:9px;font-family:monospace;text-align:center"></div>
-    </div>
-  </div>
-  <div id="friendsList"></div>
+<div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS • SUPABASE</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10%</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div><div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px"><div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN • 9 USERS</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">CSV</button><button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">JSON</button><button onclick="adminSync()" style="flex:1;background:#00e5ff;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">SYNC</button></div><div id="adminLog" style="margin-top:8px;color:#00ff88;font-size:9px;font-family:monospace;text-align:center"></div></div></div><div id="friendsList"></div></div>
 </div>
-</div>
-<div class="bottom">
-<div class="nav active" data-page="mine"><b>⛏️</b>Mine</div>
-<div class="nav" data-page="tasks"><b>☰</b>Tasks</div>
-<div class="nav" data-page="miners"><b>🤖</b>Miners</div>
-<div class="nav" data-page="friends"><b>👥</b>Friends</div>
-</div>
+<div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
 
 <script>
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
-  document.querySelector(`.nav[data-page="${name}"]`).classList.add('active');
-  if(name==='friends') loadFriends();
-}
+function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector(`.nav[data-page="${n}"]`).classList.add('active');if(n==='friends')loadFriends();}
 document.querySelectorAll('.nav').forEach(nav=>{nav.addEventListener('click',()=>showPage(nav.dataset.page));});
 
 const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
 const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
 const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
-let tg=window.Telegram?.WebApp;
-let uid=tg?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';
-localStorage.setItem('uid',uid);
-const ADMIN_IDS=['2120736139'];
-function isAdmin(){return ADMIN_IDS.includes(uid+"");}
-
+let tg=window.Telegram?.WebApp;let uid=tg?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';localStorage.setItem('uid',uid);
+const ADMIN_IDS=['2120736139'];function isAdmin(){return ADMIN_IDS.includes(uid+"");}
 const MINING_DURATION=4*60*60*1000;
-let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false;
-let miningStartTime=parseInt(localStorage.getItem('harold_start')||'0');
-if(miningStartTime===0){miningStartTime=Date.now();}
-
-const circle=document.getElementById('progressCircle');
-const assetsValue=document.getElementById('assetsValue');
-const miningPlus=document.getElementById('miningPlus');
-const powerFill=document.getElementById('powerFill');
-const btn=document.getElementById('claimBtn');
-const timerEl=document.getElementById('timer');
-const circ=2*Math.PI*35;circle.style.strokeDasharray=circ;
+let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={};
+const circle=document.getElementById('progressCircle'),assetsValue=document.getElementById('assetsValue'),miningPlus=document.getElementById('miningPlus'),powerFill=document.getElementById('powerFill'),btn=document.getElementById('claimBtn'),timerEl=document.getElementById('timer');
+const circ=2*Math.PI*40;circle.style.strokeDasharray=circ;
 
 function getMinerData(lvl){
   if(lvl===1) return {price:'0$',hrd:0,hold:0,speed:0.20};
@@ -146,126 +99,93 @@ function getMinerData(lvl){
   if(lvl<=200){let p=(0.42+(lvl-8)*0.015).toFixed(3)+'$';let h=4200+(lvl-8)*120;let ho=8000+(lvl-8)*800;let s=(0.20+(lvl-1)*0.015).toFixed(2);return {price:p,hrd:h,hold:ho,speed:parseFloat(s)};}
   else{let e=lvl-200;let p=(3.30+e*0.02).toFixed(3)+'$';let h=27250+e*120;let ho=161600+e*1100;let s=(3.19+e*0.02).toFixed(2);return {price:p,hrd:h,hold:ho,speed:parseFloat(s)};}
 }
-function formatTime(ms){
-  if(ms<=0) return "00:00:00 - CLAIM!";
-  let s=Math.floor(ms/1000);let h=Math.floor(s/3600);let m=Math.floor((s%3600)/60);let sec=s%60;
-  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} restant`;
-}
+function formatTime(ms){if(ms<=0)return "00:00:00 - CLAIM!";let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} restant`;}
 function updateUI(){
   assetsValue.innerHTML=balanceCoins.toLocaleString()+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";
-  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";
-  circle.style.strokeDashoffset=circ-(circ*progress/100);
-  let remain=MINING_DURATION-(Date.now()-miningStartTime);
-  timerEl.textContent=formatTime(remain);
-  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');document.getElementById('autoBadge').textContent="✅ 4H FINI - CLIQUE CLAIM!";}
-  else{btn.textContent="MINING...";btn.classList.remove('ready');document.getElementById('autoBadge').textContent=`⛏️ SUPABASE 4H - ${progress.toFixed(1)}%`;}
-  document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;
-  document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • "+balanceCoins.toLocaleString();
+  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";circle.style.strokeDashoffset=circ-(circ*progress/100);
+  let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);
+  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');document.getElementById('autoBadge').textContent="✅ 4H FINI - CLIQUE CLAIM!";}else{btn.textContent="MINING...";btn.classList.remove('ready');document.getElementById('autoBadge').textContent=`⛏️ SUPABASE 4H - ${progress.toFixed(1)}%`;}
+  document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • "+balanceCoins.toLocaleString();
 }
-
-// STOCKAGE SUPABASE
 async function saveBalance(){
-  if(!loaded) return;
+  if(!loaded)return;
   try{
-    await supa.from('harold_users').upsert({
+    await supa.from('public.harold_users').upsert({
       id:parseInt(uid),
-      balance:balanceCoins,
-      mining_start: new Date(miningStartTime).toISOString(),
-      mining_amount: mining,
-      last_seen: new Date().toISOString()
+      max_balance:balanceCoins,
+      mining_start:miningStartTime?new Date(miningStartTime).toISOString():new Date().toISOString(),
+      mining_amount:mining,
+      mining_cards:JSON.stringify(miningCards),
+      last_seen:new Date().toISOString()
     },{onConflict:'id'});
-    localStorage.setItem('harold_start', miningStartTime+'');
-  }catch(e){
-    console.log("saveBalance error",e);
-    try{await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e2){}
-  }
+  }catch(e){console.log("save error",e);}
 }
-
 async function loadBalance(){
   try{
     let startParam=tg?.initDataUnsafe?.start_param;
     if(startParam && !localStorage.getItem('referred')){
-      let refId=parseInt(startParam);
-      if(refId && refId!==parseInt(uid)){
-        await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:0,mining_start:new Date().toISOString()},{onConflict:'id'});
+      let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){
+        await supa.from('public.harold_users').upsert({id:parseInt(uid),referred_by:refId,max_balance:0,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});
         localStorage.setItem('referred',refId);
       }
     }
-    let {data}=await supa.from('harold_users').select('balance,mining_start,mining_amount').eq('id',parseInt(uid)).single();
+    let {data,error}=await supa.from('public.harold_users').select('max_balance,mining_start,mining_amount,mining_cards').eq('id',parseInt(uid)).single();
+    if(error)console.log(error);
     if(data){
-      balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;
-      if(balanceCoins<=161600){currentLvl=Math.floor((balanceCoins-8000)/800)+8;if(currentLvl<1) currentLvl=1;}else{currentLvl=200+Math.floor((balanceCoins-161600)/1100);}
-      if(currentLvl>1000) currentLvl=1000;
-      if(data.mining_start){
-        miningStartTime=new Date(data.mining_start).getTime();
-        localStorage.setItem('harold_start', miningStartTime+'');
-      }
+      balanceCoins=data.max_balance||0;balanceHRD=balanceCoins/1000000;
+      if(balanceCoins<=161600){currentLvl=Math.floor((balanceCoins-8000)/800)+8;if(currentLvl<1)currentLvl=1;}else{currentLvl=200+Math.floor((balanceCoins-161600)/1100);}if(currentLvl>1000)currentLvl=1000;
+      try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}
+      if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}
+      else{miningStartTime=Date.now();}
+      if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;
     }
     let elapsed=Date.now()-miningStartTime;
     if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).speed*0.04*4;}
     else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4;}
-
-    loaded=true;updateUI();renderMiners();saveBalance();
-    document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
-  }catch(e){loaded=true;updateUI();renderMiners();}
+    loaded=true;updateUI();renderMiners();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();
+  }catch(e){console.log(e);loaded=true;updateUI();renderMiners();}
 }
 function renderMiners(){
   const list=document.getElementById('minersList');let html='';
   for(let lvl=1;lvl<=1000;lvl++){
-    let d=getMinerData(lvl);let bc,bt;
+    let d=getMinerData(lvl),bc,bt;
     if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='LVL '+lvl;}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString();}
-    let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':'🔧';
-    let hl=lvl===currentLvl?'border:2px solid #ffd700':''; 
+    let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':'🔧';let hl=lvl===currentLvl?'border:2px solid #ffd700':'';
     html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">${d.hrd} HRD • HOLD ${d.hold.toLocaleString()}</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${(d.speed*0.04*4).toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl},${d.hold})">${bt}</button></div>`;
   }
   list.innerHTML=html;
 }
-function buyLevel(lvl,hold){if(balanceCoins<hold||lvl<=currentLvl) return;currentLvl=lvl;updateUI();renderMiners();saveBalance();}
+function buyLevel(lvl,hold){if(balanceCoins<hold||lvl<=currentLvl)return;currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 
-setInterval(()=>{
-  if(!loaded) return;
-  let elapsed=Date.now()-miningStartTime;
-  if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).speed*0.04*4;}
-  else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4;}
-  updateUI();
-  if(Math.floor(progress)%2===0) saveBalance();
-},1000);
+setInterval(()=>{if(!loaded)return;let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).speed*0.04*4;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4;}updateUI();},1000);
+setInterval(()=>{if(loaded)saveBalance();},10000);
 
-btn.addEventListener('click',()=>{
+btn.addEventListener('click',async()=>{
   if(progress>=100){
-    balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);
-    mining=0;progress=0;miningStartTime=Date.now();
-    if(balanceCoins<=161600){let nl=Math.floor((balanceCoins-8000)/800)+8;if(nl>currentLvl) currentLvl=nl;}else{let nl=200+Math.floor((balanceCoins-161600)/1100);if(nl>currentLvl) currentLvl=nl;}
-    if(currentLvl>1000) currentLvl=1000;
-    updateUI();renderMiners();saveBalance();
-    if(tg?.showAlert) tg.showAlert(`✅ +${(getMinerData(currentLvl).speed*0.04*4).toFixed(4)} HRD claimé! Nouveau cycle 4H!`);
-  }else{
-    let rest=MINING_DURATION-(Date.now()-miningStartTime);
-    if(tg?.showAlert) tg.showAlert(`⏳ Encore ${formatTime(rest)} avant CLAIM! Stocké dans Supabase ✅`);
-  }
+    balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);mining=0;progress=0;miningStartTime=Date.now();
+    if(balanceCoins<=161600){let nl=Math.floor((balanceCoins-8000)/800)+8;if(nl>currentLvl)currentLvl=nl;}else{let nl=200+Math.floor((balanceCoins-161600)/1100);if(nl>currentLvl)currentLvl=nl;}if(currentLvl>1000)currentLvl=1000;
+    updateUI();renderMiners();await saveBalance();if(tg?.showAlert)tg.showAlert(`✅ CLAIM +${(getMinerData(currentLvl).speed*0.04*4).toFixed(4)} HRD! Nouveau cycle 4H! Stocké dans Supabase!`);
+  }else{let rest=MINING_DURATION-(Date.now()-miningStartTime);if(tg?.showAlert)tg.showAlert(`⏳ Encore ${formatTime(rest)} avant CLAIM! Stocké dans Supabase ✅`);}
 });
 
 async function loadFriends(){
   try{
     document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
-    let {data:f}=await supa.from('harold_users').select('id,balance,mining_start').eq('referred_by',parseInt(uid));
-    let {count:t}=await supa.from('harold_users').select('*',{count:'exact',head:true});
-    f=f||[];t=t||0;
-    document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users • Mining stocké";
+    let {data:f}=await supa.from('public.harold_users').select('id,max_balance,mining_start').eq('referred_by',parseInt(uid));
+    let {count:t}=await supa.from('public.harold_users').select('*',{count:'exact',head:true});
+    f=f||[];t=t||0;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users • Mining 4H Supabase";
     if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users • mining_start stocké • ${new Date().toLocaleTimeString()}`;}
-    let list=document.getElementById('friendsList');
-    if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';return;}
-    let h='';f.forEach(u=>{h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${(u.balance||0).toLocaleString()} coins</div><div class="miner-hold">Mining depuis: ${u.mining_start?new Date(u.mining_start).toLocaleTimeString():'N/A'}</div></div><button class="miner-btn btn-active">ACTIF</button></div>`});list.innerHTML=h;
+    let list=document.getElementById('friendsList');if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';return;}
+    let h='';f.forEach(u=>{h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${(u.max_balance||0).toLocaleString()} coins</div><div class="miner-hold">Mining: ${u.mining_start?new Date(u.mining_start).toLocaleTimeString():'N/A'}</div></div><button class="miner-btn btn-active">ACTIF</button></div>`});list.innerHTML=h;
   }catch(e){}
 }
-function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert) tg.showAlert('Copié ✅')});}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert)tg.showAlert('Copié ✅')});}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
-async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert) tg.showAlert(`SYN ${count} users avec mining_start ✅`);}
-async function adminBackup(){let {data}=await supa.from('harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));if(tg?.showAlert) tg.showAlert(`JSON ${data.length} users copié 📋`);}
-async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,balance,mining_start,mining_amount,referred_by,last_seen\n'+data.map(u=>`${u.id},${u.balance||0},${u.mining_start||''},${u.mining_amount||0},${u.referred_by||''},${u.last_seen||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert) tg.showAlert(`CSV ${data.length} users avec mining copié 📊`);}
+async function adminSync(){let {data,count}=await supa.from('public.harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert)tg.showAlert(`SYNC ${count} users avec mining_start ✅`);}
+async function adminBackup(){let {data}=await supa.from('public.harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));if(tg?.showAlert)tg.showAlert(`JSON ${data.length} users copié 📋`);}
+async function adminExport(){let {data}=await supa.from('public.harold_users').select('*');let csv='id,max_balance,mining_start,mining_amount,mining_cards,referred_by,last_seen\n'+data.map(u=>`${u.id},${u.max_balance||0},${u.mining_start||''},${u.mining_amount||0},${(u.mining_cards||'').replace(/,/g,';')},${u.referred_by||''},${u.last_seen||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert)tg.showAlert(`CSV ${data.length} users avec mining copié 📊`);}
 
 loadBalance();if(tg){tg.ready();tg.expand();}
-setInterval(saveBalance,15000);
 </script>
 </body>
 </html>
