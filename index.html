@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V9 - 4H REAL</title>
+<title>Haroldcoin V10 SUPABASE</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -28,12 +28,12 @@ body{background:#000;display:flex;justify-content:center}
 .mining-circle{position:absolute;width:120px;height:120px;transform:rotate(-90deg)}
 .mining-circle circle{fill:none;stroke-linecap:round}
 .track{stroke:rgba(255,215,0,0.15);stroke-width:5}
-.progress{stroke:#FFD700;stroke-width:5;stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 0.5s}
+.progress{stroke:#FFD700;stroke-width:5;stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1s}
 .coin{width:92px;height:92px;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 16px #d4af37)}
 .power-bar{margin-top:18px;width:100%;height:36px;background:rgba(0,0,0,0.88);border:1.5px solid rgba(0,229,255,0.35);border-radius:20px;display:flex;align-items:center;padding:3px 6px 3px 46px;position:relative}
 .power-fill{height:12px;background:linear-gradient(90deg,#00e5ff,#ffaa55);border-radius:12px;width:0%;transition:width 1s}
 .power-icon{position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:42px;height:36px;background:linear-gradient(135deg,#00e5ff,#ff8c00);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.claim{margin-top:16px;width:100%;height:52px;border:2px solid transparent;border-radius:26px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:19px;letter-spacing:2px;cursor:pointer;transition:all 0.3s}
+.claim{margin-top:16px;width:100%;height:52px;border:2px solid transparent;border-radius:26px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:19px;letter-spacing:2px;cursor:pointer}
 .claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 20px rgba(0,255,136,0.5);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
 .bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:rgba(5,10,20,0.98);border-top:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
@@ -49,8 +49,8 @@ body{background:#000;display:flex;justify-content:center}
 .miner-info{flex:1}.miner-lvl{font-size:10px;color:#888;font-weight:800}.miner-price{font-size:16px;color:#00ff88;font-weight:900}.miner-hold{font-size:9px;color:#666}.miner-speed{font-size:10px;color:#d4af37;font-weight:700}
 .miner-btn{padding:7px 10px;border-radius:8px;border:none;font-weight:900;font-size:10px;min-width:75px;cursor:pointer}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}.btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}.btn-locked{background:#222;color:#666;border:1px solid #333}.btn-max{background:linear-gradient(#ffd700,#ff8c00);color:#000}
-.auto-badge{background:rgba(0,255,136,0.15);border:1px solid #00ff88;color:#00ff88;padding:3px 8px;border-radius:10px;font-size:9px;font-weight:900;margin-top:6px}
 .timer{color:#ffd700;font-size:11px;font-weight:900;margin-top:4px;font-family:'Orbitron'}
+.badge{background:rgba(0,255,136,0.15);border:1px solid #00ff88;color:#00ff88;padding:3px 8px;border-radius:10px;font-size:9px;font-weight:900;margin-top:6px}
 </style>
 </head>
 <body>
@@ -61,7 +61,7 @@ body{background:#000;display:flex;justify-content:center}
 <div class="page active" id="page-mine">
 <div class="assets-wrap">
 <div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div>
-<div class="mining-plus"><div class="m-label" id="miningLabel">Mining 4H</div><b id="miningPlus">+0.0000 HRD</b></div>
+<div class="mining-plus"><div class="m-label">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div>
 </div>
 <div class="center">
 <div class="coin-wrap">
@@ -70,7 +70,7 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
 <div class="timer" id="timer">4:00:00 restant</div>
-<div class="auto-badge" id="autoBadge">⛏️ MINING 4H - SE REMPLIT EN 4 HEURES</div>
+<div class="badge" id="autoBadge">⛏️ STOCKÉ DANS SUPABASE - 4H</div>
 <button class="claim" id="claimBtn">CLAIM</button>
 </div>
 </div>
@@ -80,7 +80,7 @@ body{background:#000;display:flex;justify-content:center}
 
 <div class="page" id="page-friends">
   <div class="miners-head">
-    <div class="miners-title">FRIENDS</div>
+    <div class="miners-title">FRIENDS • SUPABASE</div>
     <div class="miners-sub" id="friendsSub">Chargement...</div>
     <button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10%</button>
     <div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px;align-items:center">
@@ -88,7 +88,7 @@ body{background:#000;display:flex;justify-content:center}
       <button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button>
     </div>
     <div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px">
-      <div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN - BACKUP GLOBAL</div>
+      <div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN • SUPABASE STOCKAGE</div>
       <div style="display:flex;gap:6px;margin-top:8px">
         <button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">CSV</button>
         <button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">JSON</button>
@@ -124,13 +124,13 @@ const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let tg=window.Telegram?.WebApp;
 let uid=tg?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';
 localStorage.setItem('uid',uid);
-const ADMIN_IDS = ['2120736139']; 
-function isAdmin(){ return ADMIN_IDS.includes(uid+""); }
+const ADMIN_IDS=['2120736139'];
+function isAdmin(){return ADMIN_IDS.includes(uid+"");}
 
-const MINING_DURATION = 4*60*60*1000; // 4 heures en ms
-let balanceCoins=0;let balanceHRD=0;let mining=0;let progress=0;let currentLvl=1;let loaded=false;let miningActive=true;
-let miningStartTime = parseInt(localStorage.getItem('harold_start')||'0');
-if(miningStartTime===0){ miningStartTime=Date.now(); localStorage.setItem('harold_start', miningStartTime+''); }
+const MINING_DURATION=4*60*60*1000;
+let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false;
+let miningStartTime=parseInt(localStorage.getItem('harold_start')||'0');
+if(miningStartTime===0){miningStartTime=Date.now();}
 
 const circle=document.getElementById('progressCircle');
 const assetsValue=document.getElementById('assetsValue');
@@ -148,49 +148,62 @@ function getMinerData(lvl){
 }
 function formatTime(ms){
   if(ms<=0) return "00:00:00 - CLAIM!";
-  let totalSec=Math.floor(ms/1000);
-  let h=Math.floor(totalSec/3600);let m=Math.floor((totalSec%3600)/60);let s=totalSec%60;
-  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')} restant`;
+  let s=Math.floor(ms/1000);let h=Math.floor(s/3600);let m=Math.floor((s%3600)/60);let sec=s%60;
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} restant`;
 }
 function updateUI(){
   assetsValue.innerHTML=balanceCoins.toLocaleString()+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";
-  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";
-  powerFill.style.width=progress+"%";
+  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";
   circle.style.strokeDashoffset=circ-(circ*progress/100);
-  timerEl.textContent=formatTime(MINING_DURATION - (Date.now()-miningStartTime));
-  if(progress>=100){
-    btn.textContent="CLAIM READY!"; btn.classList.add('ready'); timerEl.textContent="✅ 4H TERMINE - CLIQUE CLAIM!";
-    document.getElementById('autoBadge').textContent="✅ MINING FINI - CLAIM POUR RECOMMENCER";
-  }else{
-    btn.textContent="MINING..."; btn.classList.remove('ready');
-    document.getElementById('autoBadge').textContent=`⛏️ MINING 4H - ${progress.toFixed(1)}%`;
-  }
+  let remain=MINING_DURATION-(Date.now()-miningStartTime);
+  timerEl.textContent=formatTime(remain);
+  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');document.getElementById('autoBadge').textContent="✅ 4H FINI - CLIQUE CLAIM!";}
+  else{btn.textContent="MINING...";btn.classList.remove('ready');document.getElementById('autoBadge').textContent=`⛏️ SUPABASE 4H - ${progress.toFixed(1)}%`;}
   document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;
+  document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • "+balanceCoins.toLocaleString();
 }
-function saveMiningState(){ localStorage.setItem('harold_progress', progress+''); localStorage.setItem('harold_mining', mining+''); localStorage.setItem('harold_start', miningStartTime+''); }
-async function saveBalance(){if(!loaded) return;try{await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e){}}
+
+// STOCKAGE SUPABASE
+async function saveBalance(){
+  if(!loaded) return;
+  try{
+    await supa.from('harold_users').upsert({
+      id:parseInt(uid),
+      balance:balanceCoins,
+      mining_start: new Date(miningStartTime).toISOString(),
+      mining_amount: mining,
+      last_seen: new Date().toISOString()
+    },{onConflict:'id'});
+    localStorage.setItem('harold_start', miningStartTime+'');
+  }catch(e){
+    console.log("saveBalance error",e);
+    try{await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e2){}
+  }
+}
 
 async function loadBalance(){
   try{
-    let startParam = tg?.initDataUnsafe?.start_param;
+    let startParam=tg?.initDataUnsafe?.start_param;
     if(startParam && !localStorage.getItem('referred')){
-      let refId = parseInt(startParam);
-      if(refId && refId !== parseInt(uid)){
-        await supa.from('harold_users').upsert({id: parseInt(uid), referred_by: refId, balance: 0}, {onConflict:'id'});
-        localStorage.setItem('referred', refId);
+      let refId=parseInt(startParam);
+      if(refId && refId!==parseInt(uid)){
+        await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:0,mining_start:new Date().toISOString()},{onConflict:'id'});
+        localStorage.setItem('referred',refId);
       }
     }
-    let {data}=await supa.from('harold_users').select('balance').eq('id',parseInt(uid)).single();
-    if(data && data.balance){
-      balanceCoins=data.balance;balanceHRD=balanceCoins/1000000;
-      if(balanceCoins<=161600){currentLvl=Math.floor((balanceCoins-8000)/800)+8;if(currentLvl<1) currentLvl=1;}
-      else{currentLvl=200+Math.floor((balanceCoins-161600)/1100);}
+    let {data}=await supa.from('harold_users').select('balance,mining_start,mining_amount').eq('id',parseInt(uid)).single();
+    if(data){
+      balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;
+      if(balanceCoins<=161600){currentLvl=Math.floor((balanceCoins-8000)/800)+8;if(currentLvl<1) currentLvl=1;}else{currentLvl=200+Math.floor((balanceCoins-161600)/1100);}
       if(currentLvl>1000) currentLvl=1000;
+      if(data.mining_start){
+        miningStartTime=new Date(data.mining_start).getTime();
+        localStorage.setItem('harold_start', miningStartTime+'');
+      }
     }
-    // Calcul progress basé sur 4H
-    let elapsed = Date.now() - miningStartTime;
-    if(elapsed>=MINING_DURATION){ progress=100; mining=getMinerData(currentLvl).speed*0.04*4; } // 0.04 HRD par TH par heure *4h
-    else{ progress=(elapsed/MINING_DURATION)*100; mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4; }
+    let elapsed=Date.now()-miningStartTime;
+    if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).speed*0.04*4;}
+    else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4;}
 
     loaded=true;updateUI();renderMiners();saveBalance();
     document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
@@ -200,64 +213,59 @@ function renderMiners(){
   const list=document.getElementById('minersList');let html='';
   for(let lvl=1;lvl<=1000;lvl++){
     let d=getMinerData(lvl);let bc,bt;
-    if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}
-    else if(balanceCoins>=d.hold){bc='btn-need';bt='LVL '+lvl;}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString();}
+    if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='LVL '+lvl;}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString();}
     let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':'🔧';
     let hl=lvl===currentLvl?'border:2px solid #ffd700':''; 
-    html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">${d.hrd} HRD • HOLD ${d.hold.toLocaleString()}</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${(d.speed*0.04*4).toFixed(4)} HRD / 4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl},${d.hold})">${bt}</button></div>`;
+    html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">${d.hrd} HRD • HOLD ${d.hold.toLocaleString()}</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${(d.speed*0.04*4).toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl},${d.hold})">${bt}</button></div>`;
   }
   list.innerHTML=html;
 }
 function buyLevel(lvl,hold){if(balanceCoins<hold||lvl<=currentLvl) return;currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 
-// 
 setInterval(()=>{
   if(!loaded) return;
   let elapsed=Date.now()-miningStartTime;
-  if(elapsed>=MINING_DURATION){
-    progress=100; mining=getMinerData(currentLvl).speed*0.04*4;
-  }else{
-    progress=(elapsed/MINING_DURATION)*100;
-    mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4;
-  }
-  updateUI(); saveMiningState();
+  if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).speed*0.04*4;}
+  else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).speed*0.04*4;}
+  updateUI();
+  if(Math.floor(progress)%2===0) saveBalance();
 },1000);
 
 btn.addEventListener('click',()=>{
   if(progress>=100){
-    balanceHRD+=mining; balanceCoins=Math.floor(balanceHRD*1000000);
-    mining=0; progress=0; miningStartTime=Date.now(); saveMiningState();
+    balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);
+    mining=0;progress=0;miningStartTime=Date.now();
     if(balanceCoins<=161600){let nl=Math.floor((balanceCoins-8000)/800)+8;if(nl>currentLvl) currentLvl=nl;}else{let nl=200+Math.floor((balanceCoins-161600)/1100);if(nl>currentLvl) currentLvl=nl;}
     if(currentLvl>1000) currentLvl=1000;
     updateUI();renderMiners();saveBalance();
-    if(tg?.showAlert) tg.showAlert(`✅ +${mining.toFixed(4)} HRD claimé! Nouveau cycle 4H démarré!`);
+    if(tg?.showAlert) tg.showAlert(`✅ +${(getMinerData(currentLvl).speed*0.04*4).toFixed(4)} HRD claimé! Nouveau cycle 4H!`);
   }else{
-    let rest = MINING_DURATION - (Date.now()-miningStartTime);
-    if(tg?.showAlert) tg.showAlert(`⏳ Encore ${formatTime(rest)} avant CLAIM!`);
+    let rest=MINING_DURATION-(Date.now()-miningStartTime);
+    if(tg?.showAlert) tg.showAlert(`⏳ Encore ${formatTime(rest)} avant CLAIM! Stocké dans Supabase ✅`);
   }
 });
 
 async function loadFriends(){
   try{
     document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
-    let {data:f}=await supa.from('harold_users').select('id,balance').eq('referred_by',parseInt(uid));
+    let {data:f}=await supa.from('harold_users').select('id,balance,mining_start').eq('referred_by',parseInt(uid));
     let {count:t}=await supa.from('harold_users').select('*',{count:'exact',head:true});
     f=f||[];t=t||0;
-    document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users";
-    if(isAdmin()){document.getElementById('adminPanel').style.display='block'; document.getElementById('adminLog').textContent=`BACKUP GLOBAL ${t} users`;}
+    document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users • Mining stocké";
+    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users • mining_start stocké • ${new Date().toLocaleTimeString()}`;}
     let list=document.getElementById('friendsList');
-    if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami</div>';return;}
-    let h='';f.forEach(u=>{h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${(u.balance||0).toLocaleString()} coins</div></div><button class="miner-btn btn-active">ACTIF</button></div>`});list.innerHTML=h;
+    if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';return;}
+    let h='';f.forEach(u=>{h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${(u.balance||0).toLocaleString()} coins</div><div class="miner-hold">Mining depuis: ${u.mining_start?new Date(u.mining_start).toLocaleTimeString():'N/A'}</div></div><button class="miner-btn btn-active">ACTIF</button></div>`});list.innerHTML=h;
   }catch(e){}
 }
-function copyLink(){ navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert) tg.showAlert('Copié ✅')}); }
-document.getElementById('inviteBtn')?.addEventListener('click', copyLink);
-async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert) tg.showAlert(`SYN ${count} users ✅`);}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert) tg.showAlert('Copié ✅')});}
+document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
+async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert) tg.showAlert(`SYN ${count} users avec mining_start ✅`);}
 async function adminBackup(){let {data}=await supa.from('harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));if(tg?.showAlert) tg.showAlert(`JSON ${data.length} users copié 📋`);}
-async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,balance,referred_by,last_seen\n'+data.map(u=>`${u.id},${u.balance||0},${u.referred_by||''},${u.last_seen||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert) tg.showAlert(`CSV ${data.length} users copié 📊`);}
+async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,balance,mining_start,mining_amount,referred_by,last_seen\n'+data.map(u=>`${u.id},${u.balance||0},${u.mining_start||''},${u.mining_amount||0},${u.referred_by||''},${u.last_seen||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert) tg.showAlert(`CSV ${data.length} users avec mining copié 📊`);}
 
 loadBalance();if(tg){tg.ready();tg.expand();}
-setInterval(saveBalance,10000);
+setInterval(saveBalance,15000);
 </script>
 </body>
 </html>
