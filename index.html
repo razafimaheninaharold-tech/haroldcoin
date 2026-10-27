@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin BONUS</title>
+<title>Haroldcoin V14 BALANCE</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -66,13 +66,13 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
 <div class="timer" id="timer">4:00:00 restant</div>
-<div class="badge" id="autoBadge">⛏️ SUPABASE 4H + BONUS 10%</div>
+<div class="badge" id="autoBadge">⛏️ SUPABASE 4H + BALANCE</div>
 <button class="claim" id="claimBtn">MINING...</button>
 </div>
 </div>
 <div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS • 1000 MAX</div><div class="miners-sub" id="minersSub">LVL 1/1000</div></div><div id="minersList"></div></div>
 <div class="page" id="page-tasks"><div class="miners-title">TASKS</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt...</div></div>
-<div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS • BONUS 10%</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div><div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px"><div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">CSV</button><button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">JSON</button><button onclick="adminSync()" style="flex:1;background:#00e5ff;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">SYNC</button></div><div id="adminLog" style="margin-top:8px;color:#00ff88;font-size:9px;font-family:monospace;text-align:center"></div></div></div><div id="friendsList"></div></div>
+<div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS • BALANCE RÉELLE</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div><div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px"><div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">CSV</button><button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">JSON</button><button onclick="adminSync()" style="flex:1;background:#00e5ff;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">SYNC</button></div><div id="adminLog" style="margin-top:8px;color:#00ff88;font-size:9px;font-family:monospace;text-align:center"></div></div></div><div id="friendsList"></div></div>
 </div>
 <div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
@@ -102,7 +102,7 @@ function updateUI(){
   assetsValue.innerHTML=balanceCoins.toLocaleString()+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";
   miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";circle.style.strokeDashoffset=circ-(circ*progress/100);
   let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);
-  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');document.getElementById('autoBadge').textContent="✅ 4H FINI - CLIQUE CLAIM!";}else{btn.textContent="MINING...";btn.classList.remove('ready');document.getElementById('autoBadge').textContent=`⛏️ SUPABASE 4H - ${progress.toFixed(1)}% + BONUS 10%`;}
+  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');document.getElementById('autoBadge').textContent="✅ 4H FINI - CLIQUE CLAIM!";}else{btn.textContent="MINING...";btn.classList.remove('ready');document.getElementById('autoBadge').textContent=`⛏️ SUPABASE 4H - ${progress.toFixed(1)}%`;}
   document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • "+balanceCoins.toLocaleString();
 }
 async function saveBalance(){
@@ -110,7 +110,7 @@ async function saveBalance(){
   try{
     await supa.from('harold_users').upsert({
       id: parseInt(uid),
-      max_balance: balanceCoins,
+      balance: balanceCoins,
       mining_start: new Date(miningStartTime).toISOString(),
       mining_amount: mining,
       mining_cards: JSON.stringify(miningCards),
@@ -123,13 +123,14 @@ async function loadBalance(){
     let startParam=tg?.initDataUnsafe?.start_param;
     if(startParam && !localStorage.getItem('referred')){
       let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){
-        await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,max_balance:0,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});
+        await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:0,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});
         localStorage.setItem('referred',refId);
       }
     }
-    let {data}=await supa.from('harold_users').select('max_balance,mining_start,mining_amount,mining_cards,referred_by').eq('id',parseInt(uid)).single();
+    let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
     if(data){
-      balanceCoins=data.max_balance||0;balanceHRD=balanceCoins/1000000;
+      balanceCoins=data.balance||data.max_balance||0;
+      balanceHRD=balanceCoins/1000000;
       if(balanceCoins<=161600){currentLvl=Math.floor((balanceCoins-8000)/800)+8;if(currentLvl<1)currentLvl=1;}else{currentLvl=200+Math.floor((balanceCoins-161600)/1100);}if(currentLvl>1000)currentLvl=1000;
       try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}
       if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();} else {miningStartTime=Date.now();}
@@ -160,43 +161,42 @@ btn.addEventListener('click',async()=>{
     balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);mining=0;progress=0;miningStartTime=Date.now();
     if(balanceCoins<=161600){let nl=Math.floor((balanceCoins-8000)/800)+8;if(nl>currentLvl)currentLvl=nl;}else{let nl=200+Math.floor((balanceCoins-161600)/1100);if(nl>currentLvl)currentLvl=nl;}if(currentLvl>1000)currentLvl=1000;
     updateUI();renderMiners();await saveBalance();
-    // BONUS 10% PARRAIN - ON GARDE LE BONUS COMME ANCIEN CODE
     try{
       let {data:me}=await supa.from('harold_users').select('referred_by').eq('id',parseInt(uid)).single();
       if(me && me.referred_by){
         let bonusCoins=Math.floor(claimedMining*0.1*1000000);
         if(bonusCoins>0){
-          let {data:parrain}=await supa.from('harold_users').select('max_balance').eq('id',me.referred_by).single();
+          let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',me.referred_by).single();
           if(parrain){
-            await supa.from('harold_users').update({max_balance:(parrain.max_balance||0)+bonusCoins}).eq('id',me.referred_by);
+            await supa.from('harold_users').update({balance:(parrain.balance||0)+bonusCoins}).eq('id',me.referred_by);
           }
         }
       }
     }catch(e){console.log("bonus error",e);}
-    if(tg?.showAlert)tg.showAlert(`✅ CLAIM +${claimedMining.toFixed(4)} HRD! Parrain a reçu 10% bonus!`);
-  }else{let rest=MINING_DURATION-(Date.now()-miningStartTime);if(tg?.showAlert)tg.showAlert(`⏳ Encore ${formatTime(rest)} avant CLAIM!`);}
+    if(tg?.showAlert)tg.showAlert(`✅ CLAIM +${claimedMining.toFixed(4)} HRD!`);
+  }else{let rest=MINING_DURATION-(Date.now()-miningStartTime);if(tg?.showAlert)tg.showAlert(`⏳ Encore ${formatTime(rest)}`);}
 });
 async function loadFriends(){
   try{
     document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
-    let {data:f}=await supa.from('harold_users').select('id,max_balance,mining_start').eq('referred_by',parseInt(uid));
+    let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));
     let {count:t}=await supa.from('harold_users').select('*',{count:'exact',head:true});
-    f=f||[];t=t||0;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users • Bonus 10% actif";
-    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users • BONUS 10% actif • ${new Date().toLocaleTimeString()}`;}
+    f=f||[];t=t||0;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users • Balance réelle";
+    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users • BALANCE • ${new Date().toLocaleTimeString()}`;}
     let list=document.getElementById('friendsList');
-    if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users<br><span style="font-size:10px">Partage ton lien pour bonus 10%!</span></div>';return;}
+    if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';return;}
     let h='';f.forEach(u=>{
-      let coins=u.max_balance||0;
-      let hrd=(coins/1000000).toFixed(4);
-      h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${coins.toLocaleString()} coins • ${hrd} HRD</div><div class="miner-hold">Balance affichée • Mining: ${u.mining_start?new Date(u.mining_start).toLocaleTimeString():'N/A'}</div></div><button class="miner-btn btn-active">+10%</button></div>`;
+      let coins = u.balance || u.max_balance || 0;
+      let hrd = (coins/1000000).toFixed(4);
+      h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${coins.toLocaleString()} coins • ${hrd} HRD</div><div class="miner-hold">VRAIE balance sauvegardée</div></div><button class="miner-btn btn-active">+10%</button></div>`;
     });list.innerHTML=h;
   }catch(e){console.log(e);}
 }
-function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert)tg.showAlert('Lien copié ✅ Bonus 10% actif!')});}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert)tg.showAlert('Lien copié ✅')});}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
-async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert)tg.showAlert(`SYNC ${count} users avec BONUS ✅`);}
-async function adminBackup(){let {data}=await supa.from('harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));if(tg?.showAlert)tg.showAlert(`JSON ${data.length} users copié 📋`);}
-async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,max_balance,mining_start,mining_amount,mining_cards,referred_by,last_seen\n'+data.map(u=>`${u.id},${u.max_balance||0},${u.mining_start||''},${u.mining_amount||0},${(u.mining_cards||'').replace(/,/g,';')},${u.referred_by||''},${u.last_seen||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert)tg.showAlert(`CSV ${data.length} users avec BONUS copié 📊`);}
+async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert)tg.showAlert(`SYNC ${count} users ✅`);}
+async function adminBackup(){let {data}=await supa.from('harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));if(tg?.showAlert)tg.showAlert(`JSON ${data.length} copié 📋`);}
+async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,balance,mining_start,mining_amount,referred_by\n'+data.map(u=>`${u.id},${u.balance||0},${u.mining_start||''},${u.mining_amount||0},${u.referred_by||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert)tg.showAlert(`CSV ${data.length} copié 📊`);}
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
 </body>
