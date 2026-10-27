@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin 5 sur 13</title>
+<title>Haroldcoin ADMIN</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -82,6 +82,18 @@ body{background:#000;display:flex;justify-content:center}
       <input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="Chargement...">
       <button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button>
     </div>
+
+    <!-- ADMIN PANEL - VISIBLE SEULEMENT POUR TOI -->
+    <div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px">
+      <div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center;margin-bottom:8px">👑 ADMIN PANEL • SYN ONLY</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">EXPORT CSV</button>
+        <button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">BACKUP JSON</button>
+        <button onclick="adminSync()" style="flex:1;background:#00e5ff;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">SYN NOW</button>
+      </div>
+      <div id="adminLog" style="margin-top:8px;color:#00ff88;font-size:9px;font-family:monospace;text-align:center">Auto-Sauvegarde active toutes les 10s</div>
+    </div>
+
   </div>
   <div id="friendsList"></div>
 </div>
@@ -111,6 +123,10 @@ const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let tg=window.Telegram?.WebApp;
 let uid=tg?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';
 localStorage.setItem('uid',uid);
+
+// ADMIN CONFIG
+const ADMIN_IDS = ['2120736139']; 
+function isAdmin(){ return ADMIN_IDS.includes(uid+""); }
 
 let balanceCoins=0;let balanceHRD=0;let mining=0;let progress=0;let currentLvl=1;let loaded=false;
 const circle=document.getElementById('progressCircle');
@@ -184,35 +200,32 @@ function renderMiners(){
 }
 function buyLevel(lvl,hold){if(balanceCoins<hold) return;if(lvl<=currentLvl) return;currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 
-// ===== FRIENDS + TOTAL USERS =====
+// ===== FRIENDS + ADMIN =====
 async function loadFriends(){
   try{
     document.getElementById('inviteLink').value = "https://t.me/Haroldcoin_bot?start=" + uid;
-    // Tes filleuls
-    let {data: friends} = await supa.from('harold_users').select('id,balance').eq('referred_by', parseInt(uid));
-    // Total communauté
+    let {data: friends} = await supa.from('harold_users').select('id,balance,referred_by,last_seen').eq('referred_by', parseInt(uid));
     let {count: totalUsers} = await supa.from('harold_users').select('*', {count:'exact', head:true});
     
-    friends = friends || [];
-    totalUsers = totalUsers || 0;
-    
+    friends = friends || []; totalUsers = totalUsers || 0;
     document.getElementById('friendsSub').textContent = friends.length + " amis (sur "+totalUsers+" utilisateurs) • Bonus: " + (friends.length*10) + "%";
+    
+    if(isAdmin()){
+      document.getElementById('adminPanel').style.display='block';
+      document.getElementById('adminLog').textContent = `ADMIN: ${totalUsers} users • Auto-SYN ON • ${new Date().toLocaleTimeString()}`;
+    }
     
     let list = document.getElementById('friendsList');
     if(friends.length===0){
-      list.innerHTML='<div style="color:#666;text-align:center;margin-top:30px">Aucun ami encore<br><span style="font-size:11px;color:#888">Communauté totale: '+totalUsers+' utilisateurs</span><br><br>Partage ton lien!</div>';
+      list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami encore<br><span style="font-size:11px">Total: '+totalUsers+'</span></div>';
       return;
     }
     let html='';friends.forEach(f=>{
-      let c=f.balance||0;let h=(c/1000000).toFixed(4);
-      html+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ID ${f.id}</div><div class="miner-price" style="color:#fff">${c.toLocaleString()} coins</div><div class="miner-hold">${h} HRD</div><div class="miner-speed" style="color:#00ff88">+10% bonus pour toi</div></div><button class="miner-btn btn-active">ACTIF</button></div>`;
+      html+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ID ${f.id}</div><div class="miner-price" style="color:#fff">${(f.balance||0).toLocaleString()} coins</div><div class="miner-hold">${((f.balance||0)/1000000).toFixed(4)} HRD</div><div class="miner-speed" style="color:#00ff88">+10% bonus</div></div><button class="miner-btn btn-active">ACTIF</button></div>`;
     });
-    html+=`<div style="text-align:center;color:#555;font-size:10px;margin:15px 0">🌍 Communauté: ${totalUsers} utilisateurs • 👥 Tes filleuls: ${friends.length}</div>`;
+    html+=`<div style="text-align:center;color:#555;font-size:10px;margin:15px 0">🌍 ${totalUsers} utilisateurs • 👥 ${friends.length} filleuls</div>`;
     list.innerHTML=html;
-  }catch(e){
-    console.log(e);
-    document.getElementById('friendsSub').textContent = "Erreur chargement";
-  }
+  }catch(e){console.log(e);}
 }
 function copyLink(){
   let input=document.getElementById('inviteLink');
@@ -220,9 +233,43 @@ function copyLink(){
 }
 document.getElementById('inviteBtn')?.addEventListener('click', copyLink);
 
+// ADMIN FUNCTIONS
+async function adminSync(){
+  if(!isAdmin()) return alert('Non admin');
+  let {data, count} = await supa.from('harold_users').select('*', {count:'exact'});
+  localStorage.setItem('harold_backup', JSON.stringify({date:new Date().toISOString(), users:data}));
+  document.getElementById('adminLog').textContent = `SYN OK: ${count} users sauvegardés • ${new Date().toLocaleTimeString()}`;
+  alert('SYN OK mon cher! '+count+' users syncés ✅');
+}
+async function adminBackup(){
+  if(!isAdmin()) return;
+  let {data} = await supa.from('harold_users').select('*');
+  let blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a'); a.href=url; a.download='harold_backup_'+Date.now()+'.json'; a.click();
+}
+async function adminExport(){
+  if(!isAdmin()) return;
+  let {data} = await supa.from('harold_users').select('*');
+  let csv = 'id,balance,referred_by,last_seen\n' + data.map(u=>`${u.id},${u.balance||0},${u.referred_by||''},${u.last_seen||''}`).join('\n');
+  let blob = new Blob([csv], {type:'text/csv'});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a'); a.href=url; a.download='harold_users.csv'; a.click();
+}
+
 loadBalance();
 if(tg){tg.ready();tg.expand();}
 setInterval(saveBalance,4000);
+
+// AUTO-SYN pour ADMIN toutes les 10s
+setInterval(async ()=>{
+  if(isAdmin() && loaded){
+    await saveBalance();
+    let {count} = await supa.from('harold_users').select('*', {count:'exact', head:true});
+    let el=document.getElementById('adminLog');
+    if(el) el.textContent = `AUTO-SYN: ${count} users • ${new Date().toLocaleTimeString()}`;
+  }
+}, 10000);
 </script>
 </body>
 </html>
