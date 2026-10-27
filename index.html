@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin MAX 1000</title>
+<title>Haroldcoin MAX 1000 + FRIENDS AUTO</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -53,6 +53,7 @@ body{background:#000;display:flex;justify-content:center}
 <div class="app">
 <div class="content">
 <div class="top"><div style="display:flex;align-items:center;gap:4px"><div class="name">HAROLD</div><div class="lvl" id="lvlDisplay">Lvl ...</div></div><div class="wallet">Connect Wallet</div></div>
+
 <div class="page active" id="page-mine">
 <div class="assets-wrap">
 <div class="assets-pill"><div class="assets-value" id="assetsValue">Chargement...</div></div>
@@ -67,9 +68,25 @@ body{background:#000;display:flex;justify-content:center}
 <button class="claim" id="claimBtn">CLAIM</button>
 </div>
 </div>
+
 <div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS • 1000 MAX</div><div class="miners-sub" id="minersSub">Chargement...</div></div><div id="minersList"></div></div>
+
 <div class="page" id="page-tasks"><div class="miners-title">TASKS</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt...</div></div>
-<div class="page" id="page-friends"><div class="miners-title">FRIENDS</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt...</div></div>
+
+<!-- PAGE FRIENDS AUTOMATIQUE -->
+<div class="page" id="page-friends">
+  <div class="miners-head">
+    <div class="miners-title">FRIENDS • AUTO</div>
+    <div class="miners-sub" id="friendsSub">Chargement amis...</div>
+    <button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS</button>
+    <div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px;align-items:center">
+      <input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="Chargement...">
+      <button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button>
+    </div>
+  </div>
+  <div id="friendsList"></div>
+</div>
+
 </div>
 <div class="bottom">
 <div class="nav active" data-page="mine"><b>⛏️</b>Mine</div>
@@ -78,12 +95,14 @@ body{background:#000;display:flex;justify-content:center}
 <div class="nav" data-page="friends"><b>👥</b>Friends</div>
 </div>
 </div>
+
 <script>
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
   document.querySelector(`.nav[data-page="${name}"]`).classList.add('active');
+  if(name==='friends') loadFriends();
 }
 document.querySelectorAll('.nav').forEach(nav=>{nav.addEventListener('click',()=>showPage(nav.dataset.page));});
 
@@ -94,117 +113,67 @@ let tg=window.Telegram?.WebApp;
 let uid=tg?.initDataUnsafe?.user?.id+""||localStorage.getItem('uid')||'12345';
 localStorage.setItem('uid',uid);
 
-let balanceCoins=0;
-let balanceHRD=0;
-let mining=0;
-let progress=0;
-let currentLvl=1;
-let loaded=false;
-
+let balanceCoins=0;let balanceHRD=0;let mining=0;let progress=0;let currentLvl=1;let loaded=false;
 const circle=document.getElementById('progressCircle');
 const assetsValue=document.getElementById('assetsValue');
 const miningPlus=document.getElementById('miningPlus');
 const powerFill=document.getElementById('powerFill');
 const btn=document.getElementById('claimBtn');
-const circ=2*Math.PI*35;
-circle.style.strokeDasharray=circ;
-circle.style.strokeDashoffset=circ;
+const circ=2*Math.PI*35;circle.style.strokeDasharray=circ;circle.style.strokeDashoffset=circ;
 
 function updateUI(){
-  if(balanceCoins>0){
-    assetsValue.innerHTML=balanceCoins.toLocaleString()+" coins<br><span style='font-size:10px;opacity:0.8'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";
-  }else{
-    assetsValue.innerHTML="0 coins<br><span style='font-size:10px'>0,0000 HRD</span>";
-  }
-  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";
-  powerFill.style.width=progress+"%";
-  circle.style.strokeDashoffset=circ-(circ*progress/100);
-  btn.textContent=progress>=100?"CLAIM READY":"CLAIM";
+  if(balanceCoins>0){assetsValue.innerHTML=balanceCoins.toLocaleString()+" coins<br><span style='font-size:10px;opacity:0.8'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";}
+  else{assetsValue.innerHTML="0 coins<br><span style='font-size:10px'>0,0000 HRD</span>";}
+  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";
+  circle.style.strokeDashoffset=circ-(circ*progress/100);btn.textContent=progress>=100?"CLAIM READY":"CLAIM";
   document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;
   document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • "+balanceCoins.toLocaleString()+" coins";
 }
 
 async function loadBalance(){
   try{
+    // Récupère balance + capture parrain si vient d'un lien
+    let startParam = tg?.initDataUnsafe?.start_param;
+    if(startParam && !localStorage.getItem('referred')){
+      let refId = parseInt(startParam);
+      if(refId && refId !== parseInt(uid)){
+        await supa.from('harold_users').upsert({id: parseInt(uid), referred_by: refId, balance: 0}, {onConflict:'id'});
+        localStorage.setItem('referred', refId);
+      }
+    }
     let {data}=await supa.from('harold_users').select('balance').eq('id',parseInt(uid)).single();
     if(data && data.balance){
-      balanceCoins=data.balance;
-      balanceHRD=balanceCoins/1000000;
-      if(balanceCoins<=161600){
-        currentLvl=Math.floor((balanceCoins-8000)/800)+8;
-        if(currentLvl<1) currentLvl=1;
-      }else{
-        currentLvl=200+Math.floor((balanceCoins-161600)/1100);
-      }
+      balanceCoins=data.balance;balanceHRD=balanceCoins/1000000;
+      if(balanceCoins<=161600){currentLvl=Math.floor((balanceCoins-8000)/800)+8;if(currentLvl<1) currentLvl=1;}
+      else{currentLvl=200+Math.floor((balanceCoins-161600)/1100);}
       if(currentLvl>1000) currentLvl=1000;
     }
-    loaded=true;
-    updateUI();
-    renderMiners();
-    saveBalance();
-  }catch(e){
-    loaded=true;
-    updateUI();
-    renderMiners();
-  }
+    loaded=true;updateUI();renderMiners();saveBalance();
+    document.getElementById('inviteLink').value = "https://t.me/Haroldcoin_bot?start=" + uid;
+  }catch(e){loaded=true;updateUI();renderMiners();document.getElementById('inviteLink').value = "https://t.me/Haroldcoin_bot?start=" + uid;}
 }
-
-async function saveBalance(){
-  if(!loaded) return;
-  try{
-    await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,last_seen:new Date().toISOString()},{onConflict:'id'});
-  }catch(e){}
-}
+async function saveBalance(){if(!loaded) return;try{await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e){}}
 
 let iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
-
 btn.addEventListener('click',()=>{
   if(progress>=100){
-    balanceHRD+=mining;
-    balanceCoins=Math.floor(balanceHRD*1000000);
-    mining=0;
-    progress=0;
-    if(balanceCoins<=161600){
-      let nl=Math.floor((balanceCoins-8000)/800)+8;
-      if(nl>currentLvl) currentLvl=nl;
-    }else{
-      let nl=200+Math.floor((balanceCoins-161600)/1100);
-      if(nl>currentLvl) currentLvl=nl;
-    }
-    if(currentLvl>1000) currentLvl=1000;
-    updateUI();
-    renderMiners();
-    saveBalance();
+    balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);mining=0;progress=0;
+    if(balanceCoins<=161600){let nl=Math.floor((balanceCoins-8000)/800)+8;if(nl>currentLvl) currentLvl=nl;}
+    else{let nl=200+Math.floor((balanceCoins-161600)/1100);if(nl>currentLvl) currentLvl=nl;}
+    if(currentLvl>1000) currentLvl=1000;updateUI();renderMiners();saveBalance();
     iv=setInterval(()=>{if(progress<100){progress+=0.6;mining+=0.00003;updateUI();}else{clearInterval(iv);updateUI();}},100);
   }
 });
-
 function getMinerData(lvl){
-  let price,hrd,hold,speed;
   if(lvl===1) return {price:'0$',hrd:0,hold:0,speed:0.20};
   if(lvl===2) return {price:'0.317$',hrd:317,hold:1000,speed:0.21};
-  if(lvl<=200){
-    price=(0.42+(lvl-8)*0.015).toFixed(3)+'$';
-    hrd=4200+(lvl-8)*120;
-    hold=8000+(lvl-8)*800;
-    speed=(0.20+(lvl-1)*0.015).toFixed(2);
-    return {price,hrd,hold,speed:parseFloat(speed)};
-  }else{
-    let extra=lvl-200;
-    price=(3.30+extra*0.02).toFixed(3)+'$';
-    hrd=27250+extra*120;
-    hold=161600+extra*1100;
-    speed=(3.19+extra*0.02).toFixed(2);
-    return {price,hrd,hold,speed:parseFloat(speed)};
-  }
+  if(lvl<=200){let p=(0.42+(lvl-8)*0.015).toFixed(3)+'$';let h=4200+(lvl-8)*120;let ho=8000+(lvl-8)*800;let s=(0.20+(lvl-1)*0.015).toFixed(2);return {price:p,hrd:h,hold:ho,speed:parseFloat(s)};}
+  else{let e=lvl-200;let p=(3.30+e*0.02).toFixed(3)+'$';let h=27250+e*120;let ho=161600+e*1100;let s=(3.19+e*0.02).toFixed(2);return {price:p,hrd:h,hold:ho,speed:parseFloat(s)};}
 }
-
 function renderMiners(){
-  const list=document.getElementById('minersList');
-  let html='';
+  const list=document.getElementById('minersList');let html='';
   for(let lvl=1;lvl<=1000;lvl++){
-    let data=getMinerData(lvl);
-    let btnClass,btnText;
+    let data=getMinerData(lvl);let btnClass,btnText;
     if(lvl<currentLvl){btnClass='btn-active';btnText='ACTIVE';}
     else if(lvl===currentLvl){btnClass='btn-max';btnText='ACTUEL';}
     else if(balanceCoins>=data.hold){btnClass='btn-need';btnText='MONTER LVL '+lvl;}
@@ -215,15 +184,36 @@ function renderMiners(){
   }
   list.innerHTML=html;
 }
+function buyLevel(lvl,hold){if(balanceCoins<hold) return;if(lvl<=currentLvl) return;currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 
-function buyLevel(lvl,hold){
-  if(balanceCoins<hold) return;
-  if(lvl<=currentLvl) return;
-  currentLvl=lvl;
-  updateUI();
-  renderMiners();
-  saveBalance();
+// ===== FRIENDS AUTOMATIQUE =====
+async function loadFriends(){
+  try{
+    document.getElementById('inviteLink').value = "https://t.me/Haroldcoin_bot?start=" + uid;
+    let {data, error} = await supa.from('harold_users').select('id,balance').eq('referred_by', parseInt(uid));
+    if(error) throw error;
+    let friends = data || [];
+    document.getElementById('friendsSub').textContent = friends.length + " amis • Bonus: " + (friends.length*10) + "% • Lien prêt";
+    let list = document.getElementById('friendsList');
+    if(friends.length===0){
+      list.innerHTML='<div style="color:#666;text-align:center;margin-top:30px">Aucun ami encore<br><br>Partage ton lien pour gagner<br>10% de leurs gains automatiquement!</div>';
+      return;
+    }
+    let html='';friends.forEach(f=>{
+      let c=f.balance||0;let h=(c/1000000).toFixed(4);
+      html+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ID ${f.id}</div><div class="miner-price" style="color:#fff">${c.toLocaleString()} coins</div><div class="miner-hold">${h} HRD • HOLD</div><div class="miner-speed" style="color:#00ff88">+10% bonus pour toi</div></div><button class="miner-btn btn-active">ACTIF</button></div>`;
+    });
+    list.innerHTML=html;
+  }catch(e){
+    document.getElementById('friendsSub').textContent = "0 amis • Invite pour bonus";
+    document.getElementById('friendsList').innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Crée la colonne referred_by dans Supabase</div>';
+  }
 }
+function copyLink(){
+  let input=document.getElementById('inviteLink');input.select();
+  navigator.clipboard.writeText(input.value).then(()=>{alert('Lien copié mon cher! ✅ '+input.value);});
+}
+document.getElementById('inviteBtn')?.addEventListener('click', copyLink);
 
 loadBalance();
 if(tg){tg.ready();tg.expand();}
