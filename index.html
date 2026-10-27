@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin MAX 1000 + FRIENDS AUTO</title>
+<title>Haroldcoin 5 sur 13</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -73,11 +73,10 @@ body{background:#000;display:flex;justify-content:center}
 
 <div class="page" id="page-tasks"><div class="miners-title">TASKS</div><div style="color:#666;text-align:center;margin-top:50px">Bientôt...</div></div>
 
-<!-- PAGE FRIENDS AUTOMATIQUE -->
 <div class="page" id="page-friends">
   <div class="miners-head">
     <div class="miners-title">FRIENDS • AUTO</div>
-    <div class="miners-sub" id="friendsSub">Chargement amis...</div>
+    <div class="miners-sub" id="friendsSub">Chargement...</div>
     <button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS</button>
     <div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px;align-items:center">
       <input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="Chargement...">
@@ -132,7 +131,6 @@ function updateUI(){
 
 async function loadBalance(){
   try{
-    // Récupère balance + capture parrain si vient d'un lien
     let startParam = tg?.initDataUnsafe?.start_param;
     if(startParam && !localStorage.getItem('referred')){
       let refId = parseInt(startParam);
@@ -186,32 +184,39 @@ function renderMiners(){
 }
 function buyLevel(lvl,hold){if(balanceCoins<hold) return;if(lvl<=currentLvl) return;currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 
-// ===== FRIENDS AUTOMATIQUE =====
+// ===== FRIENDS + TOTAL USERS =====
 async function loadFriends(){
   try{
     document.getElementById('inviteLink').value = "https://t.me/Haroldcoin_bot?start=" + uid;
-    let {data, error} = await supa.from('harold_users').select('id,balance').eq('referred_by', parseInt(uid));
-    if(error) throw error;
-    let friends = data || [];
-    document.getElementById('friendsSub').textContent = friends.length + " amis • Bonus: " + (friends.length*10) + "% • Lien prêt";
+    // Tes filleuls
+    let {data: friends} = await supa.from('harold_users').select('id,balance').eq('referred_by', parseInt(uid));
+    // Total communauté
+    let {count: totalUsers} = await supa.from('harold_users').select('*', {count:'exact', head:true});
+    
+    friends = friends || [];
+    totalUsers = totalUsers || 0;
+    
+    document.getElementById('friendsSub').textContent = friends.length + " amis (sur "+totalUsers+" utilisateurs) • Bonus: " + (friends.length*10) + "%";
+    
     let list = document.getElementById('friendsList');
     if(friends.length===0){
-      list.innerHTML='<div style="color:#666;text-align:center;margin-top:30px">Aucun ami encore<br><br>Partage ton lien pour gagner<br>10% de leurs gains automatiquement!</div>';
+      list.innerHTML='<div style="color:#666;text-align:center;margin-top:30px">Aucun ami encore<br><span style="font-size:11px;color:#888">Communauté totale: '+totalUsers+' utilisateurs</span><br><br>Partage ton lien!</div>';
       return;
     }
     let html='';friends.forEach(f=>{
       let c=f.balance||0;let h=(c/1000000).toFixed(4);
-      html+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ID ${f.id}</div><div class="miner-price" style="color:#fff">${c.toLocaleString()} coins</div><div class="miner-hold">${h} HRD • HOLD</div><div class="miner-speed" style="color:#00ff88">+10% bonus pour toi</div></div><button class="miner-btn btn-active">ACTIF</button></div>`;
+      html+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ID ${f.id}</div><div class="miner-price" style="color:#fff">${c.toLocaleString()} coins</div><div class="miner-hold">${h} HRD</div><div class="miner-speed" style="color:#00ff88">+10% bonus pour toi</div></div><button class="miner-btn btn-active">ACTIF</button></div>`;
     });
+    html+=`<div style="text-align:center;color:#555;font-size:10px;margin:15px 0">🌍 Communauté: ${totalUsers} utilisateurs • 👥 Tes filleuls: ${friends.length}</div>`;
     list.innerHTML=html;
   }catch(e){
-    document.getElementById('friendsSub').textContent = "0 amis • Invite pour bonus";
-    document.getElementById('friendsList').innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Crée la colonne referred_by dans Supabase</div>';
+    console.log(e);
+    document.getElementById('friendsSub').textContent = "Erreur chargement";
   }
 }
 function copyLink(){
-  let input=document.getElementById('inviteLink');input.select();
-  navigator.clipboard.writeText(input.value).then(()=>{alert('Lien copié mon cher! ✅ '+input.value);});
+  let input=document.getElementById('inviteLink');
+  navigator.clipboard.writeText(input.value).then(()=>{alert('Lien copié mon cher! ✅');});
 }
 document.getElementById('inviteBtn')?.addEventListener('click', copyLink);
 
