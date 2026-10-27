@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V14 BALANCE</title>
+<title>Haroldcoin V15 CLEAN</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -33,8 +33,7 @@ body{background:#000;display:flex;justify-content:center}
 .claim{margin-top:16px;width:100%;height:54px;border:2px solid transparent;border-radius:26px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:2px;cursor:pointer}
 .claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 25px rgba(0,255,136,0.6);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-.timer{color:#ffd700;font-size:12px;font-weight:900;margin-top:6px;font-family:'Orbitron'}
-.badge{background:rgba(0,255,136,0.15);border:1px solid #00ff88;color:#00ff88;padding:4px 10px;border-radius:10px;font-size:10px;font-weight:900;margin-top:6px}
+.timer{color:#ffd700;font-size:14px;font-weight:900;margin-top:10px;font-family:'Orbitron'}
 .bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:rgba(5,10,20,0.98);border-top:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
 .nav{flex:1;height:62px;background:linear-gradient(145deg,#1e2535,#151a28);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer}
 .nav.active{background:linear-gradient(145deg,#2a2215,#1f1a0f);border:1.5px solid #ffd700;color:#ffd700}
@@ -65,8 +64,7 @@ body{background:#000;display:flex;justify-content:center}
 <img class="coin" src="coin.png" onerror="this.src='https://i.imgur.com/3b9yZqH.png'">
 </div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
-<div class="timer" id="timer">4:00:00 restant</div>
-<div class="badge" id="autoBadge">⛏️ SUPABASE 4H + BALANCE</div>
+<div class="timer" id="timer">03:14:14 restant</div>
 <button class="claim" id="claimBtn">MINING...</button>
 </div>
 </div>
@@ -102,7 +100,7 @@ function updateUI(){
   assetsValue.innerHTML=balanceCoins.toLocaleString()+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";
   miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";circle.style.strokeDashoffset=circ-(circ*progress/100);
   let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);
-  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');document.getElementById('autoBadge').textContent="✅ 4H FINI - CLIQUE CLAIM!";}else{btn.textContent="MINING...";btn.classList.remove('ready');document.getElementById('autoBadge').textContent=`⛏️ SUPABASE 4H - ${progress.toFixed(1)}%`;}
+  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');}else{btn.textContent="MINING...";btn.classList.remove('ready');}
   document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • "+balanceCoins.toLocaleString();
 }
 async function saveBalance(){
@@ -167,9 +165,7 @@ btn.addEventListener('click',async()=>{
         let bonusCoins=Math.floor(claimedMining*0.1*1000000);
         if(bonusCoins>0){
           let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',me.referred_by).single();
-          if(parrain){
-            await supa.from('harold_users').update({balance:(parrain.balance||0)+bonusCoins}).eq('id',me.referred_by);
-          }
+          if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+bonusCoins}).eq('id',me.referred_by);}
         }
       }
     }catch(e){console.log("bonus error",e);}
@@ -181,14 +177,14 @@ async function loadFriends(){
     document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
     let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));
     let {count:t}=await supa.from('harold_users').select('*',{count:'exact',head:true});
-    f=f||[];t=t||0;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users • Balance réelle";
-    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users • BALANCE • ${new Date().toLocaleTimeString()}`;}
+    f=f||[];t=t||0;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users";
+    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users • ${new Date().toLocaleTimeString()}`;}
     let list=document.getElementById('friendsList');
     if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';return;}
     let h='';f.forEach(u=>{
       let coins = u.balance || u.max_balance || 0;
       let hrd = (coins/1000000).toFixed(4);
-      h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${coins.toLocaleString()} coins • ${hrd} HRD</div><div class="miner-hold">VRAIE balance sauvegardée</div></div><button class="miner-btn btn-active">+10%</button></div>`;
+      h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${coins.toLocaleString()} coins • ${hrd} HRD</div><div class="miner-hold">Balance réelle</div></div><button class="miner-btn btn-active">+10%</button></div>`;
     });list.innerHTML=h;
   }catch(e){console.log(e);}
 }
