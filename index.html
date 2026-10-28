@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V20 FIX PHOTO + CLAIM UP</title>
+<title>Haroldcoin V25 FIXE</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,22 +12,17 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center}
-.app{width:100%;max-width:400px;height:100vh;background:#0a0a0a url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
-/* FIX FOND si bg.jpg n'existe pas -> degrade doré + chart */
-.app::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%, rgba(255,215,0,0.22) 0%, rgba(20,15,0,0.85) 60%, #000 85%);pointer-events:none;z-index:1}
-.app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
-@keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:8px 8px 120px;overflow-y:auto;overflow-x:hidden}
+.app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
+.app::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, rgba(255,215,0,0.18) 0%, rgba(0,0,0,0.88) 70%);pointer-events:none;z-index:1}
+.app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(1px 1px at 20px 30px, rgba(255,215,0,0.6), transparent),radial-gradient(1px 1px at 80px 90px, #fff, transparent);background-size:250px 250px;opacity:0.5;pointer-events:none;z-index:1}
+.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:8px 8px 125px;overflow-y:auto;overflow-x:hidden}
 .top{display:flex;justify-content:space-between;align-items:flex-start;background:rgba(8,12,20,0.92);border:1px solid rgba(212,175,55,0.28);border-radius:16px;padding:10px;flex-shrink:0}
 .top-left{display:flex;align-items:flex-start;gap:8px;flex:1;min-width:0}
 .top-right{display:flex;flex-direction:column;gap:7px;align-items:flex-end;flex-shrink:0}
 .lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px;display:inline-flex}
 .cert-btn{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#3db8ff,#0066ff);color:#fff;padding:6px 12px;border-radius:12px;font-size:10px;font-weight:900;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(0,102,255,0.45);min-width:68px;line-height:1.1}
 .sync-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.15);border:1px solid #ffd700;color:#ffd700;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900;letter-spacing:0.5px;box-shadow:0 0 12px rgba(255,215,0,0.3);margin-top:6px}
-.sync-dot{width:8px;height:8px;background:#ffd700;border-radius:50%;box-shadow:0 0 8px #ffd700;animation:syncBlink 0.8s infinite}
-@keyframes syncBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
-.sync-pill.saving{background:rgba(0,255,136,0.15);border-color:#00ff88;color:#00ff88}
-.sync-pill.saving .sync-dot{background:#00ff88;box-shadow:0 0 8px #00ff88}
+.sync-dot{width:8px;height:8px;background:#ffd700;border-radius:50%;box-shadow:0 0 8px #ffd700}
 .left-pill{margin-top:6px;display:inline-flex;background:rgba(0,255,100,0.12);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:4px 10px;border-radius:12px;font-size:9px;font-weight:800;line-height:1.2}
 .wallet{background:#2CA5E0;color:#fff;border:none;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:7px;min-width:125px;box-shadow:0 4px 18px rgba(44,165,224,0.5);line-height:1.15;text-align:center;cursor:pointer}
 .assets-wrap{margin-top:12px;display:flex;justify-content:space-between;gap:8px;flex-shrink:0}
@@ -35,21 +30,19 @@ body{background:#000;display:flex;justify-content:center}
 .assets-value{font-family:'Inter';font-size:12px;font-weight:900;color:#000;line-height:1.2}
 .mining-plus{background:rgba(0,0,0,0.8);border:1.5px solid #00ff88;border-radius:16px;padding:6px 10px;flex:1}
 .mining-plus b{font-size:12px;color:#00ff88}
-.center{flex:1;display:flex;flex-direction:column;align-items:center;margin-top:10px;padding-bottom:15px}
-.coin-wrap{position:relative;width:135px;height:135px;display:flex;align-items:center;justify-content:center}
-.mining-circle{position:absolute;width:135px;height:135px;transform:rotate(-90deg)}
-.track{stroke:rgba(255,215,0,0.18);stroke-width:6;fill:none}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;margin-top:8px;padding-bottom:5px}
+/* LOGO FIXE - NE BOUGE PLUS */
+.coin-wrap{position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center;background:transparent}
+.mining-circle{position:absolute;width:140px;height:140px;transform:rotate(-90deg);background:transparent}
+.track{stroke:rgba(255,215,0,0.15);stroke-width:6;fill:none}
 .progress{stroke:#FFD700;stroke-width:6;fill:none;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:251;transition:stroke-dashoffset 1s}
-/* FIX PHOTO: enleve le clip-path 34% qui cachait tout! */
-.coin{width:92px;height:92px;border-radius:50%;object-fit:cover;display:block;border:2.5px solid #ffd700;background:radial-gradient(circle,#ffec8b,#d4af37);box-shadow:0 0 22px #d4af37}
-.power-bar{margin-top:16px;width:100%;height:36px;background:rgba(0,0,0,0.9);border:1.5px solid rgba(0,229,255,0.35);border-radius:20px;display:flex;align-items:center;padding:3px 6px 3px 46px;position:relative}
+.coin{width:92px;height:92px;border-radius:50%;object-fit:cover;display:block;background:transparent;border:none;filter:brightness(1.25) drop-shadow(0 0 18px #d4af37)}
+.power-bar{margin-top:14px;width:100%;height:36px;background:rgba(0,0,0,0.9);border:1.5px solid rgba(0,229,255,0.35);border-radius:20px;display:flex;align-items:center;padding:3px 6px 3px 46px;position:relative}
 .power-fill{height:12px;background:linear-gradient(90deg,#00e5ff,#ffaa55);border-radius:12px;width:0%;transition:width 1s}
 .power-icon{position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:42px;height:36px;background:linear-gradient(135deg,#00e5ff,#ff8c00);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px}
-/* FIX CLAIM BARRE MONTEE */
-.claim{margin-top:12px;width:100%;height:56px;border:2px solid transparent;border-radius:26px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:2px;cursor:pointer;transform:translateY(-18px);margin-bottom:25px;position:relative;z-index:20;box-shadow:0 6px 20px rgba(0,229,255,0.25)}
-.claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 25px rgba(0,255,136,0.6);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{transform:translateY(-18px) scale(1)}50%{transform:translateY(-18px) scale(1.03)}}
-.timer{color:#ffd700;font-size:14px;font-weight:900;margin-top:8px;font-family:'Orbitron'}
+.claim{margin-top:10px;width:100%;height:58px;border:2.5px solid transparent;border-radius:28px;background:linear-gradient(#0a0a14,#0a0a14) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:2px;cursor:pointer;transform:translateY(-20px);margin-bottom:30px;position:relative;z-index:20;box-shadow:0 6px 22px rgba(0,229,255,0.28)}
+.claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 28px rgba(0,255,136,0.65)}
+.timer{color:#ffd700;font-size:14px;font-weight:900;margin-top:6px;font-family:'Orbitron'}
 .bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:rgba(5,10,20,0.98);border-top:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
 .nav{flex:1;height:62px;background:linear-gradient(145deg,#1e2535,#151a28);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer}
 .nav.active{background:linear-gradient(145deg,#2a2215,#1f1a0f);border:1.5px solid #ffd700;color:#ffd700}
@@ -94,13 +87,13 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="top-right">
 <div class="cert-btn" onclick="openCert()"><span>📜</span><span>CERT</span></div>
-<div class="wallet"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 6L12 22L22 6L12 2Z" stroke="white" stroke-width="1.5" fill="white" opacity="0.9"/><path d="M2 6L12 10L22 6" stroke="#2CA5E0" stroke-width="1.5"/></svg><div>Connect<br>Wallet</div></div>
+<div class="wallet"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 6L12 22L22 6L12 2Z" fill="white"/><path d="M2 6L12 10L22 6" stroke="#2CA5E0" stroke-width="1.5"/></svg><div>Connect<br>Wallet</div></div>
 </div>
 </div>
 <div class="page active" id="page-mine">
 <div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div><div class="mining-plus"><div style="font-size:8px;color:#fff">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div>
 <div class="center">
-<div class="coin-wrap"><svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg><img class="coin" id="coinImg" src="coin.png" alt="HRD"></div>
+<div class="coin-wrap"><svg class="mining-circle" viewBox="0 0 140 140"><circle class="track" cx="72.5" cy="72.5" r="40"></circle><circle class="progress" id="progressCircle" cx="72.5" cy="72.5" r="40"></circle></svg><img class="coin" id="coinImg" src="coin.png" alt="HRD"></div>
 <div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div>
 <div class="timer" id="timer">03:59:59 restant</div>
 <button class="claim" id="claimBtn">MINING...</button>
@@ -112,7 +105,6 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
-
 <div class="cert-modal" id="certModal" onclick="if(event.target==this)closeCert()">
 <div class="cert-card" id="certCard">
 <div style="text-align:center;color:#00e5ff;font-family:'Orbitron';font-size:10px;letter-spacing:3px">MINER CERTIFICATE</div>
@@ -126,7 +118,6 @@ body{background:#000;display:flex;justify-content:center}
 <div style="height:10px"></div>
 </div>
 </div>
-
 <script>
 function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector(`.nav[data-page="${n}"]`).classList.add('active');if(n==='friends')loadFriends();if(n==='tasks')renderTasks();}
 document.querySelectorAll('.nav').forEach(nav=>{nav.addEventListener('click',()=>showPage(nav.dataset.page));});
@@ -202,20 +193,19 @@ async function saveCert(){
   const b=document.getElementById('saveBtn');b.textContent='⏳ GENERATION...';
   try{const c=await html2canvas(document.getElementById('certCard'),{backgroundColor:null,scale:3,useCORS:false});const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='HRD-Cert-Lvl'+currentLvl+'.png';document.body.appendChild(a);a.click();document.body.removeChild(a);b.textContent='✅ SAUVEGARDÉ!';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);}catch(e){b.textContent='❌ ERREUR';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);}
 }
-// FIX PHOTO SUPPLEMENTAIRE
 const coinEl=document.getElementById('coinImg');
 coinEl.addEventListener('error',function(){
-  if(this.dataset.tried!=='1'){
-    this.dataset.tried='1';
-    this.src='https://i.imgur.com/3b9yZqH.png';
-  }else{
-    // Si toujours pas, on fait une piece CSS
-    this.style.display='none';
-    let d=document.createElement('div');
-    d.style.cssText='width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #ffec8b, #d4af37 40%, #8b6914 80%);border:3px solid #ffd700;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;color:#000;font-size:24px;box-shadow:0 0 25px #ffd700';
-    d.textContent='HRD';
-    this.parentNode.appendChild(d);
-  }
+  this.onerror=null;
+  this.src='https://i.imgur.com/8Km9tLL.png';
+  setTimeout(()=>{
+    if(!this.complete || this.naturalWidth===0){
+      this.style.display='none';
+      let d=document.createElement('div');
+      d.style.cssText='width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #ffec8b, #d4af37 45%, #8b6914 85%);border:3px solid #ffd700;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;color:#000;font-size:22px;box-shadow:0 0 28px #ffd700';
+      d.textContent='HRD';
+      this.parentNode.appendChild(d);
+    }
+  },800);
 });
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
