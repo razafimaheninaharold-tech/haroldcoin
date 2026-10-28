@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V19 SYNC</title>
+<title>Haroldcoin V19 SYNC - NO BLACK FRAME</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,7 +18,8 @@ body{background:#000;display:flex;justify-content:center}
 .app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
 @keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:rgba(5,15,25,0.85);border:1px solid rgba(212,175,55,0.25);border-radius:14px;padding:10px}
+/* MODIF 1: ENLEVE CADRE NOIR HAUT */
+.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:transparent;border:none;border-radius:14px;padding:10px}
 .lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px}
 .cert-tab{margin-left:8px;margin-top:2px;background:linear-gradient(90deg,#00e5ff,#0080ff);color:#fff;padding:4px 9px;border-radius:8px;font-size:9px;font-weight:900;cursor:pointer;border:1px solid #00e5ff;animation:certPulse 1.5s infinite}
 @keyframes certPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,0.6)}50%{box-shadow:0 0 0 6px rgba(0,229,255,0)}}
@@ -47,7 +48,8 @@ body{background:#000;display:flex;justify-content:center}
 .claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 25px rgba(0,255,136,0.6);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 .timer{color:#ffd700;font-size:14px;font-weight:900;margin-top:10px;font-family:'Orbitron'}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:rgba(5,10,20,0.98);border-top:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
+/* MODIF 2: ENLEVE CADRE NOIR BAS */
+.bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:transparent;border:none;display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
 .nav{flex:1;height:62px;background:linear-gradient(145deg,#1e2535,#151a28);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer}
 .nav.active{background:linear-gradient(145deg,#2a2215,#1f1a0f);border:1.5px solid #ffd700;color:#ffd700}
 .nav b{font-size:20px}
