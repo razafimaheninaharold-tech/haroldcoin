@@ -135,6 +135,8 @@ async function saveBalance(){
     const payload={id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,wallet_address:walletAddress,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()};
     let {error}=await supa.from('harold_users').upsert(payload,{onConflict:'id'});
     if(error) console.error(error);
+    // Also sync to public.users score
+    try{ await supa.from('users').upsert({telegram_id:parseInt(uid),username:currentUserName,score:balanceCoins,energy:1000},{onConflict:'telegram_id'}); }catch(e){}
     if(pill){ setTimeout(()=>{ pill.classList.remove('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC OK'; setTimeout(()=>pill.innerHTML='<span class="sync-dot"></span> SYNC',2000); },600); }
   }catch(e){ if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } }
 }
@@ -142,7 +144,22 @@ async function loadBalance(){
   walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null; updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
   try{
-    let startParam=tg?.initDataUnsafe?.start_param;if(startParam){let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single();if(!existing || !existing.referred_by){await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);}}catch(e){}}}}
+    // === FIX REFERRAL V23 : Sauve dans les 2 tables ===
+    let startParam=tg?.initDataUnsafe?.start_param;
+    if(startParam){
+      let refId=parseInt(startParam);
+      if(refId && refId!==parseInt(uid)){
+        let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single();
+        if(!existing || !existing.referred_by){
+          // Save in harold_users
+          await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});
+          // Save in public.users aussi
+          try{ await supa.from('users').upsert({telegram_id:parseInt(uid),username:currentUserName,score:5000,referred_by:refId},{onConflict:'telegram_id'}); }catch(e){ try{ await supa.from('users').update({referred_by:refId}).eq('telegram_id',parseInt(uid)); }catch(e2){} }
+          // Bonus parrain 10k
+          try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);} let {data:parrain2}=await supa.from('users').select('score').eq('telegram_id',refId).single(); if(parrain2){ await supa.from('users').update({score:(parrain2.score||0)+10000}).eq('telegram_id',refId); } }catch(e){}
+        }
+      }
+    }
     let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
     if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);if(data.wallet_address){ walletAddress=data.wallet_address; localStorage.setItem('hrd_wallet_'+uid, walletAddress); updateWalletUI(); }try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){ miningStartTime=new Date(data.mining_start).getTime(); }else{ miningStartTime=Date.now(); }if(data.mining_amount) mining=parseFloat(data.mining_amount)||0;}else{ miningStartTime=Date.now(); }
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
@@ -169,7 +186,7 @@ async function loadFriends(){
     document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;
     let subEl=document.getElementById('friendsSub'); if(subEl) subEl.textContent="Chargement...";
     let {data:f, error}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));
-    if(error){ if(subEl) subEl.textContent="Erreur"; return; }
+    if(error){ if(subEl) subEl.textContent="Erreur: "+error.message; return; }
     f=f||[]; friendsCount=f.length;
     if(subEl){ if(f.length===0) subEl.textContent="0 ami • Invite!"; else subEl.textContent=f.length+" amis • +"+(f.length*10)+"% bonus total"; }
     let list=document.getElementById('friendsList');
@@ -177,7 +194,7 @@ async function loadFriends(){
     let h=''; f.forEach(u=>{ let coins=u.balance||0; let hrd=(coins/1000000).toFixed(4); let name=u.first_name||`AMI ${u.id}`; let avatar=u.photo_url?`<img src="${u.photo_url}" style="width:100%;height:100%;object-fit:cover">`:`👤`; h+=`<div class="miner-card"><div class="miner-icon">${avatar}</div><div class="miner-info"><div class="miner-lvl">${name}</div><div style="font-size:12px;color:#00ff88;font-weight:900">${coins.toLocaleString("en-US")} coins</div><div style="font-size:10px;color:#aaa">${hrd} HRD • LVL ${getLevelFromBalance(coins)}</div></div><button class="miner-btn btn-active">+10%</button></div>`; }); list.innerHTML=h; renderTasks();
   }catch(e){ let subEl=document.getElementById('friendsSub'); if(subEl) subEl.textContent=friendsCount+" amis"; }
 }
-function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value);}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value); alert('Lien copié: '+document.getElementById('inviteLink').value);}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
 let qr=null;
 function openCert(){document.getElementById('certLevel').textContent='LEVEL '+currentLvl;document.getElementById('certName').textContent=currentUserName||'Player';document.getElementById('certHRD').textContent='+'+balanceHRD.toFixed(4)+' HRD';document.getElementById('certSerial').textContent='SERIAL: HRD-'+String(currentLvl).padStart(4,'0')+'-'+String(parseInt(uid)).slice(-4);document.getElementById('certDate').textContent='ISSUED • '+new Date().toISOString().slice(0,10);let link="https://t.me/Haroldcoin_bot?start="+uid;if(!qr){qr=new QRious({element:document.getElementById('qrCanvas'),size:200,level:'H',background:'#fff',foreground:'#000'});}qr.set({value:link});document.getElementById('certModal').classList.add('show');}
