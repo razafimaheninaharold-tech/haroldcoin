@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V16.4</title>
+<title>Haroldcoin </title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,7 +12,7 @@
 body{background:#000;display:flex;justify-content:center}
 .app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
 .app::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%, rgba(255,215,0,0.22) 0%, transparent 35%),radial-gradient(circle at 70% 70%, rgba(0,229,255,0.18) 0%, transparent 35%);animation:galaxyMove 8s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes galaxyMove{0%{transform:rotate(0deg) translate(0,0) scale(1)}50%{transform:rotate(-1deg) translate(-15px,15px) scale(1.1)}100%{transform:rotate(0deg) translate(0,0) scale(1)}}
+@keyframes galaxyMove{0%{transform:rotate(0deg)}50%{transform:rotate(-1deg) translate(-15px,15px) scale(1.1)}100%{transform:rotate(0deg)}}
 .app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
 @keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
@@ -85,8 +85,8 @@ const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
 const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
 const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let tg=window.Telegram?.WebApp;
-let uid=tg?.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : (localStorage.getItem('uid') || '2120736139');
-localStorage.setItem('uid',uid);
+// 100% DATABASE - PAS DE LOCALSTORAGE
+let uid=tg?.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '2120736139';
 const ADMIN_IDS=['2120736139'];
 function isAdmin(){return ADMIN_IDS.includes(String(uid));}
 const MINING_DURATION=4*60*60*1000;
@@ -119,7 +119,16 @@ async function saveBalance(){ if(!loaded)return; try{await supa.from('harold_use
 async function loadBalance(){
   try{
     let startParam=tg?.initDataUnsafe?.start_param;
-    if(startParam && !localStorage.getItem('referred')){ let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){ await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:0,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",last_seen:new Date().toISOString()},{onConflict:'id'}); localStorage.setItem('referred',refId); } }
+    // Verification referral directement en DB, pas en localStorage
+    if(startParam){
+      let refId=parseInt(startParam);
+      if(refId && refId!==parseInt(uid)){
+        let {data:existing}=await supa.from('harold_users').select('referred_by').eq('id',parseInt(uid)).single();
+        if(!existing || !existing.referred_by){
+          await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:0,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});
+        }
+      }
+    }
     let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
     if(data){ balanceCoins=data.balance||data.max_balance||0; balanceHRD=balanceCoins/1000000; currentLvl=getLevelFromBalance(balanceCoins); try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};} if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();} if(data.mining_amount)mining=parseFloat(data.mining_amount)||0; }else{miningStartTime=Date.now();}
     let elapsed=Date.now()-miningStartTime; if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
@@ -145,13 +154,16 @@ async function loadFriends(){
     let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));
     let {count:t}=await supa.from('harold_users').select('*',{count:'exact',head:true});
     f=f||[];t=t||0;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users";
-    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users`;}
+    if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`SUPABASE: ${t} users - NO LOCAL`;}
     let list=document.getElementById('friendsList'); if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';return;} let h='';f.forEach(u=>{let coins=u.balance||u.max_balance||0;let hrd=(coins/1000000).toFixed(4);h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div class="miner-lvl">AMI ${u.id}</div><div class="miner-price">${coins.toLocaleString()} coins • ${hrd} HRD</div><div class="miner-hold">LVL ${getLevelFromBalance(coins)}</div></div><button class="miner-btn btn-active">+10%</button></div>`;});list.innerHTML=h;
   }catch(e){}
 }
 function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value).then(()=>{if(tg?.showAlert)tg.showAlert('Lien copié ✅')});}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
-async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});localStorage.setItem('harold_backup',JSON.stringify({date:new Date().toISOString(),users:data}));if(tg?.showAlert)tg.showAlert(`SYNC ${count} users ✅`);}
+async function adminSync(){
+  let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});
+  if(tg?.showAlert)tg.showAlert(`SYNC ${count} users ✅ - 100% DB`);
+}
 async function adminBackup(){let {data}=await supa.from('harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));if(tg?.showAlert)tg.showAlert(`JSON ${data.length} copié 📋`);}
 async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,balance,mining_start,mining_amount,referred_by\n'+data.map(u=>`${u.id},${u.balance||0},${u.mining_start||''},${u.mining_amount||0},${u.referred_by||''}`).join('\n');await navigator.clipboard.writeText(csv);if(tg?.showAlert)tg.showAlert(`CSV ${data.length} copié 📊`);}
 loadBalance();if(tg){tg.ready();tg.expand();}
