@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V17.8 CERT FIX</title>
+<title>Haroldcoin V19 SYNC</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,10 +18,16 @@ body{background:#000;display:flex;justify-content:center}
 .app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
 @keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-.top{display:flex;justify-content:space-between;align-items:center;background:rgba(5,15,25,0.85);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:8px 10px}
-.lvl{background:rgba(0,0,0,0.6);border:1px solid #00e5ff;color:#00e5ff;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:900}
-.cert-tab{margin-left:5px;background:linear-gradient(90deg,#00e5ff,#0080ff);color:#fff;padding:4px 9px;border-radius:8px;font-size:9px;font-weight:900;cursor:pointer;border:1px solid #00e5ff;animation:certPulse 1.5s infinite}
+.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:rgba(5,15,25,0.85);border:1px solid rgba(212,175,55,0.25);border-radius:14px;padding:10px}
+.lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px}
+.cert-tab{margin-left:8px;margin-top:2px;background:linear-gradient(90deg,#00e5ff,#0080ff);color:#fff;padding:4px 9px;border-radius:8px;font-size:9px;font-weight:900;cursor:pointer;border:1px solid #00e5ff;animation:certPulse 1.5s infinite}
 @keyframes certPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,0.6)}50%{box-shadow:0 0 0 6px rgba(0,229,255,0)}}
+.sync-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.15);border:1px solid #ffd700;color:#ffd700;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900;letter-spacing:0.5px;box-shadow:0 0 12px rgba(255,215,0,0.3);margin-top:6px}
+.sync-dot{width:8px;height:8px;background:#ffd700;border-radius:50%;box-shadow:0 0 8px #ffd700;animation:syncBlink 0.8s infinite}
+@keyframes syncBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.sync-pill.saving{background:rgba(0,255,136,0.15);border-color:#00ff88;color:#00ff88}
+.sync-pill.saving .sync-dot{background:#00ff88;box-shadow:0 0 8px #00ff88}
+.left-pill{margin-top:6px;display:inline-flex;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
 .wallet{background:rgba(0,0,0,0.6);border:1.5px solid transparent;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;padding:6px 10px;border-radius:16px;font-size:10px;font-weight:600}
 .assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
 .assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px}
@@ -60,7 +66,6 @@ body{background:#000;display:flex;justify-content:center}
 .task-info{flex:1}.task-name{font-size:13px;color:#fff;font-weight:800}.task-reward{font-size:11px;color:#00ff88;font-weight:700;margin-top:2px}
 .task-btn{padding:8px 14px;border-radius:10px;border:none;font-weight:900;font-size:11px;cursor:pointer;min-width:80px}
 .task-btn-go{background:linear-gradient(90deg,#00e5ff,#0080ff);color:#fff}.task-btn-done{background:#00ff88;color:#000}
-/* CERTIFICAT FIX - BIEN PRESENTE SUR MOBILE */
 .cert-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.96);z-index:99999;display:none;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .cert-modal.show{display:flex;align-items:flex-start;justify-content:center;padding:10px 10px 20px}
 .cert-card{width:100%;max-width:360px;background:radial-gradient(circle at 50% 10%, #0a2a4a 0%, #020a14 75%);border:2px solid #00e5ff;border-radius:18px;padding:12px 14px 18px;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,229,255,0.6);margin:10px auto;flex-shrink:0}
@@ -74,17 +79,21 @@ body{background:#000;display:flex;justify-content:center}
 <div class="app">
 <div class="content">
 <div class="top">
-<div style="display:flex;align-items:center;gap:8px">
-<img id="userAvatar" src="" style="width:36px;height:36px;border-radius:50%;border:2px solid #00e5ff;background:#111;object-fit:cover;display:none">
-<div id="userAvatarFallback" style="width:36px;height:36px;border-radius:50%;border:2px solid #00e5ff;background:linear-gradient(135deg,#00e5ff,#ffd700);display:flex;align-items:center;justify-content:center;font-size:16px">👤</div>
-<div style="min-width:0">
-<div id="userName" style="font-family:'Orbitron';font-size:11px;font-weight:900;color:#fff;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px">...</div>
-<div id="userIdDisplay" style="font-size:9px;color:#00e5ff;font-weight:700;margin-top:2px">ID: ...</div>
+<div style="display:flex;align-items:flex-start;gap:8px">
+<img id="userAvatar" src="" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:#111;object-fit:cover;display:none">
+<div id="userAvatarFallback" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:linear-gradient(135deg,#ffd700,#ff8c00);display:flex;align-items:center;justify-content:center;font-size:16px">👤</div>
+<div style="display:flex;flex-direction:column;min-width:0">
+<div id="userName" style="font-family:'Orbitron';font-size:14px;font-weight:900;color:#fff;line-height:1">...</div>
+<div style="display:flex;flex-direction:column;align-items:flex-start">
+<div class="lvl" id="lvlDisplay">👑 Lvl 1</div>
+<div class="sync-pill" id="syncPill"><span class="sync-dot"></span> SYNC</div>
+<div class="left-pill" id="leftToLvl">0.0007$ left to Lvl UP ›</div>
 </div>
-<div class="lvl" id="lvlDisplay">Lvl 1</div>
+<div id="userIdDisplay" style="display:none">ID: ...</div>
+</div>
 <div class="cert-tab" onclick="openCert()">📜 CERT</div>
 </div>
-<div class="wallet">Connect Wallet</div>
+<div class="wallet" style="margin-top:4px">Connect Wallet</div>
 </div>
 <div class="page active" id="page-mine">
 <div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div><div class="mining-plus"><div style="font-size:8px;color:#fff">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div>
@@ -97,7 +106,7 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS</div><div class="miners-sub" id="minersSub">LVL 1/1000</div></div><div id="minersList"></div></div>
 <div class="page" id="page-tasks"><div class="miners-head"><div class="miners-title">TASKS</div><div class="miners-sub" id="tasksSub">7 missions</div></div><div id="tasksList"></div></div>
-<div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div><div id="adminPanel" style="display:none;margin-top:12px;background:linear-gradient(135deg,#1a1a00,#000);border:2px solid #ffd700;border-radius:12px;padding:10px"><div style="color:#ffd700;font-weight:900;font-size:11px;text-align:center">👑 ADMIN</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="adminExport()" style="flex:1;background:#ffd700;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">CSV</button><button onclick="adminBackup()" style="flex:1;background:#00ff88;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">JSON</button><button onclick="adminSync()" style="flex:1;background:#00e5ff;color:#000;border:none;padding:8px;border-radius:8px;font-weight:900;font-size:10px">SYNC</button></div><div id="adminLog" style="margin-top:8px;color:#00ff88;font-size:9px;font-family:monospace;text-align:center"></div></div></div><div id="friendsList"></div></div>
+<div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div></div><div id="friendsList"></div></div>
 </div>
 <div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
@@ -105,22 +114,11 @@ body{background:#000;display:flex;justify-content:center}
 <div class="cert-modal" id="certModal" onclick="if(event.target==this)closeCert()">
 <div class="cert-card" id="certCard">
 <div style="text-align:center;color:#00e5ff;font-family:'Orbitron';font-size:10px;letter-spacing:3px">MINER CERTIFICATE</div>
-<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px">
-<div style="color:#00e5ff;font-weight:900;font-family:'Orbitron';font-size:15px;line-height:1">HRD<br><span style="font-size:9px;color:#88aaff;font-weight:600">Haroldcoin</span></div>
-<div id="certDate" style="color:#00e5ff;font-size:8px;background:rgba(0,229,255,0.15);padding:3px 6px;border-radius:6px">ISSUED • 2026-10-28</div>
-</div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px"><div style="color:#00e5ff;font-weight:900;font-family:'Orbitron';font-size:15px;line-height:1">HRD<br><span style="font-size:9px;color:#88aaff">Haroldcoin</span></div><div id="certDate" style="color:#00e5ff;font-size:8px;background:rgba(0,229,255,0.15);padding:3px 6px;border-radius:6px">ISSUED • 2026-10-28</div></div>
 <div class="hex-wrap"><div class="hex"><div style="text-align:center"><div style="font-size:24px">🔷</div><div style="font-family:'Orbitron';color:#00e5ff;font-weight:900;font-size:18px">HRD</div></div></div></div>
 <div class="cert-level" id="certLevel">LEVEL 48</div>
-<div style="text-align:center;margin-top:4px">
-<div style="color:#00e5ff;font-size:9px;letter-spacing:2px">USERNAME</div>
-<div id="certName" style="color:#fff;font-weight:900;font-size:18px;font-family:'Inter';margin-top:1px">Hugo Mahary</div>
-<div style="color:#aaa;font-size:10px;margin-top:4px">TOTAL HRD MINED <span id="certHRD" style="color:#00e5ff;font-weight:900">+4.1639 HRD</span></div>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:10px 0 0;border-top:1px solid rgba(0,229,255,0.25);gap:8px">
-<div style="flex:1"><div style="color:#00e5ff;font-size:6px;letter-spacing:0.5px;line-height:1.2">VALIDATED • SECURE •<br>BLOCKCHAIN</div><div id="certSerial" style="color:#666;font-size:6px;margin-top:3px">SERIAL: HRD-0048-6139</div></div>
-<canvas id="qrCanvas" class="cert-qr"></canvas>
-<div style="flex:1;text-align:right"><div style="color:#00e5ff;font-size:6px;line-height:1.2">VERIFY ON<br>HAROLDCHAIN</div></div>
-</div>
+<div style="text-align:center;margin-top:4px"><div style="color:#00e5ff;font-size:9px;letter-spacing:2px">USERNAME</div><div id="certName" style="color:#fff;font-weight:900;font-size:18px;font-family:'Inter';margin-top:1px">Hugo Mahary</div><div style="color:#aaa;font-size:10px;margin-top:4px">TOTAL HRD MINED <span id="certHRD" style="color:#00e5ff;font-weight:900">+4.1639 HRD</span></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:10px 0 0;border-top:1px solid rgba(0,229,255,0.25);gap:8px"><div style="flex:1"><div style="color:#00e5ff;font-size:6px;letter-spacing:0.5px;line-height:1.2">VALIDATED • SECURE •<br>BLOCKCHAIN</div><div id="certSerial" style="color:#666;font-size:6px;margin-top:3px">SERIAL: HRD-0048-6139</div></div><canvas id="qrCanvas" class="cert-qr"></canvas><div style="flex:1;text-align:right"><div style="color:#00e5ff;font-size:6px;line-height:1.2">VERIFY ON<br>HAROLDCHAIN</div></div></div>
 <button id="saveBtn" onclick="saveCert()" style="margin-top:12px;width:100%;height:44px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-family:'Orbitron';font-size:13px;cursor:pointer;box-shadow:0 0 15px rgba(0,229,255,0.5)">⬇ SAVE CERTIFICATE</button>
 <button onclick="closeCert()" style="margin-top:8px;width:100%;height:40px;background:rgba(255,255,255,0.08);border:1px solid #444;border-radius:12px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">FERMER</button>
 <div style="height:10px"></div>
@@ -132,7 +130,6 @@ function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.r
 document.querySelectorAll('.nav').forEach(nav=>{nav.addEventListener('click',()=>showPage(nav.dataset.page));});
 const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let tg=window.Telegram?.WebApp;let uid=tg?.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '2120736139';
-const ADMIN_IDS=['2120736139'];function isAdmin(){return ADMIN_IDS.includes(String(uid));}
 const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';
 const circle=document.getElementById('progressCircle'),assetsValue=document.getElementById('assetsValue'),miningPlus=document.getElementById('miningPlus'),powerFill=document.getElementById('powerFill'),btn=document.getElementById('claimBtn'),timerEl=document.getElementById('timer');
 const circ=2*Math.PI*40;circle.style.strokeDasharray=circ;
@@ -141,9 +138,43 @@ function getHold(lvl){if(lvl<=1) return 0; return 1800 * lvl * lvl;}
 function getMinerData(lvl){let hold=getHold(lvl);let speed=0.20 + (lvl-1)*0.02;let hrd4h=speed*0.04*4;let priceValue=hold*0.0000015;if(priceValue<0.001) priceValue=0.001+hold*0.0000008;let price='$'+priceValue.toFixed(3);if(lvl==1) price='$0.001';return {price:price,hold:hold,speed:parseFloat(speed.toFixed(2)),hrd4h:hrd4h};}
 function getLevelFromBalance(bal){if(bal<1800) return 1; let lvl=Math.floor(Math.sqrt(bal/1800)); if(lvl<1) lvl=1; if(lvl>1000) lvl=1000; return lvl;}
 function formatTime(ms){if(ms<=0)return "00:00:00 - CLAIM!";let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} restant`;}
-function updateUI(){assetsValue.innerHTML=balanceCoins.toLocaleString("en-US")+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";circle.style.strokeDashoffset=circ-(circ*progress/100);let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');}else{btn.textContent="MINING...";btn.classList.remove('ready');}document.getElementById('lvlDisplay').textContent="Lvl "+currentLvl;let nextHold=getHold(currentLvl+1);document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US")+" coins";}
-async function saveBalance(){if(!loaded)return; try{await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e){}}
-async function loadBalance(){try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;document.getElementById('userIdDisplay').textContent='ID: '+u.id;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}else{currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;document.getElementById('userIdDisplay').textContent='ID: '+uid;}}catch(e){}try{let startParam=tg?.initDataUnsafe?.start_param;if(startParam){let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single();if(!existing || !existing.referred_by){await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);}}catch(e){}}}}let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;}else{miningStartTime=Date.now();}let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();}catch(e){loaded=true;updateUI();renderMiners();renderTasks();}}
+function updateUI(){
+  assetsValue.innerHTML=balanceCoins.toLocaleString("en-US")+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";
+  miningPlus.textContent="+"+mining.toFixed(4)+" HRD";
+  powerFill.style.width=progress+"%";
+  circle.style.strokeDashoffset=circ-(circ*progress/100);
+  let remain=MINING_DURATION-(Date.now()-miningStartTime);
+  timerEl.textContent=formatTime(remain);
+  if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');}else{btn.textContent="MINING...";btn.classList.remove('ready');}
+  document.getElementById('lvlDisplay').textContent="👑 Lvl "+currentLvl;
+  let nextHold=getHold(currentLvl+1);
+  let needCoins=Math.max(0,nextHold-balanceCoins);
+  let needDollars=needCoins*0.0000015;
+  if(needDollars<0.001) needDollars=0.001+needCoins*0.0000008;
+  let leftEl=document.getElementById('leftToLvl');
+  if(leftEl) leftEl.textContent=needDollars.toFixed(4)+"$ left to Lvl UP  ›";
+  document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US")+" coins";
+}
+async function saveBalance(){
+  if(!loaded) return;
+  const pill=document.getElementById('syncPill');
+  if(pill){ pill.classList.add('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC...'; }
+  try{
+    await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});
+    if(pill){ setTimeout(()=>{ pill.classList.remove('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC'; },800); }
+  }catch(e){ if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } }
+}
+async function loadBalance(){
+  try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
+  try{
+    let startParam=tg?.initDataUnsafe?.start_param;
+    if(startParam){let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single();if(!existing || !existing.referred_by){await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);}}catch(e){}}}}
+    let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
+    if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;}else{miningStartTime=Date.now();}
+    let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
+    loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();
+  }catch(e){loaded=true;updateUI();renderMiners();renderTasks();}
+}
 function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':lvl>=50?'⚡':'🔧';let hl=lvl===currentLvl?'border:2px solid #ffd700':'';html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">HOLD ${d.hold.toLocaleString("en-US")} coins</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${d.hrd4h.toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
 function renderTasks(){let html='';let doneCount=Object.keys(tasksDone).length;TASKS.forEach(t=>{let done=tasksDone[t.id];let extra='';if(t.needRef){extra=` • ${friendsCount}/${t.needRef}`;}html+=`<div class="task-card ${done?'done':''}"><div class="task-icon" style="background:${t.color}">${t.icon}</div><div class="task-info"><div class="task-name">${t.name}</div><div class="task-reward">${t.sub}${extra} • +${t.reward.toLocaleString("en-US")} coins</div></div><button class="task-btn ${done?'task-btn-done':'task-btn-go'}" onclick="${done?'':`doTask('${t.id}')`}">${done?'✅ FAIT':(t.needRef?(friendsCount>=t.needRef?'CLAIM':'INVITE'):'GO')}</button></div>`;});document.getElementById('tasksList').innerHTML=html;document.getElementById('tasksSub').textContent=doneCount+"/"+TASKS.length+" faites";}
 async function doTask(id){let task=TASKS.find(x=>x.id===id);if(!task || tasksDone[id]) return;if(task.link==='#invite'){if(friendsCount < task.needRef){showPage('friends');return;}}else{window.open(task.link,'_blank');}setTimeout(async()=>{tasksDone[id]=true;balanceCoins+=task.reward;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();renderTasks();await saveBalance();},task.link==='#invite'?500:2000);}
@@ -151,12 +182,9 @@ function buyLevel(lvl){let need=getHold(lvl);if(balanceCoins<need || lvl<=curren
 setInterval(()=>{if(!loaded)return;let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}updateUI();},1000);
 setInterval(()=>{if(loaded)saveBalance();},10000);
 btn.addEventListener('click',async()=>{if(progress>=100){let claimed=mining;balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);mining=0;progress=0;miningStartTime=Date.now();currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();await saveBalance();try{let {data:me}=await supa.from('harold_users').select('referred_by').eq('id',parseInt(uid)).single();if(me && me.referred_by){let bonusCoins=Math.floor(claimed*0.1*1000000);if(bonusCoins>0){let {data:p}=await supa.from('harold_users').select('balance').eq('id',me.referred_by).single();if(p){await supa.from('harold_users').update({balance:(p.balance||0)+bonusCoins}).eq('id',me.referred_by);}}}}catch(e){}}});
-async function loadFriends(){try{document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));let {count:t}=await supa.from('harold_users').select('*',{count:'exact',head:true});f=f||[];t=t||0;friendsCount=f.length;document.getElementById('friendsSub').textContent=f.length+" amis sur "+t+" users";if(isAdmin()){document.getElementById('adminPanel').style.display='block';document.getElementById('adminLog').textContent=`${t} users | ${balanceCoins} coins`;}let list=document.getElementById('friendsList');if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami<br>Total: '+t+' users</div>';renderTasks();return;}let h='';f.forEach(u=>{let coins=u.balance||0;let hrd=(coins/1000000).toFixed(4);let name=u.first_name || `AMI ${u.id}`;let avatar=u.photo_url?`<img src="${u.photo_url}" style="width:100%;height:100%;object-fit:cover">`:`👤`;h+=`<div class="miner-card"><div class="miner-icon">${avatar}</div><div class="miner-info"><div class="miner-lvl" title="${name}">${name}</div><div style="font-size:12px;color:#00ff88;font-weight:900">${coins.toLocaleString("en-US")} coins</div><div style="font-size:10px;color:#aaa">${hrd} HRD • LVL ${getLevelFromBalance(coins)}</div></div><button class="miner-btn btn-active">+10%</button></div>`;});list.innerHTML=h;renderTasks();}catch(e){}}
+async function loadFriends(){try{document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));f=f||[];friendsCount=f.length;let list=document.getElementById('friendsList');if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami</div>';renderTasks();return;}let h='';f.forEach(u=>{let coins=u.balance||0;let hrd=(coins/1000000).toFixed(4);let name=u.first_name || `AMI ${u.id}`;let avatar=u.photo_url?`<img src="${u.photo_url}" style="width:100%;height:100%;object-fit:cover">`:`👤`;h+=`<div class="miner-card"><div class="miner-icon">${avatar}</div><div class="miner-info"><div class="miner-lvl">${name}</div><div style="font-size:12px;color:#00ff88;font-weight:900">${coins.toLocaleString("en-US")} coins</div><div style="font-size:10px;color:#aaa">${hrd} HRD • LVL ${getLevelFromBalance(coins)}</div></div><button class="miner-btn btn-active">+10%</button></div>`;});list.innerHTML=h;renderTasks();}catch(e){}}
 function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value);}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
-async function adminSync(){let {data,count}=await supa.from('harold_users').select('*',{count:'exact'});}
-async function adminBackup(){let {data}=await supa.from('harold_users').select('*');await navigator.clipboard.writeText(JSON.stringify(data,null,2));}
-async function adminExport(){let {data}=await supa.from('harold_users').select('*');let csv='id,first_name,balance,mining_start,mining_amount,referred_by\n'+data.map(u=>`${u.id},"${(u.first_name||'').replace(/"/g,'""')}",${u.balance||0},${u.mining_start||''},${u.mining_amount||0},${u.referred_by||''}`).join('\n');await navigator.clipboard.writeText(csv);}
 let qr=null;
 function openCert(){
   document.getElementById('certLevel').textContent='LEVEL '+currentLvl;
@@ -172,11 +200,7 @@ function openCert(){
 function closeCert(){document.getElementById('certModal').classList.remove('show');}
 async function saveCert(){
   const b=document.getElementById('saveBtn');b.textContent='⏳ GENERATION...';
-  try{
-    const c=await html2canvas(document.getElementById('certCard'),{backgroundColor:null,scale:3,useCORS:false});
-    const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='HRD-Cert-Lvl'+currentLvl+'.png';document.body.appendChild(a);a.click();document.body.removeChild(a);
-    b.textContent='✅ SAUVEGARDÉ!';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);
-  }catch(e){b.textContent='❌ ERREUR';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);}
+  try{const c=await html2canvas(document.getElementById('certCard'),{backgroundColor:null,scale:3,useCORS:false});const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='HRD-Cert-Lvl'+currentLvl+'.png';document.body.appendChild(a);a.click();document.body.removeChild(a);b.textContent='✅ SAUVEGARDÉ!';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);}catch(e){b.textContent='❌ ERREUR';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);}
 }
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
