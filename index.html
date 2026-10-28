@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Harold Coins </title>
+<title>Harold Coins V26.5 ILLIMITE VRAI</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -127,9 +127,9 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="page" id="page-admin">
 <div class="miners-head" style="border:2px solid #ffd700">
-<div class="miners-title">👑 ADMIN PANEL - TOUS LES JOUEURS (ILLIMITÉ)</div>
-<div class="miners-sub" id="adminSub">Mode créateur - voir tout</div>
-<button onclick="loadAllPlayers()" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:12px;color:#000;font-weight:900;font-size:13px;cursor:pointer">🔄 RAFRAÎCHIR TOUT</button>
+<div class="miners-title">👑 ADMIN PANEL - TOUS LES JOUEURS (ILLIMITÉ VRAI)</div>
+<div class="miners-sub" id="adminSub">Mode créateur - illimité</div>
+<button onclick="loadAllPlayers()" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:12px;color:#000;font-weight:900;font-size:13px;cursor:pointer">🔄 RAFRAÎCHIR TOUT (ILLIMITÉ)</button>
 <input id="searchPlayer" oninput="filterPlayers()" placeholder="🔍 Chercher nom ou ID..." style="margin-top:8px;width:100%;height:38px;background:rgba(0,0,0,0.7);border:1px solid #ffd700;border-radius:10px;color:#fff;padding:0 12px;font-size:12px">
 </div>
 <div id="adminStats"></div>
@@ -181,7 +181,6 @@ async function loadBalance(){
       }
     }
   }catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
-
   try{
     let rawParam = tg?.initDataUnsafe?.start_param || null;
     let urlParam = new URLSearchParams(window.location.search).get('start') || new URLSearchParams(window.location.search).get('startapp') || null;
@@ -206,7 +205,6 @@ async function loadBalance(){
       }
     }
   }catch(e){}
-
   try{
     let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
     if(data){
@@ -228,7 +226,6 @@ async function loadBalance(){
     loaded=true;updateUI();renderMiners();renderTasks();
   }
 }
-
 document.addEventListener('DOMContentLoaded',()=>{
   tonConnectUI=new TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://razafimaheninaharold-tech.github.io/haroldcoin/tonconnect-manifest.json',buttonRootId:'ton-root-hidden'});
   tonConnectUI.onStatusChange(wallet=>{
@@ -258,14 +255,24 @@ async function loadTopInviters(){try{let {data}=await supa.from('harold_users').
 let allPlayersCache = [];
 async function loadAllPlayers(){
   try{
-    document.getElementById('adminSub').textContent = "Chargement de tous les joueurs...";
-    let {data, error} = await supa.from('harold_users').select('*').order('balance',{ascending:false}).limit(10000);
-    if(error){ document.getElementById('adminSub').textContent = "Erreur: "+error.message; return; }
-    allPlayersCache = data || [];
-    let total = data.length;
-    let totalCoins = data.reduce((s,u)=>s+(u.balance||0),0);
+    document.getElementById('adminSub').textContent = "Chargement ILLIMITÉ VRAI...";
+    let allData = [];
+    let from = 0;
+    let step = 1000;
+    while(true){
+      let {data, error} = await supa.from('harold_users').select('*').order('balance',{ascending:false}).range(from, from+step-1);
+      if(error){ document.getElementById('adminSub').textContent = "Erreur: "+error.message; return; }
+      if(!data || data.length===0) break;
+      allData = allData.concat(data);
+      if(data.length < step) break;
+      from += step;
+      document.getElementById('adminSub').textContent = `Chargé ${allData.length}... suite`;
+    }
+    allPlayersCache = allData;
+    let total = allData.length;
+    let totalCoins = allData.reduce((s,u)=>s+(u.balance||0),0);
     let totalHRD = (totalCoins/1000000).toFixed(2);
-    let withRef = data.filter(u=>u.referred_by).length;
+    let withRef = allData.filter(u=>u.referred_by).length;
     document.getElementById('adminStats').innerHTML = `
       <div class="miners-head" style="border-color:#00ff88">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:11px;color:#fff">
@@ -274,9 +281,10 @@ async function loadAllPlayers(){
           <div>🔗 ${withRef} parrainés</div>
           <div>👤 ${total-withRef} directs</div>
         </div>
+        <div style="margin-top:6px;font-size:9px;color:#ffaa00">ℹ️ Telegram 13 = avec ceux qui n'ont pas cliqué Jouer. DB = joueurs réels.</div>
       </div>`;
-    renderAllPlayers(data);
-    document.getElementById('adminSub').textContent = `${total} joueurs • ${totalHRD} HRD total • ILLIMITÉ ACTIF`;
+    renderAllPlayers(allData);
+    document.getElementById('adminSub').textContent = `${total} joueurs • ${totalHRD} HRD • ILLIMITÉ VRAI ACTIF`;
   }catch(e){ document.getElementById('adminSub').textContent = e.message; }
 }
 function renderAllPlayers(list){
@@ -306,7 +314,6 @@ function filterPlayers(){
   let filtered = allPlayersCache.filter(u=> String(u.id).includes(q) || (u.first_name||'').toLowerCase().includes(q));
   renderAllPlayers(filtered);
 }
-
 function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value);alert('Lien copié!');}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
 let qr=null;
