@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Harold Coins</title>
+<title>Harold Coins V26</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -16,7 +16,7 @@
 body{background:#000;display:flex;justify-content:center}
 .app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;padding:6px 4px 10px;gap:6px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 4px 10px;gap:6px}
 .top-left-zone{display:flex;align-items:flex-start;gap:8px;flex:1;min-width:0}
 .top-right-zone{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
 .lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px}
@@ -27,7 +27,7 @@ body{background:#000;display:flex;justify-content:center}
 .sync-pill.saving{background:rgba(0,255,136,0.15);border-color:#00ff88;color:#00ff88}
 .sync-pill.saving .sync-dot{background:#00ff88;box-shadow:0 0 8px #00ff88}
 .left-pill{margin-top:6px;display:inline-flex;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
-.wallet{background:#1a9bff;border:none;color:#fff;padding:7px 12px;border-radius:20px;font-size:10px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:102px;justify-content:center;line-height:1.15;cursor:pointer;max-width:118px;overflow:hidden}
+.wallet{background:#1a9bff;border:none;color:#fff;padding:7px 12px;border-radius:20px;font-size:10px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:110px;justify-content:center;line-height:1.15;cursor:pointer}
 .wallet.connected{background:linear-gradient(90deg,#00c853,#00e5a0)}
 .assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
 .assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px}
@@ -40,7 +40,7 @@ body{background:#000;display:flex;justify-content:center}
 .track{stroke:rgba(255,215,0,0.15);stroke-width:6;fill:none}
 .progress{stroke:#FFD700;stroke-width:6;fill:none;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:251;transition:stroke-dashoffset 1s}
 .coin{width:95px;height:95px;border-radius:50%;clip-path:circle(34% at 50% 50%);filter:brightness(1.3) drop-shadow(0 0 18px #d4af37)}
-.right-bubble{position:absolute;right:-74px;top:50%;transform:translateY(-50%);width:72px;background:rgba(0,0,0,0.9);border:1.5px solid #ffd700;border-radius:12px;padding:6px 5px;text-align:center;box-shadow:0 0 15px rgba(255,215,0,0.5)}
+.right-bubble{position:absolute;right:-74px;top:50%;transform:translateY(-50%);width:72px;background:rgba(0,0,0,0.9);border:1.5px solid #ffd700;border-radius:12px;padding:6px 5px;text-align:center;box-shadow:0 0 15px rgba(255,215,0,0.5);cursor:pointer}
 .right-bubble-lvl{font-family:'Orbitron';font-size:11px;font-weight:900;color:#ffd700;line-height:1.1}
 .right-bubble-val{font-size:9px;color:#00ff88;font-weight:900;margin-top:3px;line-height:1.1}
 .power-bar{margin-top:18px;width:100%;height:36px;background:rgba(0,0,0,0.9);border:1.5px solid rgba(0,229,255,0.35);border-radius:20px;display:flex;align-items:center;padding:3px 6px 3px 46px;position:relative}
@@ -137,35 +137,21 @@ function getHold(lvl){if(lvl<=1) return 0; return 1800 * lvl * lvl;}
 function getMinerData(lvl){let hold=getHold(lvl);let speed=0.20 + (lvl-1)*0.02;let hrd4h=speed*0.04*4;let priceValue=hold*0.0000015;if(priceValue<0.001) priceValue=0.001+hold*0.0000008;let price='$'+priceValue.toFixed(3);if(lvl==1) price='$0.001';return {price:price,hold:hold,speed:parseFloat(speed.toFixed(2)),hrd4h:hrd4h};}
 function getLevelFromBalance(bal){if(bal<1800) return 1; let lvl=Math.floor(Math.sqrt(bal/1800)); if(lvl<1) lvl=1; if(lvl>1000) lvl=1000; return lvl;}
 function formatTime(ms){if(ms<=0)return "00:00:00 - CLAIM!";let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} restant`;}
-// === CONVERSION VRAIE ADRESSE UQ... ===
-function rawToFriendly(raw){
-  try{
-    if(!raw) return null;
-    if(raw.startsWith('UQ') || raw.startsWith('EQ')) return raw;
-    const TonWeb = window.TonWeb;
-    if(TonWeb){
-      const addr = new TonWeb.utils.Address(raw);
-      return addr.toString(true, true, true, false);
-    }
-    return raw;
-  }catch(e){ return raw; }
-}
-function shortUQ(addr){
-  if(!addr) return 'Connect<br>Wallet';
-  let f = rawToFriendly(addr);
-  if(f.length>14) return f.slice(0,6)+'...'+f.slice(-4)+'<br>✓';
-  return f;
+// === CODE SIMPLE UQ - ÉVITE PERTE DE TON ===
+function toUQ(addr){
+  if(!addr) return addr;
+  try{ return new TonWeb.utils.Address(addr).toString(true,true,false,false); } // false = UQ Tonkeeper
+  catch(e){ return addr; }
 }
 function updateUI(){assetsValue.innerHTML=balanceCoins.toLocaleString("en-US")+" coins<br><span style='font-size:10px'>"+balanceHRD.toFixed(4).replace('.',',')+" HRD</span>";miningPlus.textContent="+"+mining.toFixed(4)+" HRD";powerFill.style.width=progress+"%";circle.style.strokeDashoffset=circ-(circ*progress/100);let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');}else{btn.textContent="MINING...";btn.classList.remove('ready');}document.getElementById('lvlDisplay').textContent="👑 Lvl "+currentLvl;let rl=document.getElementById('rightLvl');if(rl) rl.textContent="LVL "+currentLvl;let rv=document.getElementById('rightVal');if(rv) rv.innerHTML="+"+(friendsCount*10)+"%<br>BONUS";let nextHold=getHold(currentLvl+1);let needCoins=Math.max(0,nextHold-balanceCoins);let needDollars=needCoins*0.0000015;if(needDollars<0.001) needDollars=0.001+needCoins*0.0000008;let leftEl=document.getElementById('leftToLvl');if(leftEl) leftEl.textContent=needDollars.toFixed(4)+"$ left to Lvl UP  ›";document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US")+" coins";}
 function updateWalletUI(){
   let wBtn=document.getElementById('walletBtn');
   let wText=document.getElementById('walletText');
   if(walletAddress){
-    let friendly = rawToFriendly(walletAddress);
-    walletFriendly = friendly;
+    walletFriendly = toUQ(walletAddress);
     wBtn.classList.add('connected');
-    wText.innerHTML=shortUQ(friendly);
-    wBtn.title=friendly;
+    wText.innerHTML = walletFriendly.slice(0,6)+'...'+walletFriendly.slice(-4)+'<br>✓';
+    wBtn.title = walletFriendly;
   }else{
     wBtn.classList.remove('connected');
     wText.innerHTML='Connect<br>Wallet';
@@ -183,7 +169,7 @@ async function saveBalance(){
   }catch(e){ if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } }
 }
 async function loadBalance(){
-  walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null; walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||walletAddress; updateWalletUI();
+  walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null; walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||toUQ(walletAddress); updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
   try{
     let startParam=tg?.initDataUnsafe?.start_param;
@@ -199,7 +185,7 @@ async function loadBalance(){
       }
     }
     let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
-    if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);if(data.wallet_address){ walletAddress=data.wallet_address; walletFriendly=data.wallet_address; localStorage.setItem('hrd_wallet_'+uid, walletAddress); localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly); updateWalletUI(); }try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){ miningStartTime=new Date(data.mining_start).getTime(); }else{ miningStartTime=Date.now(); }if(data.mining_amount) mining=parseFloat(data.mining_amount)||0;}else{ miningStartTime=Date.now(); }
+    if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);if(data.wallet_address){ walletAddress=data.wallet_address; walletFriendly=toUQ(data.wallet_address); localStorage.setItem('hrd_wallet_'+uid, walletAddress); localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly); updateWalletUI(); }try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){ miningStartTime=new Date(data.mining_start).getTime(); }else{ miningStartTime=Date.now(); }if(data.mining_amount) mining=parseFloat(data.mining_amount)||0;}else{ miningStartTime=Date.now(); }
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
     loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();
   }catch(e){ let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}loaded=true;updateUI();renderMiners();renderTasks();}
@@ -209,10 +195,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
   tonConnectUI.onStatusChange(wallet => {
     if(wallet && wallet.account){
       walletAddress=wallet.account.address;
-      let friendly = rawToFriendly(walletAddress);
-      walletFriendly=friendly;
+      walletFriendly=toUQ(walletAddress);
       localStorage.setItem('hrd_wallet_'+uid, walletAddress);
-      localStorage.setItem('hrd_wallet_friendly_'+uid, friendly);
+      localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly);
       updateWalletUI();saveBalance();
     }else{
       walletAddress=null;walletFriendly=null;
@@ -225,10 +210,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
 async function connectWallet(){
   if(!tonConnectUI) return;
   if(walletAddress){
-    if(confirm('Copier adresse?\n'+(walletFriendly||walletAddress))){
-      navigator.clipboard.writeText(walletFriendly||walletAddress);
-      if(confirm('Déconnecter wallet?')) await tonConnectUI.disconnect();
+    if(confirm('Copier adresse UQ Tonkeeper?\n'+walletFriendly)){
+      navigator.clipboard.writeText(walletFriendly);
     }
+    if(confirm('Déconnecter wallet?')) await tonConnectUI.disconnect();
   } else { await tonConnectUI.openModal(); }
 }
 function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':lvl>=50?'⚡':'🔧';let hl=lvl===currentLvl?'border:2px solid #ffd700':'';html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">HOLD ${d.hold.toLocaleString("en-US")} coins</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${d.hrd4h.toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
