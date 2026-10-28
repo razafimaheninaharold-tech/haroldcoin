@@ -3,78 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HRD CYBER V27</title>
+<title>HRD V27.5 HYBRIDE</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 <script src="https://unpkg.com/tonweb@0.0.66/dist/tonweb.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center}
-.app{width:100%;max-width:400px;height:100vh;background:#050510;position:relative;overflow:hidden}
-.app::before{content:'';position:absolute;inset:0;background: 
-  linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(139,0,255,0.04) 1px, transparent 1px);
-  background-size:40px 40px;z-index:0}
-.app::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 35%, rgba(0,229,255,0.15), transparent 60%);z-index:0}
-.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:8px 10px 90px;overflow-x:hidden}
-.top{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 4px;gap:8px}
+.app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg') center/cover no-repeat;position:relative;overflow:hidden}
+.app::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 35%, rgba(0,229,255,0.18), rgba(0,0,0,0.65) 70%);z-index:1}
+.content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 10px 88px;overflow-x:hidden}
+.top{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 2px;gap:6px}
 .top-left-zone{display:flex;align-items:flex-start;gap:8px;flex:1}
 .top-right-zone{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.lvl{background:rgba(0,0,0,0.6);border:1.5px solid #a855f7;color:#fff;padding:4px 10px;border-radius:8px;font-family:'Rajdhani';font-size:10px;font-weight:900;letter-spacing:1px;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);margin-top:4px}
-.cert-tab{background:linear-gradient(135deg,#3bb6ff,#8b5cf6);color:#fff;padding:6px 14px;border-radius:20px;font-size:10px;font-weight:900;cursor:pointer;box-shadow:0 0 15px rgba(139,92,246,0.5)}
-.wallet{background:linear-gradient(90deg,#00e5a0,#00ff88);border:none;color:#000;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:900;display:flex;align-items:center;gap:6px;min-width:110px;justify-content:center;box-shadow:0 0 20px rgba(0,255,136,0.6);cursor:pointer}
+.lvl{background:rgba(0,0,0,0.7);border:1.2px solid #a855f7;color:#fff;padding:3px 10px;border-radius:6px;font-family:'Orbitron';font-size:9px;font-weight:900;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);letter-spacing:1px}
+.cert-tab{background:rgba(0,229,255,0.15);border:1px solid #00e5ff;color:#00e5ff;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:900;cursor:pointer;backdrop-filter:blur(6px)}
+.wallet{background:linear-gradient(90deg,#00e5a0,#00ff88);border:none;color:#000;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:900;display:flex;align-items:center;gap:4px;min-width:115px;justify-content:center;box-shadow:0 0 20px rgba(0,255,136,0.7);cursor:pointer}
 .wallet.connected{animation:glow 1.5s infinite}
 @keyframes glow{0%,100%{box-shadow:0 0 15px #00ff88}50%{box-shadow:0 0 30px #00ff88}}
+}
+.left-pill{margin-top:5px;display:inline-flex;background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.4);color:#00e5ff;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:800}
 .sync-pill{display:none}
-.left-pill{margin-top:6px;display:inline-flex;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.4);color:#00e5ff;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
-.assets-wrap{display:none}
-.center{flex:1;display:flex;flex-direction:column;align-items:center;margin-top:20px}
-.coin-wrap{position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center}
-.coin-wrap::before{content:'';position:absolute;width:220px;height:220px;border:1.5px solid rgba(0,229,255,0.3);border-radius:50%;animation:orbit 4s linear infinite}
-.coin-wrap::after{content:'';position:absolute;width:190px;height:190px;border:1px dashed rgba(168,85,247,0.3);border-radius:50%;animation:orbit 6s linear infinite reverse}
-@keyframes orbit{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.mining-circle{position:absolute;width:160px;height:160px;transform:rotate(-90deg);filter:drop-shadow(0 0 12px #00e5ff)}
-.track{stroke:rgba(0,229,255,0.1);stroke-width:5;fill:none}
-.progress{stroke:#00e5ff;stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:251;transition:stroke-dashoffset 1s;filter:drop-shadow(0 0 8px #00e5ff)}
-.coin{width:110px;height:110px;border-radius:50%;filter:brightness(1.2) drop-shadow(0 0 25px #00e5ff) drop-shadow(0 0 45px #a855f7);animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.right-bubble{position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:78px;background:rgba(0,0,0,0.8);border:1.5px solid #a855f7;border-radius:12px;padding:8px 6px;text-align:center;box-shadow:0 0 20px rgba(168,85,247,0.5);backdrop-filter:blur(8px);clip-path:polygon(10% 0,100% 0,90% 100%,0 100%)}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;margin-top:18px}
+.coin-wrap{position:relative;width:150px;height:150px;display:flex;align-items:center;justify-content:center}
+.coin-wrap::before{content:'';position:absolute;width:165px;height:165px;background:radial-gradient(circle, rgba(0,229,255,0.35) 0%, rgba(0,229,255,0) 70%);border-radius:50%;filter:blur(8px)}
+.mining-circle{position:absolute;width:150px;height:150px;transform:rotate(-90deg);z-index:2}
+.track{stroke:rgba(255,255,255,0.12);stroke-width:5;fill:none}
+.progress{stroke:#00e5ff;stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:251;transition:1s;filter:drop-shadow(0 0 8px #00e5ff)}
+.coin{width:105px;height:105px;border-radius:50%;z-index:1;filter:brightness(1.25) drop-shadow(0 0 20px #00e5ff);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.right-bubble{position:absolute;right:-78px;top:50%;transform:translateY(-50%);width:78px;background:rgba(5,5,15,0.85);border:1px solid #a855f7;border-left:3px solid #00e5ff;border-radius:10px;padding:7px 6px;text-align:center;box-shadow:0 0 20px rgba(168,85,247,0.5);backdrop-filter:blur(8px);z-index:3}
 .right-bubble-lvl{font-family:'Orbitron';font-size:11px;font-weight:900;color:#00e5ff}
-.right-bubble-val{font-size:9px;color:#00ff88;font-weight:900;margin-top:4px}
-.cyber-stats{margin-top:30px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.cyber-card{background:rgba(255,255,255,0.04);border:1px solid rgba(0,229,255,0.25);border-radius:14px;padding:10px 12px;backdrop-filter:blur(10px);position:relative;overflow:hidden}
-.cyber-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#00e5ff,transparent)}
-.cyber-label{font-size:8px;color:#a78bfa;letter-spacing:1.5px;font-family:'Orbitron'}
-.cyber-value{font-family:'Orbitron';font-size:16px;color:#fff;font-weight:900;margin-top:2px}
-.cyber-sub{font-size:10px;color:#00ff88;margin-top:2px;font-weight:700}
-.power-bar{display:none}
-.timer{color:#a78bfa;font-size:11px;font-weight:700;margin-top:16px;font-family:'Orbitron';letter-spacing:2px}
-.claim{margin-top:14px;width:100%;height:52px;border-radius:16px;background:rgba(0,0,0,0.6);border:1.5px solid #00e5ff;color:#00e5ff;font-family:'Orbitron';font-weight:900;font-size:16px;letter-spacing:3px;cursor:pointer;box-shadow:0 0 20px rgba(0,229,255,0.3), inset 0 0 20px rgba(0,229,255,0.1);transition:0.2s}
-.claim.ready{background:linear-gradient(90deg,#00e5ff,#a855f7);color:#000;border-color:#fff;box-shadow:0 0 30px #00e5ff;animation:pulse 1s infinite}
+.right-bubble-val{font-size:9px;color:#00ff88;font-weight:900;margin-top:3px}
+.cyber-stats{margin-top:22px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cyber-card{background:rgba(10,10,25,0.65);border:1px solid rgba(0,229,255,0.28);border-radius:14px;padding:10px 12px;backdrop-filter:blur(10px);position:relative}
+.cyber-card:last-child{border-color:rgba(168,85,247,0.35)}
+.cyber-card::before{content:'';position:absolute;top:0;left:12px;right:12px;height:1px;background:linear-gradient(90deg,transparent,#00e5ff,transparent);opacity:0.6}
+.cyber-label{font-family:'Orbitron';font-size:7.5px;color:#a78bfa;letter-spacing:1.5px}
+.cyber-value{font-family:'Orbitron';font-size:15px;color:#fff;font-weight:900;margin-top:3px}
+.cyber-sub{font-size:10px;color:#00ff88;font-weight:700;margin-top:2px}
+.timer{color:#a78bfa;font-size:11px;font-weight:700;margin-top:14px;font-family:'Orbitron';letter-spacing:2px;text-shadow:0 0 10px #a855f7}
+.claim{margin-top:12px;width:100%;height:52px;border-radius:16px;background:rgba(0,0,0,0.55);border:1.5px solid #00e5ff;color:#00e5ff;font-family:'Orbitron';font-weight:900;font-size:15px;letter-spacing:3px;cursor:pointer;box-shadow:0 0 18px rgba(0,229,255,0.35), inset 0 0 15px rgba(0,229,255,0.1);backdrop-filter:blur(6px)}
+.claim.ready{background:linear-gradient(90deg,#00e5ff,#a855f7);color:#fff;border-color:#fff;box-shadow:0 0 30px #00e5ff;animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:86px;display:flex;justify-content:space-between;padding:8px 10px;gap:8px;z-index:999;background:rgba(5,5,16,0.9);border-top:1px solid rgba(0,229,255,0.2);backdrop-filter:blur(12px)}
-.nav{flex:1;height:60px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer;transition:0.2s}
-.nav.active{background:rgba(0,229,255,0.15);border-color:#00e5ff;color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.3)}
-.nav b{font-size:18px;margin-bottom:2px}
-/* pages */
+.bottom{position:absolute;bottom:0;left:0;right:0;height:82px;display:flex;justify-content:space-between;padding:8px 8px;gap:6px;z-index:999;background:rgba(0,0,0,0.55);border-top:1px solid rgba(0,229,255,0.18);backdrop-filter:blur(12px)}
+.nav{flex:1;height:58px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer}
+.nav.active{background:rgba(0,229,255,0.18);border-color:#00e5ff;color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.3)}
+.nav b{font-size:18px}
 .page{display:none;flex:1;overflow-y:auto}.page.active{display:flex;flex-direction:column}
-.miners-head{background:rgba(255,255,255,0.04);border:1px solid rgba(0,229,255,0.2);padding:10px;border-radius:12px;margin-bottom:10px;backdrop-filter:blur(8px)}
-.miners-title{font-family:'Orbitron';font-size:14px;color:#00e5ff;font-weight:900}
-.miners-sub{font-size:10px;color:#a78bfa;margin-top:4px}
-.miner-card{background:rgba(255,255,255,0.03);border:1px solid rgba(168,85,247,0.2);border-radius:12px;padding:10px 11px;margin-bottom:8px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(6px)}
-.miner-icon{width:40px;height:40px;background:rgba(0,0,0,0.5);border:1px solid #333;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.miner-price{font-size:14px;color:#00ff88;font-weight:900}
-.miner-hold{font-size:9px;color:#888}
-.miner-speed{font-size:10px;color:#00e5ff;font-weight:700}
+.miners-head{background:rgba(0,0,0,0.6);border:1px solid rgba(0,229,255,0.2);padding:10px;border-radius:12px;margin-bottom:10px;backdrop-filter:blur(8px)}
+.miners-title{font-family:'Orbitron';font-size:13px;color:#00e5ff;font-weight:900}
+.miners-sub{font-size:10px;color:#a78bfa;margin-top:3px}
+.miner-card{background:rgba(0,0,0,0.6);border:1px solid rgba(168,85,247,0.25);border-radius:12px;padding:10px 11px;margin-bottom:8px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(6px)}
+.miner-icon{width:38px;height:38px;background:rgba(0,0,0,0.5);border:1px solid #333;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .miner-btn{padding:6px 10px;border-radius:8px;border:none;font-weight:900;font-size:10px;min-width:70px;cursor:pointer}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}.btn-need{background:linear-gradient(#a78bfa,#00e5ff);color:#000}.btn-locked{background:#222;color:#666}.btn-max{background:linear-gradient(#00ff88,#00e5ff);color:#000}
-.task-card{background:rgba(255,255,255,0.03);border:1px solid rgba(0,229,255,0.2);border-radius:14px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:10px;backdrop-filter:blur(6px)}
-.cert-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.96);z-index:99999;display:none}.cert-modal.show{display:flex;align-items:center;justify-content:center;padding:10px}
-.cert-card{width:100%;max-width:360px;background:radial-gradient(circle at 50% 10%, #0a2a4a 0%, #020a14 75%);border:2px solid #00e5ff;border-radius:18px;padding:12px 14px 18px;box-shadow:0 0 40px rgba(0,229,255,0.6)}
 </style>
 </head>
 <body>
@@ -82,9 +68,9 @@ body{background:#000;display:flex;justify-content:center}
 <div class="content">
 <div class="top">
 <div class="top-left-zone">
-<img id="userAvatar" src="" style="width:36px;height:36px;border-radius:50%;border:1.5px solid #00e5ff;display:none">
-<div id="userAvatarFallback" style="width:36px;height:36px;border-radius:50%;border:1.5px solid #00e5ff;background:linear-gradient(135deg,#00e5ff,#a855f7);display:flex;align-items:center;justify-content:center">👤</div>
-<div style="display:flex;flex-direction:column;min-width:0">
+<img id="userAvatar" src="" style="width:34px;height:34px;border-radius:50%;border:1.5px solid #00e5ff;display:none">
+<div id="userAvatarFallback" style="width:34px;height:34px;border-radius:50%;border:1.5px solid #00e5ff;background:linear-gradient(135deg,#00e5ff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
+<div style="display:flex;flex-direction:column">
 <div id="userName" style="font-family:'Orbitron';font-size:13px;font-weight:900;color:#fff">...</div>
 <div class="lvl" id="lvlDisplay">LVL 49</div>
 <div class="left-pill" id="leftToLvl">0.1931$ left to Lvl UP ›</div>
@@ -96,35 +82,31 @@ body{background:#000;display:flex;justify-content:center}
 <div class="wallet" id="walletBtn" onclick="connectWallet()"><span id="walletText">Connect Wallet</span></div>
 </div>
 </div>
-
 <div class="page active" id="page-mine">
 <div class="center">
 <div class="coin-wrap">
 <svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg>
-<img class="coin" id="mainCoin" src="coin.png" onerror="this.src='https://i.imgur.com/3b9yZqH.png'">
-<div class="right-bubble" onclick="openCert()"><div class="right-bubble-lvl" id="rightLvl">LVL 49</div><div class="right-bubble-val" id="rightVal">+0%<br>BONUS</div></div>
+<img class="coin" src="coin.png" onerror="this.src='https://i.imgur.com/3b9yZqH.png'">
+<div class="right-bubble"><div class="right-bubble-lvl" id="rightLvl">LVL 49</div><div class="right-bubble-val" id="rightVal">+0%<br>BONUS</div></div>
 </div>
-
 <div class="cyber-stats">
-<div class="cyber-card"><div class="cyber-label">HASH RATE</div><div class="cyber-value" id="hashRate">1.32 TH/s</div><div class="cyber-sub">⚡ Efficient</div></div>
+<div class="cyber-card"><div class="cyber-label">HASH RATE</div><div class="cyber-value" id="hashRate">1.16 TH/s</div><div class="cyber-sub">⚡ Efficient</div></div>
 <div class="cyber-card"><div class="cyber-label">MINING 4H SUPA</div><div class="cyber-value" style="color:#00ff88" id="miningPlus">+0.0474 HRD</div><div class="cyber-sub" id="assetsValue">4,371,269 coins</div></div>
 </div>
-
 <div class="timer" id="timer">02:58:42 restant</div>
 <button class="claim" id="claimBtn">MINING...</button>
 </div>
 </div>
-
-<div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS // LVL 1-1000</div><div class="miners-sub" id="minersSub"></div></div><div id="minersList"></div></div>
-<div class="page" id="page-tasks"><div class="miners-head"><div class="miners-title">TASKS // MISSIONS</div><div class="miners-sub" id="tasksSub"></div></div><div id="tasksList"></div></div>
+<div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS</div><div class="miners-sub" id="minersSub"></div></div><div id="minersList"></div></div>
+<div class="page" id="page-tasks"><div class="miners-head"><div class="miners-title">TASKS</div><div class="miners-sub" id="tasksSub"></div></div><div id="tasksList"></div></div>
 <div class="page" id="page-friends">
-<div class="miners-head"><div class="miners-title">FRIENDS // NETWORK</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#a855f7);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 0 15px rgba(0,229,255,0.4)">INVITER +10% BONUS</button><div style="margin-top:8px;background:rgba(0,0,0,0.5);border:1px solid rgba(0,229,255,0.2);padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#00e5ff;font-size:10px" value="..."><button onclick="copyLink()" style="background:#00e5ff;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer;color:#000">COPY</button></div></div>
-<div class="miners-head" style="border-color:#a855f7"><div class="miners-title">🏆 TOP INVITEURS</div><div class="miners-sub">Classement</div></div><div id="topInviters"></div><div class="miners-head"><div class="miners-title">MES AMIS</div><div class="miners-sub" id="myFriendsSub">0 ami</div></div><div id="friendsList"></div>
+<div class="miners-head"><div class="miners-title">FRIENDS</div><div class="miners-sub" id="friendsSub"></div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#a855f7);border:none;border-radius:12px;color:#fff;font-weight:900;box-shadow:0 0 15px rgba(0,229,255,0.4)">INVITER +10% BONUS</button><div style="margin-top:8px;background:rgba(0,0,0,0.5);border:1px solid rgba(0,229,255,0.2);padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#00e5ff;font-size:10px" value="..."><button onclick="copyLink()" style="background:#00e5ff;border:none;padding:5px 10px;border-radius:6px;font-weight:900;color:#000">COPY</button></div></div>
+<div class="miners-head" style="border-color:#a855f7"><div class="miners-title">🏆 TOP INVITEURS</div></div><div id="topInviters"></div>
+<div class="miners-head"><div class="miners-title">MES AMIS</div><div class="miners-sub" id="myFriendsSub">0 ami</div></div><div id="friendsList"></div>
 </div>
 </div>
 <div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
-<div class="cert-modal" id="certModal" onclick="if(event.target==this)closeCert()"><div class="cert-card" id="certCard" style="text-align:center"><div style="color:#00e5ff;font-family:'Orbitron';font-size:10px;letter-spacing:3px">MINER CERTIFICATE</div><div id="certLevel" style="font-family:'Orbitron';font-size:28px;color:#00e5ff;margin-top:10px">LEVEL 49</div><div id="certName" style="color:#fff;font-weight:900;margin-top:6px">Player</div><canvas id="qrCanvas" style="width:84px;height:84px;background:#fff;border-radius:8px;margin:14px auto;display:block"></canvas><button onclick="closeCert()" style="margin-top:12px;width:100%;height:40px;background:rgba(255,255,255,0.08);border:1px solid #444;border-radius:12px;color:#fff">FERMER</button></div></div>
 <div id="ton-root-hidden" style="display:none"></div>
 <script>
 function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector(`.nav[data-page="${n}"]`).classList.add('active');if(n==='friends'){loadFriends();loadTopInviters();}if(n==='tasks')renderTasks();}
@@ -139,42 +121,24 @@ function getHold(lvl){if(lvl<=1) return 0; return 1800 * lvl * lvl;}
 function getMinerData(lvl){let hold=getHold(lvl);let speed=0.20 + (lvl-1)*0.02;let hrd4h=speed*0.04*4;let priceValue=hold*0.0000015;if(priceValue<0.001) priceValue=0.001+hold*0.0000008;let price='$'+priceValue.toFixed(3);if(lvl==1) price='$0.001';return {price:price,hold:hold,speed:parseFloat(speed.toFixed(2)),hrd4h:hrd4h};}
 function getLevelFromBalance(bal){if(bal<1800) return 1; let lvl=Math.floor(Math.sqrt(bal/1800)); if(lvl<1) lvl=1; if(lvl>1000) lvl=1000; return lvl;}
 function formatTime(ms){if(ms<=0)return "00:00:00 - CLAIM!";let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} restant`;}
-function toUQ(addr){if(!addr) return addr; try{ return new TonWeb.utils.Address(addr).toString(true,true,false,false); }catch(e){ return addr; }}
-function updateUI(){let av=document.getElementById('assetsValue');if(av) av.textContent=balanceCoins.toLocaleString("en-US")+" coins";miningPlus.textContent="+"+mining.toFixed(4)+" HRD";let hr=document.getElementById('hashRate');if(hr) hr.textContent=getMinerData(currentLvl).speed+" TH/s";circle.style.strokeDashoffset=circ-(circ*progress/100);let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');}else{btn.textContent="MINING...";btn.classList.remove('ready');}document.getElementById('lvlDisplay').textContent="LVL "+currentLvl;let rl=document.getElementById('rightLvl');if(rl) rl.textContent="LVL "+currentLvl;let rv=document.getElementById('rightVal');if(rv) rv.innerHTML="+"+(friendsCount*10)+"%<br>BONUS";let nextHold=getHold(currentLvl+1);let needCoins=Math.max(0,nextHold-balanceCoins);let needDollars=needCoins*0.0000015;if(needDollars<0.001) needDollars=0.001+needCoins*0.0000008;let leftEl=document.getElementById('leftToLvl');if(leftEl) leftEl.textContent=needDollars.toFixed(4)+"$ left to Lvl UP  ›";let ms=document.getElementById('minersSub');if(ms) ms.textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US")+" coins";}
+function toUQ(addr){if(!addr) return addr; try{ return new TonWeb.utils.Address(addr).toString(true,true,false,false);}catch(e){return addr;}}
+function updateUI(){if(assetsValue) assetsValue.textContent=balanceCoins.toLocaleString("en-US")+" coins";if(miningPlus) miningPlus.textContent="+"+mining.toFixed(4)+" HRD";let hr=document.getElementById('hashRate');if(hr) hr.textContent=getMinerData(currentLvl).speed+" TH/s";circle.style.strokeDashoffset=circ-(circ*progress/100);let remain=MINING_DURATION-(Date.now()-miningStartTime);timerEl.textContent=formatTime(remain);if(progress>=100){btn.textContent="CLAIM READY!";btn.classList.add('ready');}else{btn.textContent="MINING...";btn.classList.remove('ready');}document.getElementById('lvlDisplay').textContent="LVL "+currentLvl;let rl=document.getElementById('rightLvl');if(rl) rl.textContent="LVL "+currentLvl;let rv=document.getElementById('rightVal');if(rv) rv.innerHTML="+"+(friendsCount*10)+"%<br>BONUS";let nextHold=getHold(currentLvl+1);let needCoins=Math.max(0,nextHold-balanceCoins);let needDollars=needCoins*0.0000015;if(needDollars<0.001) needDollars=0.001+needCoins*0.0000008;let leftEl=document.getElementById('leftToLvl');if(leftEl) leftEl.textContent=needDollars.toFixed(4)+"$ left to Lvl UP ›";let ms=document.getElementById('minersSub');if(ms) ms.textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US");}
 function updateWalletUI(){let wBtn=document.getElementById('walletBtn');let wText=document.getElementById('walletText');if(walletAddress){walletFriendly=toUQ(walletAddress);wBtn.classList.add('connected');wText.innerHTML=walletFriendly.slice(0,6)+'...'+walletFriendly.slice(-4)+'<br>✓';}else{wBtn.classList.remove('connected');wText.innerHTML='Connect Wallet';}}
-async function saveBalance(){if(!loaded) return; try{const payload={id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,wallet_address:walletFriendly||walletAddress,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()};await supa.from('harold_users').upsert(payload,{onConflict:'id'});}catch(e){}}
-async function loadBalance(){
-  walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null; walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||toUQ(walletAddress); updateWalletUI();
-  try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
-  try{
-    let startParam=tg?.initDataUnsafe?.start_param; if(startParam){let refId=parseInt(startParam); if(refId && refId!==parseInt(uid)){let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single(); if(!existing || !existing.referred_by){await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'}); try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);} }catch(e){}}}}
-    let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
-    if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);if(data.wallet_address){ walletAddress=data.wallet_address; walletFriendly=toUQ(data.wallet_address); localStorage.setItem('hrd_wallet_'+uid, walletAddress); localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly); updateWalletUI(); }try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){}if(data.mining_start){ miningStartTime=new Date(data.mining_start).getTime(); }if(data.mining_amount) mining=parseFloat(data.mining_amount)||0;}else{ miningStartTime=Date.now(); }
-    let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
-    loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();
-  }catch(e){ let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}loaded=true;updateUI();renderMiners();renderTasks();}
-}
-document.addEventListener('DOMContentLoaded', ()=>{
-  tonConnectUI = new TON_CONNECT_UI.TonConnectUI({manifestUrl: 'https://razafimaheninaharold-tech.github.io/haroldcoin/tonconnect-manifest.json',buttonRootId: 'ton-root-hidden'});
-  tonConnectUI.onStatusChange(wallet => {
-    if(wallet && wallet.account){ walletAddress=wallet.account.address; walletFriendly=toUQ(walletAddress); localStorage.setItem('hrd_wallet_'+uid, walletAddress); localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly); updateWalletUI();saveBalance();
-    }else{ walletAddress=null;walletFriendly=null; localStorage.removeItem('hrd_wallet_'+uid); localStorage.removeItem('hrd_wallet_friendly_'+uid); updateWalletUI();saveBalance(); }
-  });
-});
-async function connectWallet(){ if(!tonConnectUI) return; if(walletAddress){ if(confirm('Copier UQ?\n'+walletFriendly)){ navigator.clipboard.writeText(walletFriendly);} if(confirm('Déconnecter?')) await tonConnectUI.disconnect(); } else { await tonConnectUI.openModal(); }}
-function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':lvl>=50?'⚡':'🔧';html+=`<div class="miner-card"><div class="miner-icon">${ic}</div><div class="miner-info"><div style="font-size:10px;color:#888">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">HOLD ${d.hold.toLocaleString("en-US")} • ${d.speed} TH/s</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
-function renderTasks(){let html='';TASKS.forEach(t=>{let done=tasksDone[t.id];html+=`<div class="task-card ${done?'done':''}"><div class="miner-icon" style="background:${t.color}">${t.icon}</div><div class="miner-info"><div style="font-size:13px;color:#fff;font-weight:800">${t.name}</div><div style="font-size:11px;color:#00ff88">${t.sub} • +${t.reward.toLocaleString("en-US")}</div></div><button class="miner-btn ${done?'btn-max':'btn-need'}" onclick="${done?'':`doTask('${t.id}')`}">${done?'✅ FAIT':(t.needRef?(friendsCount>=t.needRef?'CLAIM':'INVITE'):'GO')}</button></div>`;});document.getElementById('tasksList').innerHTML=html;document.getElementById('tasksSub').textContent=Object.keys(tasksDone).length+"/"+TASKS.length+" faites";}
-async function doTask(id){let task=TASKS.find(x=>x.id===id);if(!task || tasksDone[id]) return;if(task.link==='#invite'){if(friendsCount < task.needRef){showPage('friends');return;}}else{window.open(task.link,'_blank');}setTimeout(async()=>{tasksDone[id]=true;balanceCoins+=task.reward;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();renderTasks();await saveBalance();},1500);}
+async function saveBalance(){if(!loaded) return; try{await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,wallet_address:walletFriendly||walletAddress,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e){}}
+async function loadBalance(){walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null; walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||toUQ(walletAddress); updateWalletUI(); try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;} try{let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single(); if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);if(data.wallet_address){ walletAddress=data.wallet_address; walletFriendly=toUQ(data.wallet_address); localStorage.setItem('hrd_wallet_'+uid, walletAddress); localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly); updateWalletUI(); }try{miningCards=JSON.parse(data.mining_cards||"{}");}catch(e){}try{tasksDone=JSON.parse(data.tasks_done||"{}");}catch(e){}if(data.mining_start) miningStartTime=new Date(data.mining_start).getTime(); if(data.mining_amount) mining=parseFloat(data.mining_amount)||0;} let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;} loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();}catch(e){let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}loaded=true;updateUI();renderMiners();renderTasks();}}
+document.addEventListener('DOMContentLoaded', ()=>{tonConnectUI = new TON_CONNECT_UI.TonConnectUI({manifestUrl: 'https://razafimaheninaharold-tech.github.io/haroldcoin/tonconnect-manifest.json',buttonRootId: 'ton-root-hidden'}); tonConnectUI.onStatusChange(wallet => {if(wallet && wallet.account){ walletAddress=wallet.account.address; walletFriendly=toUQ(walletAddress); localStorage.setItem('hrd_wallet_'+uid, walletAddress); localStorage.setItem('hrd_wallet_friendly_'+uid, walletFriendly); updateWalletUI();saveBalance();}else{ walletAddress=null;walletFriendly=null; localStorage.removeItem('hrd_wallet_'+uid); localStorage.removeItem('hrd_wallet_friendly_'+uid); updateWalletUI();saveBalance();}});});
+async function connectWallet(){ if(!tonConnectUI) return; if(walletAddress){ if(confirm('Copier UQ?\n'+walletFriendly)) navigator.clipboard.writeText(walletFriendly); if(confirm('Déconnecter?')) await tonConnectUI.disconnect(); } else { await tonConnectUI.openModal(); }}
+function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}html+=`<div class="miner-card"><div class="miner-icon">⚡</div><div style="flex:1"><div style="font-size:10px;color:#888">LVL ${lvl}</div><div style="font-size:14px;color:#00ff88;font-weight:900">${d.price}</div><div style="font-size:9px;color:#aaa">HOLD ${d.hold.toLocaleString()} • ${d.speed} TH/s</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
+function renderTasks(){let html='';TASKS.forEach(t=>{let done=tasksDone[t.id];html+=`<div class="miner-card"><div class="miner-icon" style="background:${t.color}">${t.icon}</div><div style="flex:1"><div style="font-size:13px;color:#fff;font-weight:800">${t.name}</div><div style="font-size:11px;color:#00ff88">${t.sub} • +${t.reward.toLocaleString()}</div></div><button class="miner-btn ${done?'btn-max':'btn-need'}" onclick="${done?'':`doTask('${t.id}')`}">${done?'✅ FAIT':'GO'}</button></div>`;});document.getElementById('tasksList').innerHTML=html;}
+async function doTask(id){let task=TASKS.find(x=>x.id===id);if(!task || tasksDone[id]) return;if(task.link!=='#invite') window.open(task.link,'_blank'); setTimeout(async()=>{tasksDone[id]=true;balanceCoins+=task.reward;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();renderTasks();await saveBalance();},1200);}
 function buyLevel(lvl){let need=getHold(lvl);if(balanceCoins<need || lvl<=currentLvl) return; currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 setInterval(()=>{if(!loaded)return;let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}updateUI();},1000);
-setInterval(()=>{if(loaded)saveBalance();},15000);
 btn.addEventListener('click',async()=>{let elapsedCheck=Date.now()-miningStartTime;if(elapsedCheck < MINING_DURATION - 5000) return; if(progress>=100){let claimed=mining;if(claimed<=0) return;balanceHRD+=claimed;balanceCoins=Math.floor(balanceHRD*1000000);mining=0;progress=0;miningStartTime=Date.now();updateUI();renderMiners();await saveBalance();}});
-async function loadFriends(){try{document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));f=f||[];friendsCount=f.length;document.getElementById('friendsSub').textContent=f.length+" amis • +"+(f.length*10)+"% bonus";document.getElementById('myFriendsSub').textContent=f.length+" amis";let list=document.getElementById('friendsList');if(f.length===0){ list.innerHTML='<div style="color:#666;text-align:center;margin-top:10px">Aucun ami encore</div>'; return; }let h=''; f.forEach(u=>{ h+=`<div class="miner-card"><div class="miner-icon">👤</div><div class="miner-info"><div style="font-size:12px;color:#fff">${u.first_name||`AMI ${u.id}`}</div><div style="font-size:11px;color:#00ff88">${(u.balance||0).toLocaleString()} coins</div></div><button class="miner-btn btn-active">+10%</button></div>`; }); list.innerHTML=h; updateUI();}catch(e){}}
-async function loadTopInviters(){try{let {data}=await supa.from('harold_users').select('referred_by').not('referred_by','is',null);let counts={}; (data||[]).forEach(r=>{ counts[r.referred_by]=(counts[r.referred_by]||0)+1; });let sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);let html=''; sorted.forEach((entry,i)=>{let medal=i<3?['🥇','🥈','🥉'][i]:`#${i+1}`; html+=`<div class="miner-card"><div class="miner-icon">${medal}</div><div class="miner-info"><div style="font-size:12px;color:#fff">ID ${String(entry[0]).slice(-4)}</div><div style="font-size:11px;color:#00ff88">${entry[1]} amis invités</div></div><button class="miner-btn btn-need">${entry[1]} INV</button></div>`;});document.getElementById('topInviters').innerHTML=html||'<div style="color:#666;font-size:11px;text-align:center">Aucun</div>';}catch(e){}}
+async function loadFriends(){try{let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));f=f||[];friendsCount=f.length;document.getElementById('friendsSub').textContent=f.length+" amis • +"+(f.length*10)+"%";document.getElementById('myFriendsSub').textContent=f.length+" amis";let list=document.getElementById('friendsList');if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:10px">Aucun ami</div>';return;}let h='';f.forEach(u=>{h+=`<div class="miner-card"><div class="miner-icon">👤</div><div style="flex:1"><div style="color:#fff;font-size:12px">${u.first_name||'Ami'}</div><div style="color:#00ff88;font-size:11px">${(u.balance||0).toLocaleString()} coins</div></div></div>`;});list.innerHTML=h;updateUI();}catch(e){}}
+async function loadTopInviters(){try{let {data}=await supa.from('harold_users').select('referred_by').not('referred_by','is',null);let counts={};(data||[]).forEach(r=>{counts[r.referred_by]=(counts[r.referred_by]||0)+1;});let sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);let html='';sorted.forEach((e,i)=>{let m=i<3?['🥇','🥈','🥉'][i]:`#${i+1}`;html+=`<div class="miner-card"><div class="miner-icon">${m}</div><div style="flex:1"><div style="color:#fff;font-size:12px">ID ${String(e[0]).slice(-4)}</div><div style="color:#00ff88;font-size:11px">${e[1]} invités</div></div></div>`;});document.getElementById('topInviters').innerHTML=html||'<div style="color:#666;text-align:center">Aucun</div>';}catch(e){}}
 function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value); alert('Lien copié!');}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
-let qr=null;function openCert(){document.getElementById('certLevel').textContent='LEVEL '+currentLvl;document.getElementById('certName').textContent=currentUserName||'Player';let link="https://t.me/Haroldcoin_bot?start="+uid;if(!qr){qr=new QRious({element:document.getElementById('qrCanvas'),size:200,level:'H',background:'#fff',foreground:'#000'});}qr.set({value:link});document.getElementById('certModal').classList.add('show');}
-function closeCert(){document.getElementById('certModal').classList.remove('show');}
+function openCert(){}
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
 </body>
