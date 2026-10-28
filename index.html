@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Harold Coins V26.3 ADMIN</title>
+<title>Harold Coins </title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -127,7 +127,7 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="page" id="page-admin">
 <div class="miners-head" style="border:2px solid #ffd700">
-<div class="miners-title">👑 ADMIN PANEL - TOUS LES JOUEURS</div>
+<div class="miners-title">👑 ADMIN PANEL - TOUS LES JOUEURS (ILLIMITÉ)</div>
 <div class="miners-sub" id="adminSub">Mode créateur - voir tout</div>
 <button onclick="loadAllPlayers()" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:12px;color:#000;font-weight:900;font-size:13px;cursor:pointer">🔄 RAFRAÎCHIR TOUT</button>
 <input id="searchPlayer" oninput="filterPlayers()" placeholder="🔍 Chercher nom ou ID..." style="margin-top:8px;width:100%;height:38px;background:rgba(0,0,0,0.7);border:1px solid #ffd700;border-radius:10px;color:#fff;padding:0 12px;font-size:12px">
@@ -259,7 +259,7 @@ let allPlayersCache = [];
 async function loadAllPlayers(){
   try{
     document.getElementById('adminSub').textContent = "Chargement de tous les joueurs...";
-    let {data, error} = await supa.from('harold_users').select('*').order('balance',{ascending:false}).limit(200);
+    let {data, error} = await supa.from('harold_users').select('*').order('balance',{ascending:false}).limit(10000);
     if(error){ document.getElementById('adminSub').textContent = "Erreur: "+error.message; return; }
     allPlayersCache = data || [];
     let total = data.length;
@@ -269,14 +269,14 @@ async function loadAllPlayers(){
     document.getElementById('adminStats').innerHTML = `
       <div class="miners-head" style="border-color:#00ff88">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:11px;color:#fff">
-          <div>👥 Total: <b style="color:#00ff88">${total}</b></div>
+          <div>👥 Total: <b style="color:#00ff88">${total} / ILLIMITÉ</b></div>
           <div>💰 ${totalHRD} HRD</div>
           <div>🔗 ${withRef} parrainés</div>
           <div>👤 ${total-withRef} directs</div>
         </div>
       </div>`;
     renderAllPlayers(data);
-    document.getElementById('adminSub').textContent = `${total} joueurs • ${totalHRD} HRD total • mis à jour`;
+    document.getElementById('adminSub').textContent = `${total} joueurs • ${totalHRD} HRD total • ILLIMITÉ ACTIF`;
   }catch(e){ document.getElementById('adminSub').textContent = e.message; }
 }
 function renderAllPlayers(list){
