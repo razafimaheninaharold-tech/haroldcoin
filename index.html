@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V19 SYNC</title>
+<title>Haroldcoin V20 FINAL BLUE WALLET</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,17 +18,19 @@ body{background:#000;display:flex;justify-content:center}
 .app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
 @keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:rgba(5,15,25,0.85);border:1px solid rgba(212,175,55,0.25);border-radius:14px;padding:10px}
-.lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px}
-.cert-tab{margin-left:8px;margin-top:2px;background:linear-gradient(90deg,#00e5ff,#0080ff);color:#fff;padding:4px 9px;border-radius:8px;font-size:9px;font-weight:900;cursor:pointer;border:1px solid #00e5ff;animation:certPulse 1.5s infinite}
-@keyframes certPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,0.6)}50%{box-shadow:0 0 0 6px rgba(0,229,255,0)}}
+.top{display:flex;justify-content:space-between;align-items:flex-start;background:rgba(8,12,20,0.92);border:1px solid rgba(212,175,55,0.28);border-radius:16px;padding:10px}
+.top-left{display:flex;align-items:flex-start;gap:8px;flex:1;min-width:0}
+.top-right{display:flex;flex-direction:column;gap:7px;align-items:flex-end;flex-shrink:0}
+.lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px;display:inline-flex}
+.cert-btn{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#3db8ff,#0066ff);color:#fff;padding:6px 12px;border-radius:12px;font-size:10px;font-weight:900;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(0,102,255,0.45);min-width:68px;line-height:1.1}
 .sync-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.15);border:1px solid #ffd700;color:#ffd700;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900;letter-spacing:0.5px;box-shadow:0 0 12px rgba(255,215,0,0.3);margin-top:6px}
 .sync-dot{width:8px;height:8px;background:#ffd700;border-radius:50%;box-shadow:0 0 8px #ffd700;animation:syncBlink 0.8s infinite}
 @keyframes syncBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
 .sync-pill.saving{background:rgba(0,255,136,0.15);border-color:#00ff88;color:#00ff88}
 .sync-pill.saving .sync-dot{background:#00ff88;box-shadow:0 0 8px #00ff88}
-.left-pill{margin-top:6px;display:inline-flex;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
-.wallet{background:rgba(0,0,0,0.6);border:1.5px solid transparent;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)) padding-box, linear-gradient(90deg,#00e5ff,#ffbb66) border-box;color:#fff;padding:6px 10px;border-radius:16px;font-size:10px;font-weight:600}
+.left-pill{margin-top:6px;display:inline-flex;background:rgba(0,255,100,0.12);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:4px 10px;border-radius:12px;font-size:9px;font-weight:800;line-height:1.2}
+/* WALLET BLEU TON COMME TA PHOTO */
+.wallet{background:#2CA5E0;color:#fff;border:none;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:7px;min-width:125px;box-shadow:0 4px 18px rgba(44,165,224,0.5);line-height:1.15;text-align:center;cursor:pointer}
 .assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
 .assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px}
 .assets-value{font-family:'Inter';font-size:12px;font-weight:900;color:#000;line-height:1.2}
@@ -79,21 +81,20 @@ body{background:#000;display:flex;justify-content:center}
 <div class="app">
 <div class="content">
 <div class="top">
-<div style="display:flex;align-items:flex-start;gap:8px">
-<img id="userAvatar" src="" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:#111;object-fit:cover;display:none">
-<div id="userAvatarFallback" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:linear-gradient(135deg,#ffd700,#ff8c00);display:flex;align-items:center;justify-content:center;font-size:16px">👤</div>
+<div class="top-left">
+<img id="userAvatar" src="" style="width:42px;height:42px;border-radius:50%;border:2px solid #d4af37;background:#111;object-fit:cover;display:none">
+<div id="userAvatarFallback" style="width:42px;height:42px;border-radius:50%;border:2px solid #d4af37;background:linear-gradient(135deg,#ffd700,#ff8c00);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">👤</div>
 <div style="display:flex;flex-direction:column;min-width:0">
-<div id="userName" style="font-family:'Orbitron';font-size:14px;font-weight:900;color:#fff;line-height:1">...</div>
-<div style="display:flex;flex-direction:column;align-items:flex-start">
-<div class="lvl" id="lvlDisplay">👑 Lvl 1</div>
+<div id="userName" style="font-family:'Orbitron';font-size:14px;font-weight:900;color:#fff;line-height:1.1;white-space:nowrap">Hugo<br>Mahary</div>
+<div class="lvl" id="lvlDisplay">👑 Lvl 48</div>
 <div class="sync-pill" id="syncPill"><span class="sync-dot"></span> SYNC</div>
-<div class="left-pill" id="leftToLvl">0.0007$ left to Lvl UP ›</div>
+<div class="left-pill" id="leftToLvl">0.2369$ left to<br>Lvl UP ›</div>
 </div>
-<div id="userIdDisplay" style="display:none">ID: ...</div>
 </div>
-<div class="cert-tab" onclick="openCert()">📜 CERT</div>
+<div class="top-right">
+<div class="cert-btn" onclick="openCert()"><span>📜</span><span>CERT</span></div>
+<div class="wallet"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 6L12 22L22 6L12 2Z" stroke="white" stroke-width="1.5" fill="white" opacity="0.9"/><path d="M2 6L12 10L22 6" stroke="#2CA5E0" stroke-width="1.5"/></svg><div>Connect<br>Wallet</div></div>
 </div>
-<div class="wallet" style="margin-top:4px">Connect Wallet</div>
 </div>
 <div class="page active" id="page-mine">
 <div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div><div class="mining-plus"><div style="font-size:8px;color:#fff">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div>
@@ -152,7 +153,7 @@ function updateUI(){
   let needDollars=needCoins*0.0000015;
   if(needDollars<0.001) needDollars=0.001+needCoins*0.0000008;
   let leftEl=document.getElementById('leftToLvl');
-  if(leftEl) leftEl.textContent=needDollars.toFixed(4)+"$ left to Lvl UP  ›";
+  if(leftEl) leftEl.innerHTML=needDollars.toFixed(4)+"$ left to<br>Lvl UP ›";
   document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US")+" coins";
 }
 async function saveBalance(){
@@ -165,10 +166,8 @@ async function saveBalance(){
   }catch(e){ if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } }
 }
 async function loadBalance(){
-  try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
+  try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').innerHTML=currentUserName.replace(' ','<br>');if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
   try{
-    let startParam=tg?.initDataUnsafe?.start_param;
-    if(startParam){let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single();if(!existing || !existing.referred_by){await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);}}catch(e){}}}}
     let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
     if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;}else{miningStartTime=Date.now();}
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
@@ -176,19 +175,19 @@ async function loadBalance(){
   }catch(e){loaded=true;updateUI();renderMiners();renderTasks();}
 }
 function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':lvl>=50?'⚡':'🔧';let hl=lvl===currentLvl?'border:2px solid #ffd700':'';html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">HOLD ${d.hold.toLocaleString("en-US")} coins</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${d.hrd4h.toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
-function renderTasks(){let html='';let doneCount=Object.keys(tasksDone).length;TASKS.forEach(t=>{let done=tasksDone[t.id];let extra='';if(t.needRef){extra=` • ${friendsCount}/${t.needRef}`;}html+=`<div class="task-card ${done?'done':''}"><div class="task-icon" style="background:${t.color}">${t.icon}</div><div class="task-info"><div class="task-name">${t.name}</div><div class="task-reward">${t.sub}${extra} • +${t.reward.toLocaleString("en-US")} coins</div></div><button class="task-btn ${done?'task-btn-done':'task-btn-go'}" onclick="${done?'':`doTask('${t.id}')`}">${done?'✅ FAIT':(t.needRef?(friendsCount>=t.needRef?'CLAIM':'INVITE'):'GO')}</button></div>`;});document.getElementById('tasksList').innerHTML=html;document.getElementById('tasksSub').textContent=doneCount+"/"+TASKS.length+" faites";}
+function renderTasks(){let html='';TASKS.forEach(t=>{let done=tasksDone[t.id];let extra='';if(t.needRef){extra=` • ${friendsCount}/${t.needRef}`;}html+=`<div class="task-card ${done?'done':''}"><div class="task-icon" style="background:${t.color}">${t.icon}</div><div class="task-info"><div class="task-name">${t.name}</div><div class="task-reward">${t.sub}${extra} • +${t.reward.toLocaleString("en-US")} coins</div></div><button class="task-btn ${done?'task-btn-done':'task-btn-go'}" onclick="${done?'':`doTask('${t.id}')`}">${done?'✅ FAIT':(t.needRef?(friendsCount>=t.needRef?'CLAIM':'INVITE'):'GO')}</button></div>`;});document.getElementById('tasksList').innerHTML=html;document.getElementById('tasksSub').textContent=Object.keys(tasksDone).length+"/"+TASKS.length+" faites";}
 async function doTask(id){let task=TASKS.find(x=>x.id===id);if(!task || tasksDone[id]) return;if(task.link==='#invite'){if(friendsCount < task.needRef){showPage('friends');return;}}else{window.open(task.link,'_blank');}setTimeout(async()=>{tasksDone[id]=true;balanceCoins+=task.reward;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();renderTasks();await saveBalance();},task.link==='#invite'?500:2000);}
 function buyLevel(lvl){let need=getHold(lvl);if(balanceCoins<need || lvl<=currentLvl) return; currentLvl=lvl;updateUI();renderMiners();saveBalance();}
 setInterval(()=>{if(!loaded)return;let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}updateUI();},1000);
 setInterval(()=>{if(loaded)saveBalance();},10000);
 btn.addEventListener('click',async()=>{if(progress>=100){let claimed=mining;balanceHRD+=mining;balanceCoins=Math.floor(balanceHRD*1000000);mining=0;progress=0;miningStartTime=Date.now();currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();await saveBalance();try{let {data:me}=await supa.from('harold_users').select('referred_by').eq('id',parseInt(uid)).single();if(me && me.referred_by){let bonusCoins=Math.floor(claimed*0.1*1000000);if(bonusCoins>0){let {data:p}=await supa.from('harold_users').select('balance').eq('id',me.referred_by).single();if(p){await supa.from('harold_users').update({balance:(p.balance||0)+bonusCoins}).eq('id',me.referred_by);}}}}catch(e){}}});
-async function loadFriends(){try{document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));f=f||[];friendsCount=f.length;let list=document.getElementById('friendsList');if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami</div>';renderTasks();return;}let h='';f.forEach(u=>{let coins=u.balance||0;let hrd=(coins/1000000).toFixed(4);let name=u.first_name || `AMI ${u.id}`;let avatar=u.photo_url?`<img src="${u.photo_url}" style="width:100%;height:100%;object-fit:cover">`:`👤`;h+=`<div class="miner-card"><div class="miner-icon">${avatar}</div><div class="miner-info"><div class="miner-lvl">${name}</div><div style="font-size:12px;color:#00ff88;font-weight:900">${coins.toLocaleString("en-US")} coins</div><div style="font-size:10px;color:#aaa">${hrd} HRD • LVL ${getLevelFromBalance(coins)}</div></div><button class="miner-btn btn-active">+10%</button></div>`;});list.innerHTML=h;renderTasks();}catch(e){}}
+async function loadFriends(){try{document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;let {data:f}=await supa.from('harold_users').select('*').eq('referred_by',parseInt(uid));f=f||[];friendsCount=f.length;let list=document.getElementById('friendsList');if(f.length===0){list.innerHTML='<div style="color:#666;text-align:center;margin-top:20px">Aucun ami</div>';return;}let h='';f.forEach(u=>{let coins=u.balance||0;let hrd=(coins/1000000).toFixed(4);let name=u.first_name || `AMI ${u.id}`;let avatar=u.photo_url?`<img src="${u.photo_url}" style="width:100%;height:100%;object-fit:cover">`:`👤`;h+=`<div class="miner-card"><div class="miner-icon">${avatar}</div><div class="miner-info"><div class="miner-lvl">${name}</div><div style="font-size:12px;color:#00ff88;font-weight:900">${coins.toLocaleString("en-US")} coins</div><div style="font-size:10px;color:#aaa">${hrd} HRD • LVL ${getLevelFromBalance(coins)}</div></div><button class="miner-btn btn-active">+10%</button></div>`;});list.innerHTML=h;}catch(e){}}
 function copyLink(){navigator.clipboard.writeText(document.getElementById('inviteLink').value);}
 document.getElementById('inviteBtn')?.addEventListener('click',copyLink);
 let qr=null;
 function openCert(){
   document.getElementById('certLevel').textContent='LEVEL '+currentLvl;
-  document.getElementById('certName').textContent=currentUserName||'Hugo Mahary';
+  document.getElementById('certName').textContent=currentUserName.replace('<br>',' ')||'Hugo Mahary';
   document.getElementById('certHRD').textContent='+'+balanceHRD.toFixed(4)+' HRD';
   document.getElementById('certSerial').textContent='SERIAL: HRD-'+String(currentLvl).padStart(4,'0')+'-'+String(parseInt(uid)).slice(-4);
   document.getElementById('certDate').textContent='ISSUED • '+new Date().toISOString().slice(0,10);
