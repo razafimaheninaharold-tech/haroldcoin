@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin V19 SYNC + WALLET SAVE</title>
+<title>Haroldcoin V19 TONKEEPER</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -19,19 +19,19 @@ body{background:#000;display:flex;justify-content:center}
 .app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
 @keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:transparent;border:none;border-radius:14px;padding:6px 4px 10px;gap:6px}
+.top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:transparent;border:none;padding:6px 4px 10px;gap:6px}
 .top-left-zone{display:flex;align-items:flex-start;gap:8px;flex:1;min-width:0}
 .top-right-zone{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
 .lvl{background:linear-gradient(90deg,#fff9c4,#d4af37);color:#000;border:1px solid #ffd700;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;margin-top:6px}
-.cert-tab{background:linear-gradient(90deg,#3bb6ff,#0090ff);color:#fff;padding:6px 14px;border-radius:20px;font-size:10px;font-weight:900;cursor:pointer;border:1.5px solid #4fc3f7;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;min-width:56px;box-shadow:0 2px 10px rgba(0,144,255,0.4)}
+.cert-tab{background:linear-gradient(90deg,#3bb6ff,#0090ff);color:#fff;padding:6px 14px;border-radius:20px;font-size:10px;font-weight:900;cursor:pointer;border:1.5px solid #4fc3f7;display:flex;flex-direction:column;align-items:center;line-height:1.1;min-width:56px;box-shadow:0 2px 10px rgba(0,144,255,0.4)}
 .sync-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.15);border:1px solid #ffd700;color:#ffd700;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900;letter-spacing:0.5px;box-shadow:0 0 12px rgba(255,215,0,0.3);margin-top:6px}
 .sync-dot{width:8px;height:8px;background:#ffd700;border-radius:50%;box-shadow:0 0 8px #ffd700;animation:syncBlink 0.8s infinite}
 @keyframes syncBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
 .sync-pill.saving{background:rgba(0,255,136,0.15);border-color:#00ff88;color:#00ff88}
 .sync-pill.saving .sync-dot{background:#00ff88;box-shadow:0 0 8px #00ff88}
 .left-pill{margin-top:6px;display:inline-flex;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
-.wallet{background:#1a9bff;border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:96px;justify-content:center;line-height:1.15;box-shadow:0 3px 12px rgba(26,155,255,0.45);cursor:pointer;transition:all 0.2s}
-.wallet.connected{background:linear-gradient(90deg,#00e5a0,#00c853);box-shadow:0 3px 12px rgba(0,200,83,0.45)}
+.wallet{background:#1a9bff;border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:96px;justify-content:center;line-height:1.15;box-shadow:0 3px 12px rgba(26,155,255,0.45);cursor:pointer}
+.wallet.connected{background:linear-gradient(90deg,#00c853,#00e5a0);box-shadow:0 3px 12px rgba(0,200,83,0.45)}
 .assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
 .assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px}
 .assets-value{font-family:'Inter';font-size:12px;font-weight:900;color:#000;line-height:1.2}
@@ -50,7 +50,7 @@ body{background:#000;display:flex;justify-content:center}
 .claim.ready{background:linear-gradient(#1a3a00,#0a0a14) padding-box, linear-gradient(90deg,#00ff88,#ffd700) border-box;box-shadow:0 0 25px rgba(0,255,136,0.6);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 .timer{color:#ffd700;font-size:14px;font-weight:900;margin-top:10px;font-family:'Orbitron'}
-.bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:transparent;border:none;display:flex;justify-content:space-between;padding:8px 6px;gap:6px;border-radius:18px 18px 0 0;z-index:999}
+.bottom{position:absolute;bottom:0;left:0;right:0;height:86px;background:transparent;border:none;display:flex;justify-content:space-between;padding:8px 6px;gap:6px;z-index:999}
 .nav{flex:1;height:62px;background:linear-gradient(145deg,#1e2535,#151a28);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer}
 .nav.active{background:linear-gradient(145deg,#2a2215,#1f1a0f);border:1.5px solid #ffd700;color:#ffd700}
 .nav b{font-size:20px}
@@ -60,7 +60,7 @@ body{background:#000;display:flex;justify-content:center}
 .miners-sub{font-size:11px;color:#aaa;margin-top:4px;font-weight:600}
 .miner-card{background:linear-gradient(135deg,rgba(22,22,22,0.98),rgba(0,0,0,0.99));border:1.2px solid rgba(212,175,55,0.28);border-radius:13px;padding:10px 11px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
 .miner-icon{width:42px;height:42px;background:#111;border:1px solid #333;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0}
-.miner-info{flex:1;min-width:0}.miner-lvl{font-size:10px;color:#888;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.miner-price{font-size:15px;color:#00ff88;font-weight:900}.miner-hold{font-size:9px;color:#aaa}.miner-speed{font-size:10px;color:#d4af37;font-weight:700}
+.miner-info{flex:1;min-width:0}.miner-lvl{font-size:10px;color:#888;font-weight:800}.miner-price{font-size:15px;color:#00ff88;font-weight:900}.miner-hold{font-size:9px;color:#aaa}.miner-speed{font-size:10px;color:#d4af37;font-weight:700}
 .miner-btn{padding:7px 10px;border-radius:8px;border:none;font-weight:900;font-size:10px;min-width:75px;cursor:pointer;flex-shrink:0}
 .btn-active{background:linear-gradient(#fff9c4,#d4af37);color:#000}.btn-need{background:linear-gradient(#ffeda0,#ffaa00);color:#000}.btn-locked{background:#222;color:#666;border:1px solid #333}.btn-max{background:linear-gradient(#ffd700,#ff8c00);color:#000}
 .task-card{background:linear-gradient(135deg,rgba(20,20,30,0.98),rgba(0,0,0,0.99));border:1.5px solid rgba(0,229,255,0.3);border-radius:14px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:10px}
@@ -69,7 +69,7 @@ body{background:#000;display:flex;justify-content:center}
 .task-info{flex:1}.task-name{font-size:13px;color:#fff;font-weight:800}.task-reward{font-size:11px;color:#00ff88;font-weight:700;margin-top:2px}
 .task-btn{padding:8px 14px;border-radius:10px;border:none;font-weight:900;font-size:11px;cursor:pointer;min-width:80px}
 .task-btn-go{background:linear-gradient(90deg,#00e5ff,#0080ff);color:#fff}.task-btn-done{background:#00ff88;color:#000}
-.cert-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.96);z-index:99999;display:none;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cert-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.96);z-index:99999;display:none;padding:0;overflow-y:auto}
 .cert-modal.show{display:flex;align-items:flex-start;justify-content:center;padding:10px 10px 20px}
 .cert-card{width:100%;max-width:360px;background:radial-gradient(circle at 50% 10%, #0a2a4a 0%, #020a14 75%);border:2px solid #00e5ff;border-radius:18px;padding:12px 14px 18px;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,229,255,0.6);margin:10px auto;flex-shrink:0}
 .hex-wrap{width:130px;height:130px;margin:6px auto;position:relative}
@@ -96,7 +96,7 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="top-right-zone">
 <div class="cert-tab" onclick="openCert()"><span style="font-size:12px">📜</span><span>CERT</span></div>
-<div class="wallet" id="walletBtn" onclick="connectWallet()"><span style="font-size:14px">◿</span><span id="walletText">Connect<br>Wallet</span></div>
+<div class="wallet" id="walletBtn" onclick="connectWallet()"><span id="walletText">Connect<br>Wallet</span></div>
 </div>
 </div>
 <div class="page active" id="page-mine">
@@ -115,6 +115,9 @@ body{background:#000;display:flex;justify-content:center}
 <div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
 <div class="cert-modal" id="certModal" onclick="if(event.target==this)closeCert()"><div class="cert-card" id="certCard"><div style="text-align:center;color:#00e5ff;font-family:'Orbitron';font-size:10px;letter-spacing:3px">MINER CERTIFICATE</div><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px"><div style="color:#00e5ff;font-weight:900;font-family:'Orbitron';font-size:15px;line-height:1">HRD<br><span style="font-size:9px;color:#88aaff">Haroldcoin</span></div><div id="certDate" style="color:#00e5ff;font-size:8px;background:rgba(0,229,255,0.15);padding:3px 6px;border-radius:6px">ISSUED • 2026-10-28</div></div><div class="hex-wrap"><div class="hex"><div style="text-align:center"><div style="font-size:24px">🔷</div><div style="font-family:'Orbitron';color:#00e5ff;font-weight:900;font-size:18px">HRD</div></div></div></div><div class="cert-level" id="certLevel">LEVEL 48</div><div style="text-align:center;margin-top:4px"><div style="color:#00e5ff;font-size:9px;letter-spacing:2px">USERNAME</div><div id="certName" style="color:#fff;font-weight:900;font-size:18px;font-family:'Inter';margin-top:1px">Hugo Mahary</div><div style="color:#aaa;font-size:10px;margin-top:4px">TOTAL HRD MINED <span id="certHRD" style="color:#00e5ff;font-weight:900">+4.1639 HRD</span></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:10px 0 0;border-top:1px solid rgba(0,229,255,0.25);gap:8px"><div style="flex:1"><div style="color:#00e5ff;font-size:6px;letter-spacing:0.5px;line-height:1.2">VALIDATED • SECURE •<br>BLOCKCHAIN</div><div id="certSerial" style="color:#666;font-size:6px;margin-top:3px">SERIAL: HRD-0048-6139</div></div><canvas id="qrCanvas" class="cert-qr"></canvas><div style="flex:1;text-align:right"><div style="color:#00e5ff;font-size:6px;line-height:1.2">VERIFY ON<br>HAROLDCHAIN</div></div></div><button id="saveBtn" onclick="saveCert()" style="margin-top:12px;width:100%;height:44px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-family:'Orbitron';font-size:13px;cursor:pointer;box-shadow:0 0 15px rgba(0,229,255,0.5)">⬇ SAVE CERTIFICATE</button><button onclick="closeCert()" style="margin-top:8px;width:100%;height:40px;background:rgba(255,255,255,0.08);border:1px solid #444;border-radius:12px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">FERMER</button><div style="height:10px"></div></div></div>
+
+<div id="ton-root-hidden" style="display:none"></div>
+
 <script>
 function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector(`.nav[data-page="${n}"]`).classList.add('active');if(n==='friends')loadFriends();if(n==='tasks')renderTasks();}
 document.querySelectorAll('.nav').forEach(nav=>{nav.addEventListener('click',()=>showPage(nav.dataset.page));});
@@ -150,7 +153,7 @@ function updateWalletUI(){
   let wText=document.getElementById('walletText');
   if(walletAddress){
     wBtn.classList.add('connected');
-    wText.innerHTML=(walletAddress.slice(0,4)+'...'+walletAddress.slice(-4))+'<br>✓ Saved';
+    wText.innerHTML=walletAddress.slice(0,4)+'...'+walletAddress.slice(-4)+'<br>✓';
   } else {
     wBtn.classList.remove('connected');
     wText.innerHTML='Connect<br>Wallet';
@@ -161,32 +164,20 @@ async function saveBalance(){
   const pill=document.getElementById('syncPill');
   if(pill){ pill.classList.add('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC...'; }
   try{
-    // Sauvegarde principale + wallet_address
     await supa.from('harold_users').upsert({
-      id:parseInt(uid),
-      balance:balanceCoins,
-      first_name:currentUserName,
-      photo_url:currentUserPhoto,
-      wallet_address:walletAddress,
-      mining_start:new Date(miningStartTime).toISOString(),
-      mining_amount:mining,
-      mining_cards:JSON.stringify(miningCards),
-      tasks_done:JSON.stringify(tasksDone),
-      last_seen:new Date().toISOString()
+      id:parseInt(uid), balance:balanceCoins, first_name:currentUserName, photo_url:currentUserPhoto,
+      wallet_address:walletAddress, mining_start:new Date(miningStartTime).toISOString(),
+      mining_amount:mining, mining_cards:JSON.stringify(miningCards), tasks_done:JSON.stringify(tasksDone), last_seen:new Date().toISOString()
     },{onConflict:'id'});
     localStorage.setItem('hrd_wallet_'+uid, walletAddress||'');
     if(pill){ setTimeout(()=>{ pill.classList.remove('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC'; },800); }
-  }catch(e){ 
-    // Si colonne wallet_address n'existe pas encore, on sauve sans elle
-    try{
-      await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});
-    }catch(e2){}
+  }catch(e){
+    try{ await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});}catch(e2){}
     localStorage.setItem('hrd_wallet_'+uid, walletAddress||'');
-    if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } 
+    if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); }
   }
 }
 async function loadBalance(){
-  // Restaure wallet local d'abord
   walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null;
   updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
@@ -203,34 +194,41 @@ async function loadBalance(){
     loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();
   }catch(e){loaded=true;updateUI();renderMiners();renderTasks();}
 }
-// CONNECT WALLET LOGIC
+// === TONKEEPER DIRECT ===
+document.addEventListener('DOMContentLoaded', ()=>{
+  tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: 'https://ton-connect.github.io/demo-dapp-with-wallet/tonconnect-manifest.json',
+    buttonRootId: 'ton-root-hidden'
+  });
+  tonConnectUI.onStatusChange(wallet => {
+    if(wallet && wallet.account){
+      walletAddress = wallet.account.address;
+      localStorage.setItem('hrd_wallet_'+uid, walletAddress);
+      updateWalletUI();
+      saveBalance();
+    } else {
+      walletAddress = null;
+      localStorage.removeItem('hrd_wallet_'+uid);
+      updateWalletUI();
+      saveBalance();
+    }
+  });
+  // Restore
+  setTimeout(()=>{
+    if(tonConnectUI.account){
+      walletAddress = tonConnectUI.account.address;
+      updateWalletUI();
+    }
+  }, 800);
+});
 async function connectWallet(){
+  if(!tonConnectUI){ alert('Recharge la page mon cher'); return; }
   if(walletAddress){
-    if(confirm('Déconnecter wallet '+walletAddress.slice(0,6)+'... ?')){ walletAddress=null; updateWalletUI(); await saveBalance(); }
-    return;
-  }
-  try{
-    if(!tonConnectUI){
-      tonConnectUI=new TON_CONNECT_UI.TonConnectUI({
-        manifestUrl:'https://ton-connect.github.io/demo-dapp-with-wallet/tonconnect-manifest.json',
-        buttonRootId:'ton-root-hidden'
-      });
+    if(confirm('Déconnecter '+walletAddress.slice(0,6)+'...?')){
+      await tonConnectUI.disconnect();
     }
-    const connectedWallet=await tonConnectUI.connectWallet();
-    if(connectedWallet && connectedWallet.account && connectedWallet.account.address){
-      walletAddress=connectedWallet.account.address;
-      updateWalletUI();
-      await saveBalance();
-      alert('✅ Wallet connecté: '+walletAddress.slice(0,6)+'... sauvegardé!');
-    }
-  }catch(err){
-    // Fallback manuel si TonConnect ne marche pas dans WebView
-    let addr=prompt('Entre ton adresse TON (UQ... ou EQ...):');
-    if(addr && addr.length>10){
-      walletAddress=addr.trim();
-      updateWalletUI();
-      await saveBalance();
-    }
+  } else {
+    await tonConnectUI.openModal(); // Ouvre Tonkeeper, MyTonWallet, Gram Wallet etc.
   }
 }
 function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':lvl>=50?'⚡':'🔧';let hl=lvl===currentLvl?'border:2px solid #ffd700':'';html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">HOLD ${d.hold.toLocaleString("en-US")} coins</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${d.hrd4h.toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
@@ -262,6 +260,5 @@ async function saveCert(){
 }
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
-<div id="ton-root-hidden" style="display:none"></div>
 </body>
 </html>
