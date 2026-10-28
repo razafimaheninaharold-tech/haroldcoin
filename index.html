@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Haroldcoin </title>
+<title>Haroldcoin V19 SYNC + WALLET SAVE</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center}
@@ -18,7 +19,6 @@ body{background:#000;display:flex;justify-content:center}
 .app::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(2px 2px at 20px 30px, #ffd700, transparent),radial-gradient(2px 2px at 80px 90px, #fff, transparent);background-size:300px 300px;animation:starsTwinkle 2.5s infinite;pointer-events:none;z-index:1}
 @keyframes starsTwinkle{0%,100%{opacity:0.4}50%{opacity:1}}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
-/* TOP SANS CADRE NOIR + WALLET ALIGNE */
 .top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;background:transparent;border:none;border-radius:14px;padding:6px 4px 10px;gap:6px}
 .top-left-zone{display:flex;align-items:flex-start;gap:8px;flex:1;min-width:0}
 .top-right-zone{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
@@ -30,8 +30,8 @@ body{background:#000;display:flex;justify-content:center}
 .sync-pill.saving{background:rgba(0,255,136,0.15);border-color:#00ff88;color:#00ff88}
 .sync-pill.saving .sync-dot{background:#00ff88;box-shadow:0 0 8px #00ff88}
 .left-pill{margin-top:6px;display:inline-flex;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
-/* WALLET COMME TA 2EME PHOTO - BLEU */
-.wallet{background:#1a9bff;border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:96px;justify-content:center;line-height:1.15;box-shadow:0 3px 12px rgba(26,155,255,0.45);cursor:pointer}
+.wallet{background:#1a9bff;border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:96px;justify-content:center;line-height:1.15;box-shadow:0 3px 12px rgba(26,155,255,0.45);cursor:pointer;transition:all 0.2s}
+.wallet.connected{background:linear-gradient(90deg,#00e5a0,#00c853);box-shadow:0 3px 12px rgba(0,200,83,0.45)}
 .assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
 .assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px}
 .assets-value{font-family:'Inter';font-size:12px;font-weight:900;color:#000;line-height:1.2}
@@ -96,7 +96,7 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="top-right-zone">
 <div class="cert-tab" onclick="openCert()"><span style="font-size:12px">📜</span><span>CERT</span></div>
-<div class="wallet"><span style="font-size:14px">◿</span><span>Connect<br>Wallet</span></div>
+<div class="wallet" id="walletBtn" onclick="connectWallet()"><span style="font-size:14px">◿</span><span id="walletText">Connect<br>Wallet</span></div>
 </div>
 </div>
 <div class="page active" id="page-mine">
@@ -114,27 +114,13 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 <div class="bottom"><div class="nav active" data-page="mine"><b>⛏️</b>Mine</div><div class="nav" data-page="tasks"><b>☰</b>Tasks</div><div class="nav" data-page="miners"><b>🤖</b>Miners</div><div class="nav" data-page="friends"><b>👥</b>Friends</div></div>
 </div>
-
-<div class="cert-modal" id="certModal" onclick="if(event.target==this)closeCert()">
-<div class="cert-card" id="certCard">
-<div style="text-align:center;color:#00e5ff;font-family:'Orbitron';font-size:10px;letter-spacing:3px">MINER CERTIFICATE</div>
-<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px"><div style="color:#00e5ff;font-weight:900;font-family:'Orbitron';font-size:15px;line-height:1">HRD<br><span style="font-size:9px;color:#88aaff">Haroldcoin</span></div><div id="certDate" style="color:#00e5ff;font-size:8px;background:rgba(0,229,255,0.15);padding:3px 6px;border-radius:6px">ISSUED • 2026-10-28</div></div>
-<div class="hex-wrap"><div class="hex"><div style="text-align:center"><div style="font-size:24px">🔷</div><div style="font-family:'Orbitron';color:#00e5ff;font-weight:900;font-size:18px">HRD</div></div></div></div>
-<div class="cert-level" id="certLevel">LEVEL 48</div>
-<div style="text-align:center;margin-top:4px"><div style="color:#00e5ff;font-size:9px;letter-spacing:2px">USERNAME</div><div id="certName" style="color:#fff;font-weight:900;font-size:18px;font-family:'Inter';margin-top:1px">Hugo Mahary</div><div style="color:#aaa;font-size:10px;margin-top:4px">TOTAL HRD MINED <span id="certHRD" style="color:#00e5ff;font-weight:900">+4.1639 HRD</span></div></div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:10px 0 0;border-top:1px solid rgba(0,229,255,0.25);gap:8px"><div style="flex:1"><div style="color:#00e5ff;font-size:6px;letter-spacing:0.5px;line-height:1.2">VALIDATED • SECURE •<br>BLOCKCHAIN</div><div id="certSerial" style="color:#666;font-size:6px;margin-top:3px">SERIAL: HRD-0048-6139</div></div><canvas id="qrCanvas" class="cert-qr"></canvas><div style="flex:1;text-align:right"><div style="color:#00e5ff;font-size:6px;line-height:1.2">VERIFY ON<br>HAROLDCHAIN</div></div></div>
-<button id="saveBtn" onclick="saveCert()" style="margin-top:12px;width:100%;height:44px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-family:'Orbitron';font-size:13px;cursor:pointer;box-shadow:0 0 15px rgba(0,229,255,0.5)">⬇ SAVE CERTIFICATE</button>
-<button onclick="closeCert()" style="margin-top:8px;width:100%;height:40px;background:rgba(255,255,255,0.08);border:1px solid #444;border-radius:12px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">FERMER</button>
-<div style="height:10px"></div>
-</div>
-</div>
-
+<div class="cert-modal" id="certModal" onclick="if(event.target==this)closeCert()"><div class="cert-card" id="certCard"><div style="text-align:center;color:#00e5ff;font-family:'Orbitron';font-size:10px;letter-spacing:3px">MINER CERTIFICATE</div><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px"><div style="color:#00e5ff;font-weight:900;font-family:'Orbitron';font-size:15px;line-height:1">HRD<br><span style="font-size:9px;color:#88aaff">Haroldcoin</span></div><div id="certDate" style="color:#00e5ff;font-size:8px;background:rgba(0,229,255,0.15);padding:3px 6px;border-radius:6px">ISSUED • 2026-10-28</div></div><div class="hex-wrap"><div class="hex"><div style="text-align:center"><div style="font-size:24px">🔷</div><div style="font-family:'Orbitron';color:#00e5ff;font-weight:900;font-size:18px">HRD</div></div></div></div><div class="cert-level" id="certLevel">LEVEL 48</div><div style="text-align:center;margin-top:4px"><div style="color:#00e5ff;font-size:9px;letter-spacing:2px">USERNAME</div><div id="certName" style="color:#fff;font-weight:900;font-size:18px;font-family:'Inter';margin-top:1px">Hugo Mahary</div><div style="color:#aaa;font-size:10px;margin-top:4px">TOTAL HRD MINED <span id="certHRD" style="color:#00e5ff;font-weight:900">+4.1639 HRD</span></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:10px 0 0;border-top:1px solid rgba(0,229,255,0.25);gap:8px"><div style="flex:1"><div style="color:#00e5ff;font-size:6px;letter-spacing:0.5px;line-height:1.2">VALIDATED • SECURE •<br>BLOCKCHAIN</div><div id="certSerial" style="color:#666;font-size:6px;margin-top:3px">SERIAL: HRD-0048-6139</div></div><canvas id="qrCanvas" class="cert-qr"></canvas><div style="flex:1;text-align:right"><div style="color:#00e5ff;font-size:6px;line-height:1.2">VERIFY ON<br>HAROLDCHAIN</div></div></div><button id="saveBtn" onclick="saveCert()" style="margin-top:12px;width:100%;height:44px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-family:'Orbitron';font-size:13px;cursor:pointer;box-shadow:0 0 15px rgba(0,229,255,0.5)">⬇ SAVE CERTIFICATE</button><button onclick="closeCert()" style="margin-top:8px;width:100%;height:40px;background:rgba(255,255,255,0.08);border:1px solid #444;border-radius:12px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">FERMER</button><div style="height:10px"></div></div></div>
 <script>
 function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector(`.nav[data-page="${n}"]`).classList.add('active');if(n==='friends')loadFriends();if(n==='tasks')renderTasks();}
 document.querySelectorAll('.nav').forEach(nav=>{nav.addEventListener('click',()=>showPage(nav.dataset.page));});
 const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let tg=window.Telegram?.WebApp;let uid=tg?.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '2120736139';
-const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';
+const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';let walletAddress=null;let tonConnectUI=null;
 const circle=document.getElementById('progressCircle'),assetsValue=document.getElementById('assetsValue'),miningPlus=document.getElementById('miningPlus'),powerFill=document.getElementById('powerFill'),btn=document.getElementById('claimBtn'),timerEl=document.getElementById('timer');
 const circ=2*Math.PI*40;circle.style.strokeDasharray=circ;
 const TASKS=[{id:'x_follow',name:'Follow X (Twitter)',sub:'@Haroldcoinsbot',icon:'𝕏',color:'linear-gradient(135deg,#000,#444)',link:'https://x.com/Haroldcoinsbot',reward:15000},{id:'insta_follow',name:'Follow Instagram',sub:'haroldcoinsbot',icon:'📸',color:'linear-gradient(135deg,#833AB4,#E1306C,#FCB045)',link:'https://instagram.com/haroldcoinsbot',reward:15000},{id:'tg_channel',name:'Rejoindre Canal HRD',sub:'t.me/HaroldcoinsOfficial',icon:'📢',color:'linear-gradient(135deg,#00e5ff,#0080ff)',link:'https://t.me/HaroldcoinsOfficial',reward:15000},{id:'tg_bot',name:'Lancer le Bot',sub:'@Haroldcoinsbot',icon:'🤖',color:'linear-gradient(135deg,#ffd700,#ff8c00)',link:'https://t.me/Haroldcoinsbot',reward:10000},{id:'invite_1',name:'Invite 1 Friend',sub:'1 ami = 10,000 coins',icon:'👥',color:'linear-gradient(135deg,#00ff88,#00cc66)',link:'#invite',reward:10000,needRef:1},{id:'invite_3',name:'Invite 3 Friends',sub:'3 amis = 30,000 coins',icon:'🚀',color:'linear-gradient(135deg,#00e5ff,#ffd700)',link:'#invite',reward:30000,needRef:3},{id:'invite_10',name:'Invite 10 Friends',sub:'10 amis = 100,000 coins',icon:'👑',color:'linear-gradient(135deg,#ffd700,#ff0080)',link:'#invite',reward:100000,needRef:10}];
@@ -159,25 +145,93 @@ function updateUI(){
   if(leftEl) leftEl.textContent=needDollars.toFixed(4)+"$ left to Lvl UP  ›";
   document.getElementById('minersSub').textContent="LVL "+currentLvl+"/1000 • NEXT: "+nextHold.toLocaleString("en-US")+" coins";
 }
+function updateWalletUI(){
+  let wBtn=document.getElementById('walletBtn');
+  let wText=document.getElementById('walletText');
+  if(walletAddress){
+    wBtn.classList.add('connected');
+    wText.innerHTML=(walletAddress.slice(0,4)+'...'+walletAddress.slice(-4))+'<br>✓ Saved';
+  } else {
+    wBtn.classList.remove('connected');
+    wText.innerHTML='Connect<br>Wallet';
+  }
+}
 async function saveBalance(){
   if(!loaded) return;
   const pill=document.getElementById('syncPill');
   if(pill){ pill.classList.add('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC...'; }
   try{
-    await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});
+    // Sauvegarde principale + wallet_address
+    await supa.from('harold_users').upsert({
+      id:parseInt(uid),
+      balance:balanceCoins,
+      first_name:currentUserName,
+      photo_url:currentUserPhoto,
+      wallet_address:walletAddress,
+      mining_start:new Date(miningStartTime).toISOString(),
+      mining_amount:mining,
+      mining_cards:JSON.stringify(miningCards),
+      tasks_done:JSON.stringify(tasksDone),
+      last_seen:new Date().toISOString()
+    },{onConflict:'id'});
+    localStorage.setItem('hrd_wallet_'+uid, walletAddress||'');
     if(pill){ setTimeout(()=>{ pill.classList.remove('saving'); pill.innerHTML='<span class="sync-dot"></span> SYNC'; },800); }
-  }catch(e){ if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } }
+  }catch(e){ 
+    // Si colonne wallet_address n'existe pas encore, on sauve sans elle
+    try{
+      await supa.from('harold_users').upsert({id:parseInt(uid),balance:balanceCoins,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date(miningStartTime).toISOString(),mining_amount:mining,mining_cards:JSON.stringify(miningCards),tasks_done:JSON.stringify(tasksDone),last_seen:new Date().toISOString()},{onConflict:'id'});
+    }catch(e2){}
+    localStorage.setItem('hrd_wallet_'+uid, walletAddress||'');
+    if(pill){ pill.innerHTML='<span class="sync-dot"></span> SYNC'; pill.classList.remove('saving'); } 
+  }
 }
 async function loadBalance(){
+  // Restaure wallet local d'abord
+  walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null;
+  updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
   try{
     let startParam=tg?.initDataUnsafe?.start_param;
     if(startParam){let refId=parseInt(startParam);if(refId && refId!==parseInt(uid)){let {data:existing}=await supa.from('harold_users').select('referred_by,balance').eq('id',parseInt(uid)).single();if(!existing || !existing.referred_by){await supa.from('harold_users').upsert({id:parseInt(uid),referred_by:refId,balance:5000,first_name:currentUserName,photo_url:currentUserPhoto,mining_start:new Date().toISOString(),mining_amount:0,mining_cards:"{}",tasks_done:"{}",last_seen:new Date().toISOString()},{onConflict:'id'});try{let {data:parrain}=await supa.from('harold_users').select('balance').eq('id',refId).single();if(parrain){await supa.from('harold_users').update({balance:(parrain.balance||0)+10000}).eq('id',refId);}}catch(e){}}}}
     let {data}=await supa.from('harold_users').select('*').eq('id',parseInt(uid)).single();
-    if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;}else{miningStartTime=Date.now();}
+    if(data){
+      balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);
+      if(data.wallet_address){ walletAddress=data.wallet_address; localStorage.setItem('hrd_wallet_'+uid, walletAddress); updateWalletUI(); }
+      try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;
+    }else{miningStartTime=Date.now();}
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
     loaded=true;updateUI();renderMiners();renderTasks();document.getElementById('inviteLink').value="https://t.me/Haroldcoin_bot?start="+uid;saveBalance();
   }catch(e){loaded=true;updateUI();renderMiners();renderTasks();}
+}
+// CONNECT WALLET LOGIC
+async function connectWallet(){
+  if(walletAddress){
+    if(confirm('Déconnecter wallet '+walletAddress.slice(0,6)+'... ?')){ walletAddress=null; updateWalletUI(); await saveBalance(); }
+    return;
+  }
+  try{
+    if(!tonConnectUI){
+      tonConnectUI=new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl:'https://ton-connect.github.io/demo-dapp-with-wallet/tonconnect-manifest.json',
+        buttonRootId:'ton-root-hidden'
+      });
+    }
+    const connectedWallet=await tonConnectUI.connectWallet();
+    if(connectedWallet && connectedWallet.account && connectedWallet.account.address){
+      walletAddress=connectedWallet.account.address;
+      updateWalletUI();
+      await saveBalance();
+      alert('✅ Wallet connecté: '+walletAddress.slice(0,6)+'... sauvegardé!');
+    }
+  }catch(err){
+    // Fallback manuel si TonConnect ne marche pas dans WebView
+    let addr=prompt('Entre ton adresse TON (UQ... ou EQ...):');
+    if(addr && addr.length>10){
+      walletAddress=addr.trim();
+      updateWalletUI();
+      await saveBalance();
+    }
+  }
 }
 function renderMiners(){let html='';for(let lvl=1;lvl<=1000;lvl++){let d=getMinerData(lvl),bc,bt;if(lvl<currentLvl){bc='btn-active';bt='ACTIVE';}else if(lvl===currentLvl){bc='btn-max';bt='ACTUEL';}else if(balanceCoins>=d.hold){bc='btn-need';bt='UPGRADE';}else{bc='btn-locked';bt='NEED '+d.hold.toLocaleString("en-US");}let ic=lvl>=1000?'🔥':lvl>=500?'💎':lvl>=200?'👑':lvl>=50?'⚡':'🔧';let hl=lvl===currentLvl?'border:2px solid #ffd700':'';html+=`<div class="miner-card" style="${hl}"><div class="miner-icon">${ic}</div><div class="miner-info"><div class="miner-lvl">LVL ${lvl}</div><div class="miner-price">${d.price}</div><div class="miner-hold">HOLD ${d.hold.toLocaleString("en-US")} coins</div><div class="miner-speed">⚡ ${d.speed} TH/s • ${d.hrd4h.toFixed(4)} HRD/4H</div></div><button class="miner-btn ${bc}" onclick="buyLevel(${lvl})">${bt}</button></div>`;}document.getElementById('minersList').innerHTML=html;}
 function renderTasks(){let html='';let doneCount=Object.keys(tasksDone).length;TASKS.forEach(t=>{let done=tasksDone[t.id];let extra='';if(t.needRef){extra=` • ${friendsCount}/${t.needRef}`;}html+=`<div class="task-card ${done?'done':''}"><div class="task-icon" style="background:${t.color}">${t.icon}</div><div class="task-info"><div class="task-name">${t.name}</div><div class="task-reward">${t.sub}${extra} • +${t.reward.toLocaleString("en-US")} coins</div></div><button class="task-btn ${done?'task-btn-done':'task-btn-go'}" onclick="${done?'':`doTask('${t.id}')`}">${done?'✅ FAIT':(t.needRef?(friendsCount>=t.needRef?'CLAIM':'INVITE'):'GO')}</button></div>`;});document.getElementById('tasksList').innerHTML=html;document.getElementById('tasksSub').textContent=doneCount+"/"+TASKS.length+" faites";}
@@ -208,5 +262,6 @@ async function saveCert(){
 }
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
+<div id="ton-root-hidden" style="display:none"></div>
 </body>
 </html>
