@@ -14,7 +14,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center}
-.app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg?v=lion2') center/cover no-repeat;;position:relative;overflow:hidden}
+.app{width:100%;max-width:400px;height:100vh;background:#000 url('bg.jpg?v=lionFINAL') center/cover no-repeat;;position:relative;overflow:hidden}
 .content{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:6px 8px 90px;overflow-x:hidden}
 .top{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 4px 10px;gap:6px}
 .top-left-zone{display:flex;align-items:flex-start;gap:8px;flex:1;min-width:0}
@@ -29,12 +29,14 @@ body{background:#000;display:flex;justify-content:center}
 .left-pill{margin-top:6px;display:inline-flex;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.3);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:900}
 .wallet{background:#1a9bff;border:none;color:#fff;padding:7px 12px;border-radius:20px;font-size:10px;font-weight:800;display:flex;align-items:center;gap:6px;min-width:110px;justify-content:center;line-height:1.15;cursor:pointer}
 .wallet.connected{background:linear-gradient(90deg,#00c853,#00e5a0)}
-.assets-wrap{margin-top:10px;display:flex;justify-content:space-between;gap:8px;perspective:800px}
-.assets-pill{background:linear-gradient(90deg,#d4af37,#ffec8b,#d4af37);border-radius:18px;padding:6px 12px;flex:1;display:flex;align-items:center;gap:6px;transform:perspective(600px) rotateX(10deg) rotateY(5deg);box-shadow:0 8px 20px rgba(0,0,0,0.6),0 0 15px rgba(212,175,55,0.3),inset 0 1px 0 rgba(255,255,255,0.5)}
-.assets-value{font-family:'Inter';font-size:12px;font-weight:900;color:#000;line-height:1.2}
-.mining-plus{background:rgba(0,0,0,0.8);border:1.5px solid #00ff88;border-radius:16px;padding:6px 10px;flex:1;transform:perspective(600px) rotateX(10deg) rotateY(-5deg);box-shadow:0 8px 20px rgba(0,0,0,0.6),0 0 12px rgba(0,255,136,0.2),inset 0 1px 0 rgba(255,255,255,0.05)}
-.mining-plus b{font-size:12px;color:#00ff88}
-.center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:14px;perspective:1000px}
+/* MODIFIÉ POUR VOIR TÊTE LION */
+.assets-wrap{margin-top:2px;display:flex;justify-content:space-between;gap:6px;perspective:800px;transform:scale(0.88);opacity:0.92;transform-origin:top center}
+.assets-pill{background:rgba(0,0,0,0.35)!important;backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.5);border-radius:14px;padding:5px 10px;flex:1;display:flex;align-items:center;gap:6px;transform:perspective(600px) rotateX(10deg) rotateY(5deg);box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+.assets-value{font-family:'Inter';font-size:11px;font-weight:900;color:#ffd700!important;line-height:1.2}
+.mining-plus{background:rgba(0,0,0,0.35)!important;backdrop-filter:blur(10px);border:1px solid rgba(0,255,136,0.5);border-radius:14px;padding:5px 10px;flex:1;transform:perspective(600px) rotateX(10deg) rotateY(-5deg);box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+.mining-plus div{color:#fff!important;font-size:8px}
+.mining-plus b{font-size:11px;color:#00ff88!important}
+.center{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;margin-top:8px;perspective:1000px}
 .coin-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center}
 .mining-circle{position:absolute;width:130px;height:130px;transform:rotate(-90deg)}
 .track{stroke:rgba(255,215,0,0.15);stroke-width:6;fill:none}
@@ -110,7 +112,7 @@ body{background:#000;display:flex;justify-content:center}
 </div>
 </div>
 <div class="page active" id="page-mine">
-<div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div><div class="mining-plus"><div style="font-size:8px;color:#fff">Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div>
+<div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 coins</div></div><div class="mining-plus"><div>Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div>
 <div class="center">
 <div class="coin-wrap">
 <div class="left-bubble" id="leftBubble"><div class="left-bubble-lvl">HASH RATE</div><div class="left-bubble-val" id="hashVal">1.15 TH/s</div><div class="left-bubble-sub">⚡ Efficient</div></div>
