@@ -1,114 +1,29 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harold Coins - 2500 H OFFERTS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HRD Invite</title>
 
-<!-- FACEBOOK / MESSENGER -->
-<meta property="og:title" content="👑 Harold Coins - 2500 H OFFERTS">
-<meta property="og:description" content="⛏️ Mine du H gratuit chaque heure - 💰 Retire en TON réel">
-<meta property="og:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-logo-512.jpg">
-<meta property="og:image:width" content="512">
-<meta property="og:image:height" content="512">
-<meta property="og:url" content="https://razafimaheninaharold-tech.github.io/haroldcoin/invite.html">
+<!-- C'EST CA QUI AFFICHE L'IMAGE AUTOMATIQUEMENT -->
+<meta property="og:title" content="🦁 HRD - Rejoins le Lion Roi!">
+<meta property="og:description" content="Mine 5,331,268+ Coins avec moi! +10% Bonus par ami. Haroldcoin Madagascar - Le futur est HRD!">
+<meta property="og:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/bg.jpg?v=lion2">
 <meta property="og:type" content="website">
-
-<!-- TWITTER / X -->
+<meta property="og:url" content="https://razafimaheninaharold-tech.github.io/haroldcoin/invite.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="👑 Harold Coins - 2500 H OFFERTS">
-<meta name="twitter:description" content="⛏️ Mine du H gratuit chaque heure">
-<meta name="twitter:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/harold-logo-512.jpg">
+<meta name="twitter:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/bg.jpg?v=lion2">
 
-<style>
-  body {
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:Arial, sans-serif;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    min-height:100vh;
-    text-align:center;
-    padding:20px;
-  }
-  .logo-circle {
-    width:160px;
-    height:160px;
-    border-radius:50%;
-    border:4px solid #FFD700;
-    overflow:hidden;
-    box-shadow:0 0 30px rgba(255,215,0,0.7);
-    background:#000;
-    margin-bottom:25px;
-  }
-  .logo-circle img {
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-  }
-  h1 {
-    color:#FFD700;
-    margin:10px 0;
-    font-size:32px;
-  }
-  .bonus {
-    font-size:26px;
-    font-weight:bold;
-    margin:10px 0;
-  }
-  .info {
-    opacity:0.9;
-    margin:8px 0;
-    font-size:18px;
-  }
-  .btn {
-    margin-top:30px;
-    background:#FFD700;
-    color:#000;
-    padding:18px 35px;
-    border-radius:50px;
-    font-weight:bold;
-    font-size:20px;
-    text-decoration:none;
-    display:inline-block;
-    box-shadow:0 0 20px rgba(255,215,0,0.6);
-  }
-  .small {
-    margin-top:20px;
-    opacity:0.6;
-    font-size:14px;
-  }
-</style>
+<style>body{background:#000;color:#ffd700;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:Arial;text-align:center}img{width:200px;border-radius:20px;box-shadow:0 0 30px #ffd700}</style>
 </head>
 <body>
-
-<div class="logo-circle">
-  <img src="harold-logo-512.jpg" alt="Harold Coins">
-</div>
-
-<h1>👑 Harold Coins</h1>
-<div class="bonus">🎁 2500 H OFFERTS</div>
-<div class="info">⛏️ Mine du H gratuit chaque heure</div>
-<div class="info">💰 Retire en TON réel</div>
-
-<a id="tgBtn" class="btn" href="#">🚀 OUVRIR DANS TELEGRAM</a>
-
-<div class="small">Clique pour lancer le bot et recevoir ton bonus</div>
-
+<img src="bg.jpg?v=lion2">
+<h1>🦁 HRD Haroldcoin</h1>
+<p>Redirection vers Telegram...</p>
 <script>
-// Récupère le start= et redirige vers Telegram
-const params = new URLSearchParams(window.location.search);
-const start = params.get('start') || '';
-const botUrl = `https://t.me/haroldcoinsbot?start=${start}`;
-document.getElementById('tgBtn').href = botUrl;
-
-// Auto-redirect après 1 sec (optionnel)
-// setTimeout(()=>{ window.location.href = botUrl; }, 1000);
+let p = new URLSearchParams(location.search);
+let id = p.get('start') || '2120736139';
+setTimeout(()=>{ location.href='https://t.me/Haroldcoin_bot?start='+id }, 800);
 </script>
-
 </body>
 </html>
