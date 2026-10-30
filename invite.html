@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Harold Coin - 2500 HRD OFFERTS</title>
 
-<!-- IMAGE AUTO SUR FB / TG / WHATSAPP -->
+<!-- IMAGE FACEBOOK / WHATSAPP / TELEGRAM -->
 <meta property="og:title" content="👑 Harold Coin - 2500 HRD OFFERTS!">
 <meta property="og:description" content="Mine du HRD gratuit chaque heure. Retire en TON réel. 2500 HRD offerts au démarrage!">
 <meta property="og:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/bg.jpg">
@@ -17,6 +17,7 @@
 <meta name="twitter:image" content="https://razafimaheninaharold-tech.github.io/haroldcoin/bg.jpg">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;font-family:Arial;text-align:center;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
@@ -25,8 +26,9 @@ body{background:#000;color:#fff;font-family:Arial;text-align:center;min-height:1
 h1{color:#ffd700;font-size:30px;margin:18px 0 8px;text-shadow:0 0 12px #ffd700}
 .offer{font-size:22px;font-weight:900;margin:8px 0}
 .sub{color:#ccc;font-size:15px;margin:4px 0}
-.btn{background:#ffd700;color:#000;padding:16px 32px;border-radius:30px;font-weight:900;font-size:17px;text-decoration:none;margin-top:26px;display:inline-block;box-shadow:0 0 25px #ffd700}
+.btn{background:#ffd700;color:#000;padding:16px 32px;border-radius:30px;font-weight:900;font-size:17px;text-decoration:none;margin-top:26px;display:inline-block;box-shadow:0 0 25px #ffd700;cursor:pointer}
 .small{margin-top:14px;color:#888;font-size:12px}
+.ref-box{margin-top:18px;background:rgba(255,215,0,0.1);border:1px solid #ffd700;border-radius:12px;padding:10px 14px;font-size:12px;color:#ffd700}
 </style>
 </head>
 <body>
@@ -36,38 +38,44 @@ h1{color:#ffd700;font-size:30px;margin:18px 0 8px;text-shadow:0 0 12px #ffd700}
 <div class="offer">🎁 2500 HRD OFFERTS</div>
 <div class="sub">⛏️ Mine du HRD gratuit chaque heure</div>
 <div class="sub">💰 Retire en TON réel</div>
+<div class="ref-box" id="refBox">Chargement parrain...</div>
 
 <a id="go" class="btn" href="#">🚀 OUVRIR DANS TELEGRAM</a>
-<div class="small">Redirection automatique vers le bot...</div>
+<div class="small">Redirection automatique vers le bot dans 2 secondes...</div>
 
 <script>
 const SUPA_URL="https://kgmatxqbdyusxpiuavbw.supabase.co";
 const SUPA_KEY="sb_publishable_vn5kPYncLS3TtBS75hSFew_LjeISc47";
 const supa = supabase.createClient(SUPA_URL,SUPA_KEY);
 
-// Récupère parrain
 let p = new URLSearchParams(location.search);
-let ref = p.get('start') || '2120736139';
-ref = ref.replace(/[^0-9]/g,'');
-let botLink = "https://t.me/Haroldcoin_bot?start=" + ref;
+let ref = p.get('start') || p.get('startapp') || '2120736139';
+ref = String(ref).replace(/[^0-9]/g,'');
+if(!ref) ref='2120736139';
+
+// ✅ VRAI BOT - PAS LE CANAL!
+let botLink = "https://t.me/Haroldcoinsbot?start=" + ref;
 
 document.getElementById('go').href = botLink;
+document.getElementById('refBox').innerHTML = "🎁 Parrain: <b>"+ref+"</b> • +10% BONUS pour toi!";
 
-// Si ouvert DANS Telegram, sauvegarde direct le parrainage dans DATA
 try{
   let tg = window.Telegram?.WebApp;
   let myId = tg?.initDataUnsafe?.user?.id;
   if(myId && ref && String(myId)!==String(ref)){
     supa.from('harold_users').upsert({id:parseInt(myId),referred_by:parseInt(ref),last_seen:new Date().toISOString()},{onConflict:'id'}).then(()=>{});
-    // Bonus parrain +10000
     supa.from('harold_users').select('balance').eq('id',parseInt(ref)).single().then(r=>{
       if(r.data) supa.from('harold_users').update({balance:(r.data.balance||0)+10000}).eq('id',parseInt(ref)).then(()=>{});
     });
   }
 }catch(e){}
 
-// Redirection auto après 1.2s vers le bot (pour FB -> TG)
-setTimeout(()=>{ location.href = botLink; }, 1200);
+setTimeout(()=>{ window.location.href = botLink; }, 2000);
+
+document.getElementById('go').addEventListener('click',(e)=>{
+  e.preventDefault();
+  window.location.href = botLink;
+});
 </script>
 </body>
 </html>
