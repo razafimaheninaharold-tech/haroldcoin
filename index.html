@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Harold V33 </title>
+<title>Harold V33.3 </title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -151,7 +151,6 @@ async function payerGagnant(userId, wallet){
   if(rP.error){ alert('Erreur: '+rP.error.message); return; }
   alert('✅ Notif envoyée ! Le joueur va voir le popup.');
 }
-// V33.2 AJOUT - RAPPEL
 async function sendRappelV33(){
   if(!confirm('Envoyer rappel aux 38 joueurs ?')) return;
   let rR = await supa.from('harold_users').select('id').limit(100);
@@ -193,6 +192,30 @@ window.__HRD_UID = uid;
 function isGuestUser(){ return isGuest || String(uid).startsWith('guest_'); }
 function numericUid(){ let n = parseInt(uid); return isNaN(n) ? null : n; }
 const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';let walletAddress=null,walletFriendly=null;let tonConnectUI=null;let x2Until=0;let myRef=null;
+
+// V33.3 FIX - Réclamer le parrainage APRES création du joueur
+async function claimReferralNow(){
+  if(!myRef || !numericUid()) return;
+  if(myRef === numericUid()) return;
+  try{
+    // 1. On vérifie si déjà parrainé
+    let rEx = await supa.from('harold_users').select('referred_by').eq('id', numericUid()).single();
+    if(rEx.data && rEx.data.referred_by){
+      localStorage.removeItem('hrd_pending_ref');
+      return; // déjà parrainé, on ne change pas
+    }
+    // 2. On essaie via Edge Function
+    let res = await fetch(EDGE_REFERRAL_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},body:JSON.stringify({user_id:numericUid(),referrer_id:myRef})});
+    let out = null; try{ out = await res.json(); }catch(e){}
+    // 3. Sécurité : si Edge échoue, on met directement referred_by
+    if(!res.ok || (out && out.error)){
+      await supa.from('harold_users').update({referred_by: myRef}).eq('id', numericUid());
+    }
+    localStorage.removeItem('hrd_pending_ref');
+    console.log('✅ Parrainage réclamé pour', myRef);
+  }catch(e){ console.log('referral erreur', e); }
+}
+
 function checkAdminWheel(){
   let b=document.getElementById('testWheelBtn');
   let mb=document.getElementById('wheelMineBtn');
@@ -253,8 +276,46 @@ async function loadBalance(){
   }
   walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null;walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||toUQ(walletAddress);x2Until=parseInt(localStorage.getItem('hrd_x2_'+uid)||'0');updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
-  try{let rawParam=tg?.initDataUnsafe?.start_param||null;let urlParam=new URLSearchParams(window.location.search).get('start')||new URLSearchParams(window.location.search).get('startapp')||null;let hashParam=null;try{hashParam=new URLSearchParams(window.location.hash.split('?')[1]||'').get('start');}catch(e){}let startParam=rawParam||urlParam||hashParam||localStorage.getItem('hrd_pending_ref');if(startParam){let refId=parseInt(String(startParam).replace(/[^0-9]/g,''));if(refId&&refId!==numericUid()){myRef=refId;localStorage.setItem('hrd_pending_ref',String(refId));let rEx = await supa.from('harold_users').select('referred_by, referral_claimed').eq('id',numericUid()).single();let existing=rEx.data;if(!existing||!existing.referred_by){try{await fetch(EDGE_REFERRAL_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},body:JSON.stringify({user_id:numericUid(),referrer_id:refId})});}catch(e){}localStorage.removeItem('hrd_pending_ref');}else{localStorage.removeItem('hrd_pending_ref');}}}}catch(e){}
-  try{let rB = await supa.from('harold_users').select('*').eq('id',numericUid()).single();let data=rB.data;if(data){balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);if(data.wallet_address){walletAddress=data.wallet_address;walletFriendly=toUQ(data.wallet_address);localStorage.setItem('hrd_wallet_'+uid,walletAddress);localStorage.setItem('hrd_wallet_friendly_'+uid,walletFriendly);updateWalletUI();}try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}if(data.x2_until){x2Until=data.x2_until;localStorage.setItem('hrd_x2_'+uid,x2Until);}if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;}else{miningStartTime=Date.now();}let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}loaded=true;updateUI();renderMiners();renderTasks();drawWheel();checkAdminWheel(); checkNotifications(); document.getElementById('inviteLink').value="https://t.me/Haroldcoinsbot?start="+uid;saveBalance();}catch(e){let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}loaded=true;updateUI();renderMiners();renderTasks();drawWheel();checkAdminWheel(); checkNotifications();}
+  // V33.3 - Lecture parrain : on garde juste en mémoire, on ne réclame pas tout de suite
+  try{
+    let rawParam=tg?.initDataUnsafe?.start_param||null;
+    let urlParams = new URLSearchParams(window.location.search);
+    let urlParam=urlParams.get('start')||urlParams.get('startapp')||urlParams.get('tgWebAppStartParam')||null;
+    let hashParam=null;try{hashParam=new URLSearchParams(window.location.hash.split('?')[1]||'').get('start');}catch(e){}
+    let startParam=rawParam||urlParam||hashParam||localStorage.getItem('hrd_pending_ref');
+    if(startParam){
+      let refId=parseInt(String(startParam).replace(/[^0-9]/g,''));
+      if(refId && refId!==numericUid()){
+        myRef=refId;
+        localStorage.setItem('hrd_pending_ref',String(refId));
+      }
+    }
+  }catch(e){}
+  try{
+    let rB = await supa.from('harold_users').select('*').eq('id',numericUid()).single();let data=rB.data;
+    if(data){
+      balanceCoins=data.balance||0;balanceHRD=balanceCoins/1000000;currentLvl=getLevelFromBalance(balanceCoins);
+      if(data.wallet_address){walletAddress=data.wallet_address;walletFriendly=toUQ(data.wallet_address);localStorage.setItem('hrd_wallet_'+uid,walletAddress);localStorage.setItem('hrd_wallet_friendly_'+uid,walletFriendly);updateWalletUI();}
+      try{miningCards=data.mining_cards?JSON.parse(data.mining_cards):{};}catch(e){miningCards={};}
+      try{tasksDone=data.tasks_done?JSON.parse(data.tasks_done):{};}catch(e){tasksDone={};}
+      if(data.x2_until){x2Until=data.x2_until;localStorage.setItem('hrd_x2_'+uid,x2Until);}
+      if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}
+      if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;
+      // Si le joueur a déjà un parrain en base, on ne l'écrase pas
+      if(data.referred_by){ myRef = parseInt(data.referred_by); }
+    }else{miningStartTime=Date.now();}
+    let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
+    loaded=true;updateUI();renderMiners();renderTasks();drawWheel();checkAdminWheel(); checkNotifications();
+    document.getElementById('inviteLink').value="https://t.me/Haroldcoinsbot?start="+uid;
+    await saveBalance();
+    // V33.3 FIX : APRÈS saveBalance (le joueur existe), on réclame le parrainage
+    await claimReferralNow();
+  }catch(e){
+    let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
+    loaded=true;updateUI();renderMiners();renderTasks();drawWheel();checkAdminWheel(); checkNotifications();
+    await saveBalance();
+    await claimReferralNow();
+  }
 }
 setTimeout(()=>{let l=document.getElementById('hrdLoader');if(l){l.classList.add('hide');setTimeout(()=>l.remove(),1000);}},2500);
 document.addEventListener('DOMContentLoaded',()=>{
@@ -330,7 +391,6 @@ function openWheelManually(){document.getElementById('wheelFriendName').textCont
 function drawWheel(){let canvas=document.getElementById('wheelCanvas');if(!canvas)return;let ctx=canvas.getContext('2d');let cx=140,cy=140,r=132;let labels=['0.5 HRD','1 HRD','2 HRD','0.1 TON','0.5 TON','1 TON'];let colors=['#00ff88','#ffd700','#ff8c00','#00e5ff','#aa55ff','#ff0080'];let cur=-90;ctx.clearRect(0,0,280,280);for(let i=0;i<6;i++){let sweep=60;let end=cur+sweep;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,cur*Math.PI/180,end*Math.PI/180);ctx.closePath();ctx.fillStyle=colors[i];ctx.fill();ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.stroke();let mid=(cur+end)/2;let rad=mid*Math.PI/180;let tx=cx+78*Math.cos(rad);let ty=cy+78*Math.sin(rad);ctx.save();ctx.translate(tx,ty);ctx.rotate((mid+90)*Math.PI/180);ctx.font='900 13px Inter, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=4;ctx.strokeStyle='white';ctx.strokeText(labels[i],0,0);ctx.fillStyle='black';ctx.fillText(labels[i],0,0);ctx.restore();cur=end;}ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#ffd700';ctx.lineWidth=5;ctx.stroke();}
 let spinning=false;function spinWheel(){if(spinning)return;spinning=true;let wheel=document.getElementById('wheel');let resultEl=document.getElementById('wheelResult');let tonResultEl=document.getElementById('wheelTonResult');let btnSpin=document.getElementById('spinBtn');btnSpin.textContent='⏳...';resultEl.textContent='';tonResultEl.textContent='';let rand=Math.random()*100;let reward,text,tonText='',isTon=false,segIndex=0;if(rand<40){reward=0.5;segIndex=0;text='🟩 +0.5 HRD!';}else if(rand<65){reward=1;segIndex=1;text='🟨 +1 HRD!';}else if(rand<80){reward=2;segIndex=2;text='🟧 +2 HRD!';}else if(rand<90){reward=0.1;isTon=true;segIndex=3;text='🟦 0.1 TON RARE!';tonText='💎 0.1 TON gagné!';}else if(rand<97){reward=0.5;isTon=true;segIndex=4;text='🟪 0.5 TON EPIC!';tonText='🔥 0.5 TON EPIC!';}else{reward=1;isTon=true;segIndex=5;text='💎 1 TON LEGENDARY!';tonText='🎉 1 TON JACKPOT!';}let centers=[-60,0,60,120,180,240];let center=centers[segIndex];let targetRot=270-center;let jitter=(Math.random()*40-20);let deg=1440+targetRot+jitter;wheel.style.transform=`rotate(${deg}deg)`;setTimeout(async()=>{resultEl.textContent=text;resultEl.style.color=isTon?'#00e5ff':'#00ff88';if(isTon){tonResultEl.textContent=tonText;try{await supa.from('harold_ton_wins').insert({user_id:numericUid(),amount:reward,type:'TON',first_name:currentUserName,wallet:walletFriendly||walletAddress});}catch(e){}balanceCoins+=Math.floor(reward*5*1000000);balanceHRD=balanceCoins/1000000;}else{balanceCoins+=Math.floor(reward*1000000);balanceHRD=balanceCoins/1000000;}currentLvl=getLevelFromBalance(balanceCoins);updateUI();renderMiners();await saveBalance();btnSpin.textContent='✅ '+text;setTimeout(()=>{closeWheel();spinning=false;wheel.style.transition='none';wheel.style.transform=`rotate(${targetRot+jitter}deg)`;setTimeout(()=>{wheel.style.transition='transform 4s cubic-bezier(0.12,0.85,0.2,1)';},50);resultEl.textContent='';tonResultEl.textContent='';btnSpin.textContent='🎯 TOURNER! WIN TON!';},3000);},4000);}
 async function saveCert(){const b=document.getElementById('saveBtn');b.textContent='⏳...';try{const c=await html2canvas(document.getElementById('certCard'),{backgroundColor:null,scale:3});const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='HRD-Cert-Lvl'+currentLvl+'.png';a.click();b.textContent='✅ SAUVEGARDÉ!';setTimeout(()=>b.textContent='⬇ SAVE CERTIFICATE',2000);}catch(e){b.textContent='❌';}}
-// V33.2 AJOUT - BONUS JOURNALIER 100% SUPABASE
 let _dailyCheckedV33 = false;
 async function checkDailyBonusV33(){
   if(isGuestUser()) return;
