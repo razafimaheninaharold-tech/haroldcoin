@@ -100,6 +100,11 @@ body{background:#000;display:flex;justify-content:center}
 .wheel-mine-btn span:last-child{font-size:6px;font-weight:900;color:#ffd700;margin-top:1px;letter-spacing:0.5px}
 .guest-banner{display:none;background:#ff3b30;color:#fff;padding:8px;text-align:center;font-size:11px;font-weight:900}
 .guest-banner.show{display:block}
+/* === NOUVEAU V34 - 3 FONCTIONS SEULEMENT - NE RIEN TOUCHER D'AUTRE === */
+.float-coin{position:fixed;font-weight:900;color:#ffd700;font-size:18px;pointer-events:none;animation:floatUp 1s ease-out forwards;z-index:999999;text-shadow:0 0 10px #ffd700}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
+.coin:active{transform:scale(0.92)}
+#lionStage{text-align:center;color:#ffd700;font-weight:900;font-size:11px;margin-top:2px;text-shadow:0 0 10px #ffd700;min-height:14px}
 </style>
 </head>
 <body>
@@ -108,7 +113,7 @@ body{background:#000;display:flex;justify-content:center}
 <div class="guest-banner" id="guestBanner">⚠️ MODE APERÇU - Ouvre via le Bot Telegram pour voir TON compte, pas celui d'un autre!</div>
 <div class="top"><div class="top-left-zone"><img id="userAvatar" src="" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:#111;object-fit:cover;display:none"><div id="userAvatarFallback" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:linear-gradient(135deg,#ffd700,#ff8c00);display:flex;align-items:center;justify-content:center;font-size:16px">👤</div><div style="display:flex;flex-direction:column;min-width:0"><div id="userName" style="font-family:'Orbitron';font-size:14px;font-weight:900;color:#fff;line-height:1">...</div><div style="display:flex;flex-direction:column;align-items:flex-start"><div class="lvl" id="lvlDisplay">👑 Lvl 1</div><div class="sync-pill" id="syncPill"><span class="sync-dot"></span> SYNC</div><div class="left-pill" id="leftToLvl">0.0002 TON left to Lvl UP ›</div></div></div></div><div class="top-right-zone"><div class="cert-tab" onclick="openCert()"><span style="font-size:12px">📜</span><span>CERT</span></div><div class="wallet" id="walletBtn" onclick="connectWallet()"><span id="walletText">Connect<br>Wallet</span></div></div></div>
 <div class="x2-banner" id="x2Banner">⚡ x2 BOOST - <span id="x2Timer">60:00</span></div>
-<div class="page active" id="page-mine"><div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 HRD</div></div><div class="mining-plus"><div>Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div><div class="center"><div class="coin-wrap"><div class="left-bubble" id="leftBubble"><div class="left-bubble-lvl">HASH RATE</div><div class="left-bubble-val" id="hashVal">1.15 TH/s</div><div class="left-bubble-sub">⚡ Efficient</div></div><svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg><img class="coin" src="coin.png"><div class="right-bubble" id="rightBubble" onclick="openCert()"><div class="right-bubble-lvl" id="rightLvl">LVL 49</div><div class="right-bubble-val" id="rightVal">+60%<br>BONUS</div></div><div class="wheel-mine-btn" id="wheelMineBtn" onclick="openWheelManually()"><span>🎡</span><span>ROUE</span></div></div><div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div><div class="timer" id="timer">03:59:59 restant</div><button class="claim" id="claimBtn">MINING...</button></div></div>
+<div class="page active" id="page-mine"><div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 HRD</div></div><div class="mining-plus"><div>Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div><div class="center"><div id="lionStage">🦁 LION</div><div class="coin-wrap"><div class="left-bubble" id="leftBubble"><div class="left-bubble-lvl">HASH RATE</div><div class="left-bubble-val" id="hashVal">1.15 TH/s</div><div class="left-bubble-sub">⚡ Efficient</div></div><svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg><img class="coin" src="coin.png"><div class="right-bubble" id="rightBubble" onclick="openCert()"><div class="right-bubble-lvl" id="rightLvl">LVL 49</div><div class="right-bubble-val" id="rightVal">+60%<br>BONUS</div></div><div class="wheel-mine-btn" id="wheelMineBtn" onclick="openWheelManually()"><span>🎡</span><span>ROUE</span></div></div><div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div><div class="timer" id="timer">03:59:59 restant</div><button class="claim" id="claimBtn">MINING...</button><div id="chestBtn" onclick="openChest()" style="margin-top:10px;width:100%;height:48px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;cursor:pointer;font-size:14px">🎁 OUVRIR LE COFFRE DU JOUR</div></div></div>
 <div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS</div><div class="miners-sub" id="minersSub">LVL 1/1000</div></div><div id="minersList"></div></div>
 <div class="page" id="page-tasks"><div class="miners-head"><div class="miners-title">TASKS</div><div class="miners-sub" id="tasksSub">7 missions</div></div><div id="tasksList"></div></div>
 <div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS + ROUE!</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div><div style="margin-top:8px;background:linear-gradient(90deg,#ff8c00,#ffd700);color:#000;padding:8px;border-radius:10px;font-size:11px;font-weight:900;text-align:center">⚡ Invite 1 ami = 1H x2 BOOST + ROUE TON!</div><button id="testWheelBtn" onclick="openWheelManually()" style="display:none;margin-top:8px;width:100%;height:40px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:12px;color:#000;font-weight:900;font-size:12px;cursor:pointer">🎡 VOIR LA ROUE - TEST (ADMIN)</button></div><div class="miners-head" style="margin-top:10px;border-color:#ffd700"><div class="miners-title">🏆 TOP INVITEURS</div><div class="miners-sub">Classement par invitations</div></div><div id="topInviters"></div><div class="miners-head" style="margin-top:10px"><div class="miners-title">MES AMIS</div><div class="miners-sub" id="myFriendsSub">0 ami</div></div><div id="friendsList"></div></div>
@@ -192,26 +197,19 @@ window.__HRD_UID = uid;
 function isGuestUser(){ return isGuest || String(uid).startsWith('guest_'); }
 function numericUid(){ let n = parseInt(uid); return isNaN(n) ? null : n; }
 const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';let walletAddress=null,walletFriendly=null;let tonConnectUI=null;let x2Until=0;let myRef=null;
-
-// ===== FIX V33.4 PARRAINAGE =====
 function getStartParamFixed(){
   try{
     let candidates = [];
-    // 1. Telegram initDataUnsafe (cas direct)
     if(tg?.initDataUnsafe?.start_param) candidates.push(tg.initDataUnsafe.start_param);
-    // 2. ?start= / ?startapp= / ?tgWebAppStartParam= dans ?...
     try{
       let qs = new URLSearchParams(window.location.search);
       ['start','startapp','tgWebAppStartParam'].forEach(k=>{ if(qs.get(k)) candidates.push(qs.get(k)); });
     }catch(e){}
-    // 3. FIX: dans le # hash Telegram : #tgWebAppData=...&tgWebAppStartParam=212...
-    // Avant tu faisais hash.split('?')[1] -> ca ne marchait jamais, le hash n'a pas de ?
     try{
       let hashStr = window.location.hash || '';
       if(hashStr.startsWith('#')) hashStr = hashStr.slice(1);
       let hs = new URLSearchParams(hashStr);
       ['start','startapp','tgWebAppStartParam'].forEach(k=>{ if(hs.get(k)) candidates.push(hs.get(k)); });
-      // 4. tgWebAppData contient parfois start_param encodé
       let rawData = hs.get('tgWebAppData');
       if(rawData){
         try{
@@ -221,10 +219,8 @@ function getStartParamFixed(){
         }catch(e){}
       }
     }catch(e){}
-    // 5. localStorage pending (si l'ami a fait START puis Jouer, on garde le ref)
     let saved = localStorage.getItem('hrd_pending_ref');
     if(saved) candidates.push(saved);
-    // 6. tg.initData brut
     try{
       if(tg?.initData){
         let inner2 = new URLSearchParams(tg.initData);
@@ -239,14 +235,12 @@ function getStartParamFixed(){
   }catch(e){ console.log('getStartParam erreur', e); }
   return null;
 }
-
 async function claimReferralNow(){
   if(!myRef || !numericUid()) return;
   if(myRef === numericUid()) return;
   try{
     let rEx = await supa.from('harold_users').select('referred_by').eq('id', numericUid()).single();
     if(rEx.data && rEx.data.referred_by){
-      // Déjà parrainé, on ne touche à rien
       myRef = parseInt(rEx.data.referred_by);
       localStorage.removeItem('hrd_pending_ref');
       return;
@@ -256,8 +250,6 @@ async function claimReferralNow(){
     if(!res.ok || (out && out.error)){
       await supa.from('harold_users').update({referred_by: myRef}).eq('id', numericUid());
     }
-    // On garde le pending tant que ce n'est pas confirmé, pour le retry au prochain load
-    // localStorage.removeItem('hrd_pending_ref'); // <-- ne pas supprimer trop tôt
     console.log('✅ Parrainage réclamé pour', myRef);
   }catch(e){ console.log('referral erreur', e); }
 }
@@ -291,8 +283,6 @@ async function saveBalance(){
   const pill=document.getElementById('syncPill');
   if(pill){pill.classList.add('saving');pill.innerHTML='<span class="sync-dot"></span> SYNC...';}
   try{
-    // FIX V33.4: on n'envoie referred_by QUE si on a un parrain, jamais null
-    // Avant: referred_by: null effaçait le parrain dans la base
     let payload = { id: numericUid(), balance: balanceCoins, first_name: currentUserName, photo_url: currentUserPhoto, wallet_address: walletFriendly || walletAddress, mining_start: new Date(miningStartTime).toISOString(), mining_amount: mining, mining_cards: JSON.stringify(miningCards), tasks_done: JSON.stringify(tasksDone), x2_until: x2Until };
     if(myRef && myRef !== numericUid()) payload.referred_by = myRef;
     const res = await fetch(EDGE_URL, {
@@ -325,7 +315,6 @@ async function loadBalance(){
   }
   walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null;walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||toUQ(walletAddress);x2Until=parseInt(localStorage.getItem('hrd_x2_'+uid)||'0');updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
-  // FIX V33.4: lecture complète du parrain
   try{
     let refId = getStartParamFixed();
     if(refId){
@@ -343,7 +332,6 @@ async function loadBalance(){
       if(data.x2_until){x2Until=data.x2_until;localStorage.setItem('hrd_x2_'+uid,x2Until);}
       if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}
       if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;
-      // FIX: si la base a déjà un parrain, on le garde. Sinon on garde celui du lien.
       if(data.referred_by){ myRef = parseInt(data.referred_by); }
     }else{miningStartTime=Date.now();}
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
@@ -456,6 +444,37 @@ async function checkDailyBonusV33(){
   }catch(e){ console.log('daily erreur', e); }
 }
 setInterval(()=>{ if(loaded && !_dailyCheckedV33){ _dailyCheckedV33 = true; checkDailyBonusV33(); } }, 2000);
+// === NOUVEAU V34 - 3 FONCTIONS SEULEMENT ===
+function updateLionStage(){
+  try{
+    let stage = currentLvl<20 ? '🐱 BÉBÉ LION' : currentLvl<50 ? '🦁 JEUNE LION' : currentLvl<100 ? '🦁 LION ADULTE' : '👑 LION ROI EN OR';
+    let el=document.getElementById('lionStage'); if(el) el.textContent=stage;
+    let coinImg=document.querySelector('.coin'); if(coinImg){ coinImg.style.filter = currentLvl>=100 ? 'brightness(1.6) drop-shadow(0 0 25px #ffd700)' : currentLvl>=50 ? 'brightness(1.4) drop-shadow(0 0 15px #ff8c00)' : 'brightness(1.3) drop-shadow(0 0 18px #d4af37)'; }
+  }catch(e){}
+}
+function openChest(){
+  try{
+    let today=new Date().toISOString().slice(0,10);
+    if(localStorage.getItem('hrd_chest_'+uid)===today){ alert('Déjà ouvert aujourd\'hui, reviens demain !'); return; }
+    localStorage.setItem('hrd_chest_'+uid, today);
+    balanceCoins+=5000; balanceHRD=balanceCoins/1000000; currentLvl=getLevelFromBalance(balanceCoins); updateUI(); updateLionStage(); if(typeof saveBalance==='function') saveBalance();
+    document.getElementById('winText').innerText='🎁 COFFRE OUVERT !\n+5000 coins !\nReviens demain !';
+    document.getElementById('winPopup').style.display='flex';
+    let cb=document.getElementById('chestBtn'); if(cb) cb.style.opacity='0.5';
+  }catch(e){ console.log('chest erreur',e); }
+}
+try{
+  document.querySelector('.coin')?.addEventListener('click', (e)=>{
+    try{
+      let s=document.createElement('div'); s.className='float-coin'; s.textContent='+'+(100+currentLvl*2);
+      s.style.left=(e.clientX-20)+'px'; s.style.top=(e.clientY-20)+'px';
+      document.body.appendChild(s); setTimeout(()=>s.remove(),1000);
+      if(navigator.vibrate) navigator.vibrate(20);
+      balanceCoins+=100+currentLvl*2; balanceHRD=balanceCoins/1000000; updateUI(); updateLionStage();
+    }catch(err){}
+  });
+}catch(e){}
+setInterval(()=>{ try{ updateLionStage(); }catch(e){} },2000);
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
 </body>
