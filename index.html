@@ -103,11 +103,18 @@ body{background:#000;display:flex;justify-content:center}
 .chest-mine-btn span:last-child{font-size:6px;font-weight:900;color:#ffd700;margin-top:1px;letter-spacing:0.5px}
 .guest-banner{display:none;background:#ff3b30;color:#fff;padding:8px;text-align:center;font-size:11px;font-weight:900}
 .guest-banner.show{display:block}
-/* === V34 - TAP BLANC - PAS DE FOND NOIR === */
+/* === V34 - TAP BLANC + ENERGIE + PLAFOND 500 === */
 .float-coin{position:fixed;font-weight:900;color:#fff;font-size:20px;pointer-events:none;animation:floatUp 0.8s ease-out forwards;z-index:999999;text-shadow:0 2px 4px #000,0 0 8px #000;background:transparent;padding:0}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
 .coin:active{transform:scale(0.92)}
 #lionStage{text-align:center;color:#fff;font-weight:900;font-size:11px;margin-top:2px;text-shadow:0 2px 4px #000,0 0 8px #000;min-height:14px;background:transparent;border:none}
+.energy-wrap{margin-top:10px;width:100%;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:6px 10px;display:flex;align-items:center;gap:8px}
+.energy-label{font-size:11px;font-weight:900;color:#fff;white-space:nowrap}
+.energy-bar{flex:1;height:10px;background:rgba(255,255,255,0.15);border-radius:10px;overflow:hidden}
+.energy-fill{height:100%;background:linear-gradient(90deg,#00e5ff,#fff);border-radius:10px;width:100%;transition:width 0.3s}
+.energy-val{font-size:11px;font-weight:900;color:#fff;min-width:42px;text-align:right}
+.energy-empty{color:#ff5555!important}
+.coin.no-energy{filter:grayscale(1) brightness(0.6)!important;opacity:0.6}
 </style>
 </head>
 <body>
@@ -116,7 +123,7 @@ body{background:#000;display:flex;justify-content:center}
 <div class="guest-banner" id="guestBanner">⚠️ MODE APERÇU - Ouvre via le Bot Telegram pour voir TON compte, pas celui d'un autre!</div>
 <div class="top"><div class="top-left-zone"><img id="userAvatar" src="" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:#111;object-fit:cover;display:none"><div id="userAvatarFallback" style="width:38px;height:38px;border-radius:50%;border:2px solid #d4af37;background:linear-gradient(135deg,#ffd700,#ff8c00);display:flex;align-items:center;justify-content:center;font-size:16px">👤</div><div style="display:flex;flex-direction:column;min-width:0"><div id="userName" style="font-family:'Orbitron';font-size:14px;font-weight:900;color:#fff;line-height:1">...</div><div style="display:flex;flex-direction:column;align-items:flex-start"><div class="lvl" id="lvlDisplay">👑 Lvl 1</div><div class="sync-pill" id="syncPill"><span class="sync-dot"></span> SYNC</div><div class="left-pill" id="leftToLvl">0.0002 TON left to Lvl UP ›</div></div></div></div><div class="top-right-zone"><div class="cert-tab" onclick="openCert()"><span style="font-size:12px">📜</span><span>CERT</span></div><div class="wallet" id="walletBtn" onclick="connectWallet()"><span id="walletText">Connect<br>Wallet</span></div></div></div>
 <div class="x2-banner" id="x2Banner">⚡ x2 BOOST - <span id="x2Timer">60:00</span></div>
-<div class="page active" id="page-mine"><div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 HRD</div></div><div class="mining-plus"><div>Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div><div class="center"><div id="lionStage">🦁 LION</div><div class="coin-wrap"><div class="left-bubble" id="leftBubble"><div class="left-bubble-lvl">HASH RATE</div><div class="left-bubble-val" id="hashVal">1.15 TH/s</div><div class="left-bubble-sub">⚡ Efficient</div></div><svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg><img class="coin" src="coin.png"><div class="right-bubble" id="rightBubble" onclick="openCert()"><div class="right-bubble-lvl" id="rightLvl">LVL 49</div><div class="right-bubble-val" id="rightVal">+60%<br>BONUS</div></div><div class="wheel-mine-btn" id="wheelMineBtn" onclick="openWheelManually()"><span>🎡</span><span>ROUE</span></div><div class="chest-mine-btn" id="chestBtn" onclick="openChest()"><span>🎁</span><span>COFFRE</span></div></div><div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div><div class="timer" id="timer">03:59:59 restant</div><button class="claim" id="claimBtn">MINING...</button></div></div>
+<div class="page active" id="page-mine"><div class="assets-wrap"><div class="assets-pill"><div class="assets-value" id="assetsValue">0 HRD</div></div><div class="mining-plus"><div>Mining 4H SUPA</div><b id="miningPlus">+0.0000 HRD</b></div></div><div class="center"><div id="lionStage">🦁 LION</div><div class="coin-wrap"><div class="left-bubble" id="leftBubble"><div class="left-bubble-lvl">HASH RATE</div><div class="left-bubble-val" id="hashVal">1.15 TH/s</div><div class="left-bubble-sub">⚡ Efficient</div></div><svg class="mining-circle" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="40"></circle><circle class="progress" id="progressCircle" cx="65" cy="65" r="40"></circle></svg><img class="coin" id="tapCoin" src="coin.png"><div class="right-bubble" id="rightBubble" onclick="openCert()"><div class="right-bubble-lvl" id="rightLvl">LVL 49</div><div class="right-bubble-val" id="rightVal">+60%<br>BONUS</div></div><div class="wheel-mine-btn" id="wheelMineBtn" onclick="openWheelManually()"><span>🎡</span><span>ROUE</span></div><div class="chest-mine-btn" id="chestBtn" onclick="openChest()"><span>🎁</span><span>COFFRE</span></div></div><div class="energy-wrap"><div class="energy-label">⚡ ÉNERGIE</div><div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div><div class="energy-val" id="energyVal">100/100</div></div><div class="power-bar"><div class="power-icon">⚡</div><div class="power-fill" id="powerFill"></div></div><div class="timer" id="timer">03:59:59 restant</div><button class="claim" id="claimBtn">MINING...</button></div></div>
 <div class="page" id="page-miners"><div class="miners-head"><div class="miners-title">MINERS</div><div class="miners-sub" id="minersSub">LVL 1/1000</div></div><div id="minersList"></div></div>
 <div class="page" id="page-tasks"><div class="miners-head"><div class="miners-title">TASKS</div><div class="miners-sub" id="tasksSub">7 missions</div></div><div id="tasksList"></div></div>
 <div class="page" id="page-friends"><div class="miners-head"><div class="miners-title">FRIENDS</div><div class="miners-sub" id="friendsSub">Chargement...</div><button id="inviteBtn" style="margin-top:10px;width:100%;height:42px;background:linear-gradient(90deg,#00e5ff,#0080ff);border:none;border-radius:12px;color:#fff;font-weight:900;font-size:13px;cursor:pointer">INVITER +10% BONUS + ROUE!</button><div style="margin-top:8px;background:rgba(0,0,0,0.7);border:1px solid #333;padding:8px;border-radius:10px;display:flex;gap:6px"><input id="inviteLink" readonly style="flex:1;background:transparent;border:none;color:#aaa;font-size:10px" value="..."><button onclick="copyLink()" style="background:#ffd700;border:none;padding:5px 10px;border-radius:6px;font-weight:900;font-size:11px;cursor:pointer">COPY</button></div><div style="margin-top:8px;background:linear-gradient(90deg,#ff8c00,#ffd700);color:#000;padding:8px;border-radius:10px;font-size:11px;font-weight:900;text-align:center">⚡ Invite 1 ami = 1H x2 BOOST + ROUE TON!</div><button id="testWheelBtn" onclick="openWheelManually()" style="display:none;margin-top:8px;width:100%;height:40px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:12px;color:#000;font-weight:900;font-size:12px;cursor:pointer">🎡 VOIR LA ROUE - TEST (ADMIN)</button></div><div class="miners-head" style="margin-top:10px;border-color:#ffd700"><div class="miners-title">🏆 TOP INVITEURS</div><div class="miners-sub">Classement par invitations</div></div><div id="topInviters"></div><div class="miners-head" style="margin-top:10px"><div class="miners-title">MES AMIS</div><div class="miners-sub" id="myFriendsSub">0 ami</div></div><div id="friendsList"></div></div>
@@ -200,6 +207,32 @@ window.__HRD_UID = uid;
 function isGuestUser(){ return isGuest || String(uid).startsWith('guest_'); }
 function numericUid(){ let n = parseInt(uid); return isNaN(n) ? null : n; }
 const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';let walletAddress=null,walletFriendly=null;let tonConnectUI=null;let x2Until=0;let myRef=null;
+// === ENERGIE V1 + PLAFOND TAP 500 ===
+let energy=100; const ENERGY_MAX=100; const ENERGY_RECHARGE_MS=30*1000; let lastEnergyTick=Date.now();
+function getTapReward(){ return Math.min(500, 100 + currentLvl*2); }
+function loadEnergy(){
+  try{
+    let saved=parseInt(localStorage.getItem('hrd_energy_'+uid)||'100');
+    let savedTime=parseInt(localStorage.getItem('hrd_energy_time_'+uid)||String(Date.now()));
+    if(!isNaN(saved)) energy=saved;
+    if(energy>ENERGY_MAX) energy=ENERGY_MAX;
+    if(energy<0) energy=0;
+    let elapsed=Date.now()-savedTime;
+    let gained=Math.floor(elapsed/ENERGY_RECHARGE_MS);
+    if(gained>0){ energy=Math.min(ENERGY_MAX, energy+gained); lastEnergyTick=Date.now()-(elapsed%ENERGY_RECHARGE_MS); }
+    else{ lastEnergyTick=savedTime; }
+  }catch(e){ energy=100; lastEnergyTick=Date.now(); }
+  updateEnergyUI();
+}
+function saveEnergy(){
+  try{ localStorage.setItem('hrd_energy_'+uid, String(energy)); localStorage.setItem('hrd_energy_time_'+uid, String(lastEnergyTick)); }catch(e){}
+}
+function updateEnergyUI(){
+  let fill=document.getElementById('energyFill'); let val=document.getElementById('energyVal'); let coin=document.getElementById('tapCoin');
+  if(fill) fill.style.width=(energy/ENERGY_MAX*100)+'%';
+  if(val){ val.textContent=energy+'/'+ENERGY_MAX; val.classList.toggle('energy-empty', energy===0); }
+  if(coin){ coin.classList.toggle('no-energy', energy===0); }
+}
 function getStartParamFixed(){
   try{
     let candidates = [];
@@ -447,12 +480,12 @@ async function checkDailyBonusV33(){
   }catch(e){ console.log('daily erreur', e); }
 }
 setInterval(()=>{ if(loaded && !_dailyCheckedV33){ _dailyCheckedV33 = true; checkDailyBonusV33(); } }, 2000);
-// === V34 - TAP BLANC - PAS DE FOND NOIR ===
+// === V34 - TAP BLANC + ENERGIE + PLAFOND 500 ===
 function updateLionStage(){
   try{
     let stage = currentLvl<20 ? '🐱 BÉBÉ LION' : currentLvl<50 ? '🦁 JEUNE LION' : currentLvl<100 ? '🦁 LION ADULTE' : '👑 LION ROI EN OR';
     let el=document.getElementById('lionStage'); if(el) el.textContent=stage;
-    let coinImg=document.querySelector('.coin'); if(coinImg){ coinImg.style.filter = 'brightness(1.0) drop-shadow(0 0 4px rgba(0,0,0,0.5))'; }
+    let coinImg=document.querySelector('.coin'); if(coinImg){ if(energy===0) coinImg.style.filter='grayscale(1) brightness(0.6)'; else coinImg.style.filter='brightness(1.0) drop-shadow(0 0 4px rgba(0,0,0,0.5))'; }
   }catch(e){}
 }
 function openChest(){
@@ -467,17 +500,40 @@ function openChest(){
   }catch(e){ console.log('chest erreur',e); }
 }
 try{
-  document.querySelector('.coin')?.addEventListener('click', (e)=>{
+  document.getElementById('tapCoin')?.addEventListener('click', (e)=>{
     try{
-      let s=document.createElement('div'); s.className='float-coin'; s.textContent='+'+(100+currentLvl*2);
+      if(energy<=0){
+        let s=document.createElement('div'); s.className='float-coin'; s.style.color='#ff5555'; s.textContent='⚡ PLUS D\'ÉNERGIE - ATTENDS';
+        s.style.left=(e.clientX-60)+'px'; s.style.top=(e.clientY-20)+'px'; s.style.fontSize='12px';
+        document.body.appendChild(s); setTimeout(()=>s.remove(),1200);
+        if(navigator.vibrate) navigator.vibrate([30,30,30]);
+        return;
+      }
+      energy--; lastEnergyTick=Date.now(); updateEnergyUI(); saveEnergy();
+      let tapVal = getTapReward();
+      let s=document.createElement('div'); s.className='float-coin'; s.textContent='+'+tapVal;
       s.style.left=(e.clientX-20)+'px'; s.style.top=(e.clientY-20)+'px';
       document.body.appendChild(s); setTimeout(()=>s.remove(),1000);
       if(navigator.vibrate) navigator.vibrate(20);
-      balanceCoins+=100+currentLvl*2; balanceHRD=balanceCoins/1000000; updateUI(); updateLionStage();
+      balanceCoins+=tapVal; balanceHRD=balanceCoins/1000000; updateUI(); updateLionStage();
     }catch(err){}
   });
 }catch(e){}
+setInterval(()=>{
+  try{
+    if(energy<ENERGY_MAX){
+      let now=Date.now();
+      if(now-lastEnergyTick>=ENERGY_RECHARGE_MS){
+        let gained=Math.floor((now-lastEnergyTick)/ENERGY_RECHARGE_MS);
+        energy=Math.min(ENERGY_MAX, energy+gained);
+        lastEnergyTick=now-((now-lastEnergyTick)%ENERGY_RECHARGE_MS);
+        updateEnergyUI(); saveEnergy();
+      }
+    }
+  }catch(e){}
+},1000);
 setInterval(()=>{ try{ updateLionStage(); }catch(e){} },2000);
+loadEnergy();
 loadBalance();if(tg){tg.ready();tg.expand();}
 </script>
 </body>
