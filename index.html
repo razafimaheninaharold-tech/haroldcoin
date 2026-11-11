@@ -192,12 +192,62 @@ window.__HRD_UID = uid;
 function isGuestUser(){ return isGuest || String(uid).startsWith('guest_'); }
 function numericUid(){ let n = parseInt(uid); return isNaN(n) ? null : n; }
 const MINING_DURATION=4*60*60*1000;let balanceCoins=0,balanceHRD=0,mining=0,progress=0,currentLvl=1,loaded=false,miningStartTime=Date.now(),miningCards={},tasksDone={},friendsCount=0;let currentUserName='',currentUserPhoto='';let walletAddress=null,walletFriendly=null;let tonConnectUI=null;let x2Until=0;let myRef=null;
+
+// ===== FIX V33.4 PARRAINAGE =====
+function getStartParamFixed(){
+  try{
+    let candidates = [];
+    // 1. Telegram initDataUnsafe (cas direct)
+    if(tg?.initDataUnsafe?.start_param) candidates.push(tg.initDataUnsafe.start_param);
+    // 2. ?start= / ?startapp= / ?tgWebAppStartParam= dans ?...
+    try{
+      let qs = new URLSearchParams(window.location.search);
+      ['start','startapp','tgWebAppStartParam'].forEach(k=>{ if(qs.get(k)) candidates.push(qs.get(k)); });
+    }catch(e){}
+    // 3. FIX: dans le # hash Telegram : #tgWebAppData=...&tgWebAppStartParam=212...
+    // Avant tu faisais hash.split('?')[1] -> ca ne marchait jamais, le hash n'a pas de ?
+    try{
+      let hashStr = window.location.hash || '';
+      if(hashStr.startsWith('#')) hashStr = hashStr.slice(1);
+      let hs = new URLSearchParams(hashStr);
+      ['start','startapp','tgWebAppStartParam'].forEach(k=>{ if(hs.get(k)) candidates.push(hs.get(k)); });
+      // 4. tgWebAppData contient parfois start_param encodé
+      let rawData = hs.get('tgWebAppData');
+      if(rawData){
+        try{
+          let decoded = decodeURIComponent(rawData);
+          let inner = new URLSearchParams(decoded);
+          if(inner.get('start_param')) candidates.push(inner.get('start_param'));
+        }catch(e){}
+      }
+    }catch(e){}
+    // 5. localStorage pending (si l'ami a fait START puis Jouer, on garde le ref)
+    let saved = localStorage.getItem('hrd_pending_ref');
+    if(saved) candidates.push(saved);
+    // 6. tg.initData brut
+    try{
+      if(tg?.initData){
+        let inner2 = new URLSearchParams(tg.initData);
+        if(inner2.get('start_param')) candidates.push(inner2.get('start_param'));
+      }
+    }catch(e){}
+    for(let c of candidates){
+      if(!c) continue;
+      let refId = parseInt(String(c).replace(/[^0-9]/g,''));
+      if(refId && refId !== numericUid()) return refId;
+    }
+  }catch(e){ console.log('getStartParam erreur', e); }
+  return null;
+}
+
 async function claimReferralNow(){
   if(!myRef || !numericUid()) return;
   if(myRef === numericUid()) return;
   try{
     let rEx = await supa.from('harold_users').select('referred_by').eq('id', numericUid()).single();
     if(rEx.data && rEx.data.referred_by){
+      // Déjà parrainé, on ne touche à rien
+      myRef = parseInt(rEx.data.referred_by);
       localStorage.removeItem('hrd_pending_ref');
       return;
     }
@@ -206,7 +256,8 @@ async function claimReferralNow(){
     if(!res.ok || (out && out.error)){
       await supa.from('harold_users').update({referred_by: myRef}).eq('id', numericUid());
     }
-    localStorage.removeItem('hrd_pending_ref');
+    // On garde le pending tant que ce n'est pas confirmé, pour le retry au prochain load
+    // localStorage.removeItem('hrd_pending_ref'); // <-- ne pas supprimer trop tôt
     console.log('✅ Parrainage réclamé pour', myRef);
   }catch(e){ console.log('referral erreur', e); }
 }
@@ -240,10 +291,14 @@ async function saveBalance(){
   const pill=document.getElementById('syncPill');
   if(pill){pill.classList.add('saving');pill.innerHTML='<span class="sync-dot"></span> SYNC...';}
   try{
+    // FIX V33.4: on n'envoie referred_by QUE si on a un parrain, jamais null
+    // Avant: referred_by: null effaçait le parrain dans la base
+    let payload = { id: numericUid(), balance: balanceCoins, first_name: currentUserName, photo_url: currentUserPhoto, wallet_address: walletFriendly || walletAddress, mining_start: new Date(miningStartTime).toISOString(), mining_amount: mining, mining_cards: JSON.stringify(miningCards), tasks_done: JSON.stringify(tasksDone), x2_until: x2Until };
+    if(myRef && myRef !== numericUid()) payload.referred_by = myRef;
     const res = await fetch(EDGE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
-      body: JSON.stringify({ id: numericUid(), balance: balanceCoins, first_name: currentUserName, photo_url: currentUserPhoto, wallet_address: walletFriendly || walletAddress, mining_start: new Date(miningStartTime).toISOString(), mining_amount: mining, mining_cards: JSON.stringify(miningCards), tasks_done: JSON.stringify(tasksDone), x2_until: x2Until, referred_by: myRef })
+      body: JSON.stringify(payload)
     });
     const out = await res.json();
     if(out && out.balance !== undefined){
@@ -270,18 +325,12 @@ async function loadBalance(){
   }
   walletAddress=localStorage.getItem('hrd_wallet_'+uid)||null;walletFriendly=localStorage.getItem('hrd_wallet_friendly_'+uid)||toUQ(walletAddress);x2Until=parseInt(localStorage.getItem('hrd_x2_'+uid)||'0');updateWalletUI();
   try{let u=tg?.initDataUnsafe?.user;if(u){currentUserName=(u.first_name||'Player')+(u.last_name?' '+u.last_name:'');currentUserPhoto=u.photo_url||'';document.getElementById('userName').textContent=currentUserName;if(u.photo_url){let img=document.getElementById('userAvatar');img.src=u.photo_url;img.style.display='block';document.getElementById('userAvatarFallback').style.display='none';}}}catch(e){currentUserName='Player '+uid;document.getElementById('userName').textContent=currentUserName;}
+  // FIX V33.4: lecture complète du parrain
   try{
-    let rawParam=tg?.initDataUnsafe?.start_param||null;
-    let urlParams = new URLSearchParams(window.location.search);
-    let urlParam=urlParams.get('start')||urlParams.get('startapp')||urlParams.get('tgWebAppStartParam')||null;
-    let hashParam=null;try{hashParam=new URLSearchParams(window.location.hash.split('?')[1]||'').get('start');}catch(e){}
-    let startParam=rawParam||urlParam||hashParam||localStorage.getItem('hrd_pending_ref');
-    if(startParam){
-      let refId=parseInt(String(startParam).replace(/[^0-9]/g,''));
-      if(refId && refId!==numericUid()){
-        myRef=refId;
-        localStorage.setItem('hrd_pending_ref',String(refId));
-      }
+    let refId = getStartParamFixed();
+    if(refId){
+      myRef = refId;
+      localStorage.setItem('hrd_pending_ref', String(refId));
     }
   }catch(e){}
   try{
@@ -294,6 +343,7 @@ async function loadBalance(){
       if(data.x2_until){x2Until=data.x2_until;localStorage.setItem('hrd_x2_'+uid,x2Until);}
       if(data.mining_start){miningStartTime=new Date(data.mining_start).getTime();}else{miningStartTime=Date.now();}
       if(data.mining_amount)mining=parseFloat(data.mining_amount)||0;
+      // FIX: si la base a déjà un parrain, on le garde. Sinon on garde celui du lien.
       if(data.referred_by){ myRef = parseInt(data.referred_by); }
     }else{miningStartTime=Date.now();}
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
