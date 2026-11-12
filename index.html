@@ -372,7 +372,7 @@ async function loadBalance(){
     }else{miningStartTime=Date.now();}
     let elapsed=Date.now()-miningStartTime;if(elapsed>=MINING_DURATION){progress=100;mining=getMinerData(currentLvl).hrd4h;}else{progress=(elapsed/MINING_DURATION)*100;mining=(progress/100)*getMinerData(currentLvl).hrd4h;}
     loaded=true;updateUI();renderMiners();renderTasks();drawWheel();checkAdminWheel(); checkNotifications();
-    document.getElementById('inviteLink').value="https://t.me/Haroldcoinsbot/app?startapp="+uid;
+    document.getElementById('inviteLink').value="https://t.me/Haroldcoinsbot?start="+uid;
     await saveBalance();
     await claimReferralNow();
   }catch(e){
